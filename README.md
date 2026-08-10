@@ -44,6 +44,26 @@ Luego vuelve a ejecutar `npm run db:setup` y `npm run dev`.
 
 Abre [http://localhost:3000](http://localhost:3000).
 
+### Acceso en red local (LAN)
+
+Para que otros equipos de tu red empresarial vean la app:
+
+```bash
+# desarrollo
+npm run dev:lan
+
+# o producción (recomendado en red)
+npm run build
+npm run start:lan
+```
+
+1. En tu PC, obtén tu IP local:
+   - Windows: `ipconfig` → busca **IPv4** (ej. `192.168.1.45`)
+   - macOS/Linux: `ip addr` o `hostname -I`
+2. Desde otro equipo abre: `http://TU_IP:3000` (ej. `http://192.168.1.45:3000`)
+3. Si no carga, permite el puerto **3000** en el Firewall de Windows (entrada TCP).
+4. Tu PC y los demás deben estar en la misma red/VLAN (o con enrutamiento permitido).
+
 ## Credenciales demo
 
 | Rol   | Email                         | Contraseña |
