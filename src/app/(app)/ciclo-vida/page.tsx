@@ -8,6 +8,8 @@ import {
   EmptyState,
   PageHeader,
 } from "@/components/ui";
+import { ListToolbar } from "@/components/ListToolbar";
+import { useListControls } from "@/hooks/useListControls";
 import { formatDate } from "@/lib/utils";
 
 type Renewal = {
@@ -83,6 +85,20 @@ export default function CicloVidaPage() {
     return "success" as const;
   }
 
+  const renewalList = useListControls(renewals, {
+    storageKey: "ciclo-renovaciones",
+    defaultView: "grid",
+    getName: (r) => r.name,
+    getSerial: (r) => r.serialNumber,
+  });
+
+  const maintList = useListControls(maintenances, {
+    storageKey: "ciclo-mantenimientos",
+    defaultView: "grid",
+    getName: (m) => m.asset.name,
+    getSerial: (m) => m.asset.serialNumber,
+  });
+
   return (
     <div>
       <PageHeader
@@ -114,11 +130,25 @@ export default function CicloVidaPage() {
           <h2 className="mb-3 font-[family-name:var(--font-display)] text-2xl">
             Control de renovación (4 años)
           </h2>
-          {renewals.length === 0 ? (
+          <ListToolbar
+            name={renewalList.name}
+            serial={renewalList.serial}
+            onNameChange={renewalList.setName}
+            onSerialChange={renewalList.setSerial}
+            view={renewalList.view}
+            onViewChange={renewalList.setView}
+            page={renewalList.page}
+            totalPages={renewalList.totalPages}
+            onPageChange={renewalList.setPage}
+            showingFrom={renewalList.showingFrom}
+            showingTo={renewalList.showingTo}
+            total={renewalList.total}
+          />
+          {renewalList.total === 0 ? (
             <EmptyState text="Sin equipos para renovación." />
-          ) : (
+          ) : renewalList.view === "grid" ? (
             <div className="space-y-3">
-              {renewals.map((item) => (
+              {renewalList.pageItems.map((item) => (
                 <Card key={item.id}>
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div>
@@ -152,6 +182,33 @@ export default function CicloVidaPage() {
                 </Card>
               ))}
             </div>
+          ) : (
+            <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white">
+              <table className="min-w-full text-sm">
+                <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
+                  <tr>
+                    <th className="px-4 py-3 text-left">Equipo</th>
+                    <th className="px-4 py-3 text-left">Serial</th>
+                    <th className="px-4 py-3 text-left">Renovación</th>
+                    <th className="px-4 py-3 text-left">Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {renewalList.pageItems.map((item) => (
+                    <tr key={item.id} className="border-t border-[var(--border)]">
+                      <td className="px-4 py-3">{item.name}</td>
+                      <td className="px-4 py-3">{item.serialNumber}</td>
+                      <td className="px-4 py-3">{formatDate(item.renewalDate)}</td>
+                      <td className="px-4 py-3">
+                        <Badge tone={renewalTone(item.renewalStatus)}>
+                          {item.renewalStatus}
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </section>
 
@@ -159,11 +216,25 @@ export default function CicloVidaPage() {
           <h2 className="mb-3 font-[family-name:var(--font-display)] text-2xl">
             Mantenimiento (6 meses)
           </h2>
-          {maintenances.length === 0 ? (
+          <ListToolbar
+            name={maintList.name}
+            serial={maintList.serial}
+            onNameChange={maintList.setName}
+            onSerialChange={maintList.setSerial}
+            view={maintList.view}
+            onViewChange={maintList.setView}
+            page={maintList.page}
+            totalPages={maintList.totalPages}
+            onPageChange={maintList.setPage}
+            showingFrom={maintList.showingFrom}
+            showingTo={maintList.showingTo}
+            total={maintList.total}
+          />
+          {maintList.total === 0 ? (
             <EmptyState text="No hay mantenimientos pendientes." />
-          ) : (
+          ) : maintList.view === "grid" ? (
             <div className="space-y-3">
-              {maintenances.map((item) => (
+              {maintList.pageItems.map((item) => (
                 <Card key={item.id}>
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div>
@@ -172,11 +243,7 @@ export default function CicloVidaPage() {
                         {item.asset.category} · {item.asset.serialNumber}
                       </p>
                     </div>
-                    <Badge
-                      tone={
-                        item.status === "Próximo" ? "warn" : "info"
-                      }
-                    >
+                    <Badge tone={item.status === "Próximo" ? "warn" : "info"}>
                       {item.status}
                     </Badge>
                   </div>
@@ -199,6 +266,48 @@ export default function CicloVidaPage() {
                   </div>
                 </Card>
               ))}
+            </div>
+          ) : (
+            <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white">
+              <table className="min-w-full text-sm">
+                <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
+                  <tr>
+                    <th className="px-4 py-3 text-left">Equipo</th>
+                    <th className="px-4 py-3 text-left">Serial</th>
+                    <th className="px-4 py-3 text-left">Programado</th>
+                    <th className="px-4 py-3 text-left">Estado</th>
+                    {role === "ADMIN" && (
+                      <th className="px-4 py-3 text-left">Acción</th>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {maintList.pageItems.map((item) => (
+                    <tr key={item.id} className="border-t border-[var(--border)]">
+                      <td className="px-4 py-3">{item.asset.name}</td>
+                      <td className="px-4 py-3">{item.asset.serialNumber}</td>
+                      <td className="px-4 py-3">
+                        {formatDate(item.scheduledDate)}
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge tone={item.status === "Próximo" ? "warn" : "info"}>
+                          {item.status}
+                        </Badge>
+                      </td>
+                      {role === "ADMIN" && (
+                        <td className="px-4 py-3">
+                          <Button
+                            className="px-2 py-1"
+                            onClick={() => completeMaintenance(item.id)}
+                          >
+                            Completar
+                          </Button>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </section>

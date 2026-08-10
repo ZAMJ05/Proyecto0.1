@@ -12,6 +12,8 @@ import {
   PageHeader,
   Select,
 } from "@/components/ui";
+import { ListToolbar } from "@/components/ListToolbar";
+import { useListControls } from "@/hooks/useListControls";
 import { formatDate } from "@/lib/utils";
 
 type AppUser = {
@@ -82,8 +84,17 @@ export default function UsuariosPage() {
     await load();
   }
 
+  const list = useListControls(users, {
+    storageKey: "accesos",
+    defaultView: "list",
+    getName: (u) => u.name,
+    getSerial: (u) => u.email,
+  });
+
   if (!allowed) {
-    return <p className="text-sm text-[var(--muted)]">Verificando permisos...</p>;
+    return (
+      <p className="text-sm text-[var(--muted)]">Verificando permisos...</p>
+    );
   }
 
   return (
@@ -100,7 +111,11 @@ export default function UsuariosPage() {
         <form onSubmit={onCreate} className="grid gap-4 md:grid-cols-2">
           <div>
             <Label>Nombre</Label>
-            <Input required value={name} onChange={(e) => setName(e.target.value)} />
+            <Input
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
           <div>
             <Label>Email</Label>
@@ -138,9 +153,26 @@ export default function UsuariosPage() {
         </form>
       </Card>
 
-      {users.length === 0 ? (
-        <EmptyState text="No hay usuarios." />
-      ) : (
+      <ListToolbar
+        name={list.name}
+        serial={list.serial}
+        onNameChange={list.setName}
+        onSerialChange={list.setSerial}
+        view={list.view}
+        onViewChange={list.setView}
+        page={list.page}
+        totalPages={list.totalPages}
+        onPageChange={list.setPage}
+        showingFrom={list.showingFrom}
+        showingTo={list.showingTo}
+        total={list.total}
+        serialLabel="Email"
+        serialPlaceholder="Buscar por email..."
+      />
+
+      {list.total === 0 ? (
+        <EmptyState text="No hay usuarios con esos filtros." />
+      ) : list.view === "list" ? (
         <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white">
           <table className="min-w-full text-sm">
             <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
@@ -153,7 +185,7 @@ export default function UsuariosPage() {
               </tr>
             </thead>
             <tbody>
-              {users.map((u) => (
+              {list.pageItems.map((u) => (
                 <tr key={u.id} className="border-t border-[var(--border)]">
                   <td className="px-4 py-3 font-medium">{u.name}</td>
                   <td className="px-4 py-3">{u.email}</td>
@@ -176,6 +208,33 @@ export default function UsuariosPage() {
               ))}
             </tbody>
           </table>
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {list.pageItems.map((u) => (
+            <Card key={u.id}>
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <p className="font-semibold">{u.name}</p>
+                  <p className="text-sm text-[var(--muted)]">{u.email}</p>
+                  <p className="mt-1 text-xs text-[var(--muted)]">
+                    {formatDate(u.createdAt)}
+                  </p>
+                </div>
+                <Badge tone={u.role === "ADMIN" ? "info" : "neutral"}>
+                  {u.role}
+                </Badge>
+              </div>
+              <Button
+                className="mt-3"
+                variant="danger"
+                disabled={u.id === meId}
+                onClick={() => remove(u.id)}
+              >
+                Eliminar
+              </Button>
+            </Card>
+          ))}
         </div>
       )}
     </div>

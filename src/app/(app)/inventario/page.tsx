@@ -15,6 +15,8 @@ import {
   statusTone,
 } from "@/components/ui";
 import { AssetForm, AssetFormValues } from "@/components/AssetForm";
+import { ListToolbar } from "@/components/ListToolbar";
+import { useListControls } from "@/hooks/useListControls";
 import { ASSET_CATEGORIES, ASSET_STATUSES } from "@/lib/constants";
 import { formatDate, toInputDate } from "@/lib/utils";
 
@@ -32,7 +34,11 @@ type Asset = {
   anydesk: string | null;
   notes: string | null;
   assignments: Array<{
-    employee: { name: string; email: string | null; position?: { name: string } | null };
+    employee: {
+      name: string;
+      email: string | null;
+      position?: { name: string } | null;
+    };
   }>;
 };
 
@@ -81,6 +87,13 @@ function InventarioContent() {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
+
+  const list = useListControls(assets, {
+    storageKey: "inventario",
+    defaultView: "list",
+    getName: (a) => a.name,
+    getSerial: (a) => `${a.serialNumber} ${a.inventoryNumber}`,
+  });
 
   async function saveAsset(values: AssetFormValues) {
     setSubmitting(true);
@@ -133,7 +146,7 @@ function InventarioContent() {
         }
       />
 
-      <Card className="mb-6 animate-rise">
+      <Card className="mb-4 animate-rise">
         <div className="mb-3 flex items-center gap-2 text-sm font-medium text-[var(--ink)]">
           <Filter className="h-4 w-4" />
           Filtros avanzados
@@ -189,15 +202,6 @@ function InventarioContent() {
             />
           </div>
           <div>
-            <Label>Serial</Label>
-            <Input
-              value={filters.serialNumber}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, serialNumber: e.target.value }))
-              }
-            />
-          </div>
-          <div>
             <Label>No. inventario</Label>
             <Input
               value={filters.inventoryNumber}
@@ -239,6 +243,21 @@ function InventarioContent() {
         </div>
       </Card>
 
+      <ListToolbar
+        name={list.name}
+        serial={list.serial}
+        onNameChange={list.setName}
+        onSerialChange={list.setSerial}
+        view={list.view}
+        onViewChange={list.setView}
+        page={list.page}
+        totalPages={list.totalPages}
+        onPageChange={list.setPage}
+        showingFrom={list.showingFrom}
+        showingTo={list.showingTo}
+        total={list.total}
+      />
+
       {showForm && role === "ADMIN" && (
         <Card className="mb-6 animate-fade">
           <h2 className="mb-4 font-[family-name:var(--font-display)] text-xl">
@@ -274,9 +293,9 @@ function InventarioContent() {
 
       {loading ? (
         <p className="text-sm text-[var(--muted)]">Cargando inventario...</p>
-      ) : assets.length === 0 ? (
+      ) : list.total === 0 ? (
         <EmptyState text="No hay equipos con estos filtros." />
-      ) : (
+      ) : list.view === "list" ? (
         <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white shadow-sm">
           <table className="min-w-full text-left text-sm">
             <thead className="bg-[var(--surface-2)] text-xs uppercase tracking-wide text-[var(--muted)]">
@@ -292,7 +311,7 @@ function InventarioContent() {
               </tr>
             </thead>
             <tbody>
-              {assets.map((asset) => (
+              {list.pageItems.map((asset) => (
                 <tr key={asset.id} className="border-t border-[var(--border)]">
                   <td className="px-4 py-3">
                     <p className="font-medium">{asset.name}</p>
@@ -350,6 +369,57 @@ function InventarioContent() {
             </tbody>
           </table>
         </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {list.pageItems.map((asset) => (
+            <Card key={asset.id}>
+              <div className="mb-3 flex items-start justify-between gap-2">
+                <div>
+                  <h3 className="font-semibold">{asset.name}</h3>
+                  <p className="text-sm text-[var(--muted)]">
+                    {asset.brand} {asset.model}
+                  </p>
+                </div>
+                <Badge tone={statusTone(asset.status)}>{asset.status}</Badge>
+              </div>
+              <dl className="space-y-1 text-sm">
+                <div className="flex justify-between gap-3">
+                  <dt className="text-[var(--muted)]">Categoría</dt>
+                  <dd>{asset.category}</dd>
+                </div>
+                <div className="flex justify-between gap-3">
+                  <dt className="text-[var(--muted)]">Serial</dt>
+                  <dd>{asset.serialNumber}</dd>
+                </div>
+                <div className="flex justify-between gap-3">
+                  <dt className="text-[var(--muted)]">Asignado</dt>
+                  <dd>{asset.assignments[0]?.employee.name || "Sin asignar"}</dd>
+                </div>
+              </dl>
+              {role === "ADMIN" && (
+                <div className="mt-3 flex gap-2">
+                  <Button
+                    variant="secondary"
+                    className="px-2 py-1"
+                    onClick={() => {
+                      setEditing(asset);
+                      setShowForm(true);
+                    }}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="danger"
+                    className="px-2 py-1"
+                    onClick={() => removeAsset(asset.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+            </Card>
+          ))}
+        </div>
       )}
     </div>
   );
@@ -357,7 +427,9 @@ function InventarioContent() {
 
 export default function InventarioPage() {
   return (
-    <Suspense fallback={<p className="text-sm text-[var(--muted)]">Cargando...</p>}>
+    <Suspense
+      fallback={<p className="text-sm text-[var(--muted)]">Cargando...</p>}
+    >
       <InventarioContent />
     </Suspense>
   );

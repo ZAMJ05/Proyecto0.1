@@ -12,6 +12,8 @@ import {
   PageHeader,
   Select,
 } from "@/components/ui";
+import { ListToolbar } from "@/components/ListToolbar";
+import { useListControls } from "@/hooks/useListControls";
 
 type Position = { id: string; name: string };
 type Employee = {
@@ -68,7 +70,12 @@ export default function EmpleadosPage() {
     const res = await fetch("/api/employees", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, department, positionId: positionId || null }),
+      body: JSON.stringify({
+        name,
+        email,
+        department,
+        positionId: positionId || null,
+      }),
     });
     const data = await res.json();
     if (!res.ok) {
@@ -104,6 +111,14 @@ export default function EmpleadosPage() {
     await load();
   }
 
+  const list = useListControls(employees, {
+    storageKey: "empleados",
+    defaultView: "grid",
+    getName: (e) => `${e.name} ${e.email || ""}`,
+    getSerial: (e) =>
+      e.assignments.map((a) => a.asset.serialNumber).join(" "),
+  });
+
   return (
     <div>
       <PageHeader
@@ -119,7 +134,11 @@ export default function EmpleadosPage() {
           <form onSubmit={onCreate} className="grid gap-4 md:grid-cols-2">
             <div>
               <Label>Nombre</Label>
-              <Input required value={name} onChange={(e) => setName(e.target.value)} />
+              <Input
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
             <div>
               <Label>Email</Label>
@@ -158,11 +177,28 @@ export default function EmpleadosPage() {
         </Card>
       )}
 
-      {employees.length === 0 ? (
-        <EmptyState text="No hay usuarios registrados." />
-      ) : (
+      <ListToolbar
+        name={list.name}
+        serial={list.serial}
+        onNameChange={list.setName}
+        onSerialChange={list.setSerial}
+        view={list.view}
+        onViewChange={list.setView}
+        page={list.page}
+        totalPages={list.totalPages}
+        onPageChange={list.setPage}
+        showingFrom={list.showingFrom}
+        showingTo={list.showingTo}
+        total={list.total}
+        namePlaceholder="Nombre o email..."
+        serialPlaceholder="Serial de equipo asignado..."
+      />
+
+      {list.total === 0 ? (
+        <EmptyState text="No hay usuarios con esos filtros." />
+      ) : list.view === "grid" ? (
         <div className="grid gap-4 lg:grid-cols-2">
-          {employees.map((emp) => (
+          {list.pageItems.map((emp) => (
             <Card key={emp.id} className="animate-fade">
               <div className="mb-3 flex items-start justify-between gap-2">
                 <div>
@@ -215,6 +251,54 @@ export default function EmpleadosPage() {
               )}
             </Card>
           ))}
+        </div>
+      ) : (
+        <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white">
+          <table className="min-w-full text-sm">
+            <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
+              <tr>
+                <th className="px-4 py-3 text-left">Usuario</th>
+                <th className="px-4 py-3 text-left">Puesto</th>
+                <th className="px-4 py-3 text-left">Activos</th>
+                <th className="px-4 py-3 text-left">Seriales</th>
+                {role === "ADMIN" && (
+                  <th className="px-4 py-3 text-left">Acciones</th>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {list.pageItems.map((emp) => (
+                <tr key={emp.id} className="border-t border-[var(--border)]">
+                  <td className="px-4 py-3">
+                    <p className="font-medium">{emp.name}</p>
+                    <p className="text-xs text-[var(--muted)]">
+                      {emp.email || "Sin email"}
+                    </p>
+                  </td>
+                  <td className="px-4 py-3">
+                    {emp.position?.name || "Sin puesto"}
+                  </td>
+                  <td className="px-4 py-3">{emp.assignments.length}</td>
+                  <td className="px-4 py-3 text-xs">
+                    {emp.assignments
+                      .map((a) => a.asset.serialNumber)
+                      .join(", ") || "—"}
+                  </td>
+                  {role === "ADMIN" && (
+                    <td className="px-4 py-3">
+                      <Button
+                        variant="danger"
+                        className="px-2 py-1"
+                        onClick={() => removeEmployee(emp)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

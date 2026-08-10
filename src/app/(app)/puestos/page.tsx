@@ -10,13 +10,20 @@ import {
   PageHeader,
   Textarea,
 } from "@/components/ui";
+import { ListToolbar } from "@/components/ListToolbar";
+import { useListControls } from "@/hooks/useListControls";
 
 type Position = {
   id: string;
   name: string;
   description: string | null;
   _count: { employees: number };
-  employees: Array<{ id: string; name: string; email: string | null; active: boolean }>;
+  employees: Array<{
+    id: string;
+    name: string;
+    email: string | null;
+    active: boolean;
+  }>;
 };
 
 export default function PuestosPage() {
@@ -69,6 +76,13 @@ export default function PuestosPage() {
     await load();
   }
 
+  const list = useListControls(positions, {
+    storageKey: "puestos",
+    defaultView: "grid",
+    getName: (p) => `${p.name} ${p.description || ""}`,
+    getSerial: (p) => p.employees.map((e) => e.name).join(" "),
+  });
+
   return (
     <div>
       <PageHeader
@@ -84,7 +98,11 @@ export default function PuestosPage() {
           <form onSubmit={onCreate} className="grid gap-4 md:grid-cols-2">
             <div>
               <Label>Nombre</Label>
-              <Input required value={name} onChange={(e) => setName(e.target.value)} />
+              <Input
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
             <div>
               <Label>Descripción</Label>
@@ -102,11 +120,28 @@ export default function PuestosPage() {
         </Card>
       )}
 
-      {positions.length === 0 ? (
-        <EmptyState text="No hay puestos creados." />
-      ) : (
+      <ListToolbar
+        name={list.name}
+        serial={list.serial}
+        onNameChange={list.setName}
+        onSerialChange={list.setSerial}
+        view={list.view}
+        onViewChange={list.setView}
+        page={list.page}
+        totalPages={list.totalPages}
+        onPageChange={list.setPage}
+        showingFrom={list.showingFrom}
+        showingTo={list.showingTo}
+        total={list.total}
+        serialLabel="Usuario en el puesto"
+        serialPlaceholder="Filtrar por nombre de usuario..."
+      />
+
+      {list.total === 0 ? (
+        <EmptyState text="No hay puestos con esos filtros." />
+      ) : list.view === "grid" ? (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {positions.map((p) => (
+          {list.pageItems.map((p) => (
             <Card key={p.id}>
               <div className="mb-2 flex items-start justify-between gap-2">
                 <div>
@@ -116,7 +151,11 @@ export default function PuestosPage() {
                   </p>
                 </div>
                 {role === "ADMIN" && (
-                  <Button variant="danger" className="px-2 py-1" onClick={() => remove(p.id)}>
+                  <Button
+                    variant="danger"
+                    className="px-2 py-1"
+                    onClick={() => remove(p.id)}
+                  >
                     Eliminar
                   </Button>
                 )}
@@ -126,13 +165,55 @@ export default function PuestosPage() {
               </p>
               <ul className="space-y-1 text-sm">
                 {p.employees.map((e) => (
-                  <li key={e.id} className="rounded-lg bg-[var(--surface-2)] px-2 py-1">
+                  <li
+                    key={e.id}
+                    className="rounded-lg bg-[var(--surface-2)] px-2 py-1"
+                  >
                     {e.name}
                   </li>
                 ))}
               </ul>
             </Card>
           ))}
+        </div>
+      ) : (
+        <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white">
+          <table className="min-w-full text-sm">
+            <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
+              <tr>
+                <th className="px-4 py-3 text-left">Puesto</th>
+                <th className="px-4 py-3 text-left">Descripción</th>
+                <th className="px-4 py-3 text-left">Usuarios</th>
+                {role === "ADMIN" && (
+                  <th className="px-4 py-3 text-left">Acciones</th>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {list.pageItems.map((p) => (
+                <tr key={p.id} className="border-t border-[var(--border)]">
+                  <td className="px-4 py-3 font-medium">{p.name}</td>
+                  <td className="px-4 py-3">
+                    {p.description || "Sin descripción"}
+                  </td>
+                  <td className="px-4 py-3">
+                    {p.employees.map((e) => e.name).join(", ") || "—"}
+                  </td>
+                  {role === "ADMIN" && (
+                    <td className="px-4 py-3">
+                      <Button
+                        variant="danger"
+                        className="px-2 py-1"
+                        onClick={() => remove(p.id)}
+                      >
+                        Eliminar
+                      </Button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

@@ -11,10 +11,18 @@ import {
   Select,
   Textarea,
 } from "@/components/ui";
+import { ListToolbar } from "@/components/ListToolbar";
+import { useListControls } from "@/hooks/useListControls";
 import { formatDate } from "@/lib/utils";
 
 type Employee = { id: string; name: string };
-type Asset = { id: string; name: string; serialNumber: string; category: string; status: string };
+type Asset = {
+  id: string;
+  name: string;
+  serialNumber: string;
+  category: string;
+  status: string;
+};
 type Assignment = {
   id: string;
   assignedAt: string;
@@ -99,6 +107,20 @@ export default function AsignacionesPage() {
     await load();
   }
 
+  const activeList = useListControls(assignments, {
+    storageKey: "asignaciones-activas",
+    defaultView: "list",
+    getName: (a) => `${a.employee.name} ${a.asset.name}`,
+    getSerial: (a) => a.asset.serialNumber,
+  });
+
+  const historyList = useListControls(history, {
+    storageKey: "asignaciones-historial",
+    defaultView: "grid",
+    getName: (a) => `${a.employee.name} ${a.asset.name}`,
+    getSerial: (a) => a.asset.serialNumber,
+  });
+
   return (
     <div>
       <PageHeader
@@ -162,9 +184,24 @@ export default function AsignacionesPage() {
         <h2 className="mb-3 font-[family-name:var(--font-display)] text-2xl">
           Asignaciones activas
         </h2>
-        {assignments.length === 0 ? (
+        <ListToolbar
+          name={activeList.name}
+          serial={activeList.serial}
+          onNameChange={activeList.setName}
+          onSerialChange={activeList.setSerial}
+          view={activeList.view}
+          onViewChange={activeList.setView}
+          page={activeList.page}
+          totalPages={activeList.totalPages}
+          onPageChange={activeList.setPage}
+          showingFrom={activeList.showingFrom}
+          showingTo={activeList.showingTo}
+          total={activeList.total}
+          namePlaceholder="Usuario o equipo..."
+        />
+        {activeList.total === 0 ? (
           <EmptyState text="No hay asignaciones activas." />
-        ) : (
+        ) : activeList.view === "list" ? (
           <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white">
             <table className="min-w-full text-sm">
               <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
@@ -179,7 +216,7 @@ export default function AsignacionesPage() {
                 </tr>
               </thead>
               <tbody>
-                {assignments.map((a) => (
+                {activeList.pageItems.map((a) => (
                   <tr key={a.id} className="border-t border-[var(--border)]">
                     <td className="px-4 py-3">
                       <p className="font-medium">{a.employee.name}</p>
@@ -212,6 +249,32 @@ export default function AsignacionesPage() {
               </tbody>
             </table>
           </div>
+        ) : (
+          <div className="grid gap-3 md:grid-cols-2">
+            {activeList.pageItems.map((a) => (
+              <Card key={a.id}>
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="font-medium">{a.employee.name}</p>
+                    <p className="text-sm">{a.asset.name}</p>
+                    <p className="text-xs text-[var(--muted)]">
+                      {a.asset.serialNumber} · {formatDate(a.assignedAt)}
+                    </p>
+                  </div>
+                  <Badge tone="success">Activa</Badge>
+                </div>
+                {role === "ADMIN" && (
+                  <Button
+                    className="mt-3"
+                    variant="secondary"
+                    onClick={() => unassign(a.id)}
+                  >
+                    Liberar
+                  </Button>
+                )}
+              </Card>
+            ))}
+          </div>
         )}
       </section>
 
@@ -219,11 +282,26 @@ export default function AsignacionesPage() {
         <h2 className="mb-3 font-[family-name:var(--font-display)] text-2xl">
           Historial de asignaciones
         </h2>
-        {history.length === 0 ? (
+        <ListToolbar
+          name={historyList.name}
+          serial={historyList.serial}
+          onNameChange={historyList.setName}
+          onSerialChange={historyList.setSerial}
+          view={historyList.view}
+          onViewChange={historyList.setView}
+          page={historyList.page}
+          totalPages={historyList.totalPages}
+          onPageChange={historyList.setPage}
+          showingFrom={historyList.showingFrom}
+          showingTo={historyList.showingTo}
+          total={historyList.total}
+          namePlaceholder="Usuario o equipo..."
+        />
+        {historyList.total === 0 ? (
           <EmptyState text="Sin historial." />
-        ) : (
+        ) : historyList.view === "grid" ? (
           <div className="space-y-3">
-            {history.map((a) => (
+            {historyList.pageItems.map((a) => (
               <Card key={a.id}>
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
@@ -246,6 +324,40 @@ export default function AsignacionesPage() {
                 )}
               </Card>
             ))}
+          </div>
+        ) : (
+          <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white">
+            <table className="min-w-full text-sm">
+              <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
+                <tr>
+                  <th className="px-4 py-3 text-left">Usuario</th>
+                  <th className="px-4 py-3 text-left">Equipo</th>
+                  <th className="px-4 py-3 text-left">Serial</th>
+                  <th className="px-4 py-3 text-left">Periodo</th>
+                  <th className="px-4 py-3 text-left">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {historyList.pageItems.map((a) => (
+                  <tr key={a.id} className="border-t border-[var(--border)]">
+                    <td className="px-4 py-3">{a.employee.name}</td>
+                    <td className="px-4 py-3">{a.asset.name}</td>
+                    <td className="px-4 py-3">{a.asset.serialNumber}</td>
+                    <td className="px-4 py-3">
+                      {formatDate(a.assignedAt)}
+                      {a.unassignedAt
+                        ? ` → ${formatDate(a.unassignedAt)}`
+                        : ""}
+                    </td>
+                    <td className="px-4 py-3">
+                      <Badge tone={a.unassignedAt ? "neutral" : "success"}>
+                        {a.unassignedAt ? "Histórica" : "Activa"}
+                      </Badge>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </section>

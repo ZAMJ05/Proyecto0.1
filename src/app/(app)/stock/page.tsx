@@ -1,7 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Badge, Card, EmptyState, PageHeader, statusTone } from "@/components/ui";
+import {
+  Badge,
+  Card,
+  EmptyState,
+  PageHeader,
+  statusTone,
+} from "@/components/ui";
+import { ListToolbar } from "@/components/ListToolbar";
+import { useListControls } from "@/hooks/useListControls";
 import { formatDate } from "@/lib/utils";
 
 type Asset = {
@@ -25,6 +33,13 @@ export default function StockPage() {
       .then((r) => r.json())
       .then((d) => setAssets(d.assets || []));
   }, []);
+
+  const list = useListControls(assets, {
+    storageKey: "stock",
+    defaultView: "grid",
+    getName: (a) => a.name,
+    getSerial: (a) => `${a.serialNumber} ${a.inventoryNumber}`,
+  });
 
   return (
     <div>
@@ -66,12 +81,27 @@ export default function StockPage() {
         </Card>
       </div>
 
-      {assets.length === 0 ? (
-        <EmptyState text="No hay equipos en stock/reserva." />
-      ) : (
+      <ListToolbar
+        name={list.name}
+        serial={list.serial}
+        onNameChange={list.setName}
+        onSerialChange={list.setSerial}
+        view={list.view}
+        onViewChange={list.setView}
+        page={list.page}
+        totalPages={list.totalPages}
+        onPageChange={list.setPage}
+        showingFrom={list.showingFrom}
+        showingTo={list.showingTo}
+        total={list.total}
+      />
+
+      {list.total === 0 ? (
+        <EmptyState text="No hay equipos en stock/reserva con esos filtros." />
+      ) : list.view === "grid" ? (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {assets.map((asset, i) => (
-            <Card key={asset.id} className={`animate-rise stagger-${(i % 5) + 1}`}>
+          {list.pageItems.map((asset) => (
+            <Card key={asset.id}>
               <div className="mb-3 flex items-start justify-between gap-2">
                 <div>
                   <h3 className="font-semibold">{asset.name}</h3>
@@ -104,6 +134,36 @@ export default function StockPage() {
               )}
             </Card>
           ))}
+        </div>
+      ) : (
+        <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white">
+          <table className="min-w-full text-sm">
+            <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
+              <tr>
+                <th className="px-4 py-3 text-left">Nombre</th>
+                <th className="px-4 py-3 text-left">Categoría</th>
+                <th className="px-4 py-3 text-left">Serial</th>
+                <th className="px-4 py-3 text-left">Inventario</th>
+                <th className="px-4 py-3 text-left">Compra</th>
+              </tr>
+            </thead>
+            <tbody>
+              {list.pageItems.map((asset) => (
+                <tr key={asset.id} className="border-t border-[var(--border)]">
+                  <td className="px-4 py-3">
+                    <p className="font-medium">{asset.name}</p>
+                    <p className="text-xs text-[var(--muted)]">
+                      {asset.brand} {asset.model}
+                    </p>
+                  </td>
+                  <td className="px-4 py-3">{asset.category}</td>
+                  <td className="px-4 py-3">{asset.serialNumber}</td>
+                  <td className="px-4 py-3">{asset.inventoryNumber}</td>
+                  <td className="px-4 py-3">{formatDate(asset.purchaseDate)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
