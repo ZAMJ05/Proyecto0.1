@@ -2,38 +2,37 @@
 # Ejecutar una vez en PowerShell:
 #   powershell -ExecutionPolicy Bypass -File .\scripts\windows\install-autostart.ps1
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$batPath = Join-Path $scriptDir "start-assetdesk.bat"
+$batPath = (Resolve-Path (Join-Path $scriptDir "start-assetdesk.bat")).Path
 $taskName = "AssetDeskAutoStart"
 
-if (-not (Test-Path $batPath)) {
+if (-not (Test-Path -LiteralPath $batPath)) {
   throw "No se encontro start-assetdesk.bat en $scriptDir"
 }
 
-# Quita tarea previa si existe
-schtasks /Query /TN $taskName 2>$null | Out-Null
+# Comprobar si ya existe sin tumbar el script cuando no esta
+$existing = schtasks /Query /TN $taskName 2>&1
 if ($LASTEXITCODE -eq 0) {
-  schtasks /Delete /TN $taskName /F | Out-Null
+  schtasks /Delete /TN $taskName /F 2>&1 | Out-Null
 }
 
 # /SC ONLOGON = al iniciar sesion del usuario actual
-# /RL LIMITED = sin privilegios elevados (mejor compatibilidad)
+# Rutas con espacios van entre comillas
 $tr = "`"$batPath`""
-schtasks /Create `
-  /TN $taskName `
-  /TR $tr `
-  /SC ONLOGON `
-  /RL LIMITED `
-  /F
 
-if ($LASTEXITCODE -ne 0) {
-  throw "No se pudo crear la tarea programada. Ejecuta PowerShell como el usuario que usara la app."
+$createOutput = schtasks /Create /TN $taskName /TR $tr /SC ONLOGON /RL LIMITED /F 2>&1
+$createCode = $LASTEXITCODE
+
+if ($createCode -ne 0) {
+  Write-Host $createOutput
+  throw "No se pudo crear la tarea programada (codigo $createCode)."
 }
 
 Write-Host ""
 Write-Host "Listo. Tarea creada: $taskName"
+Write-Host "Script: $batPath"
 Write-Host "La app arrancara al iniciar sesion de Windows."
 Write-Host ""
 Write-Host "Comandos utiles:"
