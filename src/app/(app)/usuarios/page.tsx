@@ -12,7 +12,7 @@ import {
   PageHeader,
   Select,
 } from "@/components/ui";
-import { ListToolbar } from "@/components/ListToolbar";
+import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { useListControls } from "@/hooks/useListControls";
 import { formatDate } from "@/lib/utils";
 
@@ -85,10 +85,11 @@ export default function UsuariosPage() {
   }
 
   const list = useListControls(users, {
-    storageKey: "accesos",
+    storageKey: "accesos-p25",
     defaultView: "list",
     getName: (u) => u.name,
     getSerial: (u) => u.email,
+    sortFn: (a, b) => a.name.localeCompare(b.name, "es"),
   });
 
   if (!allowed) {
@@ -237,6 +238,15 @@ export default function UsuariosPage() {
           ))}
         </div>
       )}
+
+      <ListFooter
+        page={list.page}
+        totalPages={list.totalPages}
+        onPageChange={list.setPage}
+        showingFrom={list.showingFrom}
+        showingTo={list.showingTo}
+        total={list.total}
+      />
     </div>
   );
 }

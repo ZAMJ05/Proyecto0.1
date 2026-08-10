@@ -21,7 +21,9 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Badge, Card, PageHeader } from "@/components/ui";
+import { Badge, Card, EmptyState, PageHeader } from "@/components/ui";
+import { ListFooter, ListToolbar } from "@/components/ListToolbar";
+import { useListControls } from "@/hooks/useListControls";
 import { formatDate } from "@/lib/utils";
 
 type DashboardData = {
@@ -68,6 +70,16 @@ export default function DashboardPage() {
       .then((r) => r.json())
       .then(setData);
   }, []);
+
+  const changes = data?.recentChanges || [];
+  const changeList = useListControls(changes, {
+    storageKey: "dashboard-cambios-p25",
+    defaultView: "list",
+    getName: (c) => `${c.details} ${c.action}`,
+    getSerial: (c) => c.asset?.serialNumber || c.asset?.name || "",
+    sortFn: (a, b) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  });
 
   if (!data) {
     return <p className="text-sm text-[var(--muted)]">Cargando dashboard...</p>;
@@ -223,34 +235,88 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <Card className="animate-fade mt-6" id="cambios">
-        <h2 className="mb-4 font-[family-name:var(--font-display)] text-xl">
+      <div className="animate-fade mt-6" id="cambios">
+        <h2 className="mb-3 font-[family-name:var(--font-display)] text-xl">
           Cambios recientes
         </h2>
-        <div className="space-y-3">
-          {data.recentChanges.map((item) => (
-            <div
-              key={item.id}
-              className="flex flex-col gap-1 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
-            >
-              <div>
-                <div className="mb-1 flex items-center gap-2">
-                  <Badge tone="info">{item.action}</Badge>
-                  <span className="text-xs text-[var(--muted)]">
-                    {formatDate(item.createdAt)}
-                  </span>
+        <ListToolbar
+          name={changeList.name}
+          serial={changeList.serial}
+          onNameChange={changeList.setName}
+          onSerialChange={changeList.setSerial}
+          view={changeList.view}
+          onViewChange={changeList.setView}
+          page={changeList.page}
+          totalPages={changeList.totalPages}
+          onPageChange={changeList.setPage}
+          showingFrom={changeList.showingFrom}
+          showingTo={changeList.showingTo}
+          total={changeList.total}
+          namePlaceholder="Buscar en detalle o acción..."
+          serialPlaceholder="Serial del equipo..."
+        />
+        {changeList.total === 0 ? (
+          <EmptyState text="Sin cambios para mostrar." />
+        ) : changeList.view === "list" ? (
+          <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white">
+            <table className="min-w-full text-sm">
+              <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
+                <tr>
+                  <th className="px-4 py-3 text-left">Fecha</th>
+                  <th className="px-4 py-3 text-left">Acción</th>
+                  <th className="px-4 py-3 text-left">Detalle</th>
+                  <th className="px-4 py-3 text-left">Serial</th>
+                </tr>
+              </thead>
+              <tbody>
+                {changeList.pageItems.map((item) => (
+                  <tr key={item.id} className="border-t border-[var(--border)]">
+                    <td className="px-4 py-3">{formatDate(item.createdAt)}</td>
+                    <td className="px-4 py-3">
+                      <Badge tone="info">{item.action}</Badge>
+                    </td>
+                    <td className="px-4 py-3">{item.details}</td>
+                    <td className="px-4 py-3">
+                      {item.asset?.serialNumber || "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {changeList.pageItems.map((item) => (
+              <Card key={item.id}>
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <div className="mb-1 flex items-center gap-2">
+                      <Badge tone="info">{item.action}</Badge>
+                      <span className="text-xs text-[var(--muted)]">
+                        {formatDate(item.createdAt)}
+                      </span>
+                    </div>
+                    <p className="text-sm text-[var(--ink)]">{item.details}</p>
+                  </div>
+                  {item.asset && (
+                    <p className="text-xs text-[var(--muted)]">
+                      {item.asset.serialNumber}
+                    </p>
+                  )}
                 </div>
-                <p className="text-sm text-[var(--ink)]">{item.details}</p>
-              </div>
-              {item.asset && (
-                <p className="text-xs text-[var(--muted)]">
-                  {item.asset.serialNumber}
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
-      </Card>
+              </Card>
+            ))}
+          </div>
+        )}
+        <ListFooter
+          page={changeList.page}
+          totalPages={changeList.totalPages}
+          onPageChange={changeList.setPage}
+          showingFrom={changeList.showingFrom}
+          showingTo={changeList.showingTo}
+          total={changeList.total}
+        />
+      </div>
     </div>
   );
 }

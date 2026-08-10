@@ -8,7 +8,7 @@ import {
   PageHeader,
   statusTone,
 } from "@/components/ui";
-import { ListToolbar } from "@/components/ListToolbar";
+import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { useListControls } from "@/hooks/useListControls";
 import { formatDate } from "@/lib/utils";
 
@@ -35,10 +35,11 @@ export default function StockPage() {
   }, []);
 
   const list = useListControls(assets, {
-    storageKey: "stock",
-    defaultView: "grid",
+    storageKey: "stock-p25",
+    defaultView: "list",
     getName: (a) => a.name,
     getSerial: (a) => `${a.serialNumber} ${a.inventoryNumber}`,
+    sortFn: (a, b) => a.name.localeCompare(b.name, "es"),
   });
 
   return (
@@ -166,6 +167,15 @@ export default function StockPage() {
           </table>
         </div>
       )}
+
+      <ListFooter
+        page={list.page}
+        totalPages={list.totalPages}
+        onPageChange={list.setPage}
+        showingFrom={list.showingFrom}
+        showingTo={list.showingTo}
+        total={list.total}
+      />
     </div>
   );
 }

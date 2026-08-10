@@ -12,7 +12,7 @@ import {
   PageHeader,
   Select,
 } from "@/components/ui";
-import { ListToolbar } from "@/components/ListToolbar";
+import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { useListControls } from "@/hooks/useListControls";
 
 type Position = { id: string; name: string };
@@ -112,11 +112,12 @@ export default function EmpleadosPage() {
   }
 
   const list = useListControls(employees, {
-    storageKey: "empleados",
-    defaultView: "grid",
+    storageKey: "empleados-p25",
+    defaultView: "list",
     getName: (e) => `${e.name} ${e.email || ""}`,
     getSerial: (e) =>
       e.assignments.map((a) => a.asset.serialNumber).join(" "),
+    sortFn: (a, b) => a.name.localeCompare(b.name, "es"),
   });
 
   return (
@@ -235,7 +236,7 @@ export default function EmpleadosPage() {
                 <p className="text-sm text-[var(--muted)]">Sin activos</p>
               ) : (
                 <ul className="space-y-2">
-                  {emp.assignments.map((a) => (
+                  {emp.assignments.slice(0, 5).map((a) => (
                     <li
                       key={a.asset.id}
                       className="rounded-xl bg-[var(--surface-2)] px-3 py-2 text-sm"
@@ -247,6 +248,11 @@ export default function EmpleadosPage() {
                       </p>
                     </li>
                   ))}
+                  {emp.assignments.length > 5 && (
+                    <li className="text-xs text-[var(--muted)]">
+                      +{emp.assignments.length - 5} activo(s) más
+                    </li>
+                  )}
                 </ul>
               )}
             </Card>
@@ -301,6 +307,15 @@ export default function EmpleadosPage() {
           </table>
         </div>
       )}
+
+      <ListFooter
+        page={list.page}
+        totalPages={list.totalPages}
+        onPageChange={list.setPage}
+        showingFrom={list.showingFrom}
+        showingTo={list.showingTo}
+        total={list.total}
+      />
     </div>
   );
 }

@@ -3,8 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 export type ListViewMode = "grid" | "list";
-
-const PAGE_SIZE = 25;
+export const LIST_PAGE_SIZE = 25;
 
 function readView(storageKey: string, fallback: ListViewMode): ListViewMode {
   if (typeof window === "undefined") return fallback;
@@ -18,23 +17,22 @@ export function useListControls<T>(
     storageKey: string;
     getName: (item: T) => string;
     getSerial?: (item: T) => string;
+    /** Orden estable antes de paginar */
+    sortFn?: (a: T, b: T) => number;
     defaultView?: ListViewMode;
     pageSize?: number;
   }
 ) {
-  const pageSize = options.pageSize ?? PAGE_SIZE;
+  const pageSize = options.pageSize ?? LIST_PAGE_SIZE;
+  const defaultView = options.defaultView ?? "list";
   const [name, setName] = useState("");
   const [serial, setSerial] = useState("");
-  const [view, setViewState] = useState<ListViewMode>(
-    options.defaultView ?? "grid"
-  );
+  const [view, setViewState] = useState<ListViewMode>(defaultView);
   const [page, setPage] = useState(1);
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setViewState(readView(options.storageKey, options.defaultView ?? "grid"));
-    setReady(true);
-  }, [options.storageKey, options.defaultView]);
+    setViewState(readView(options.storageKey, defaultView));
+  }, [options.storageKey, defaultView]);
 
   function setView(next: ListViewMode) {
     setViewState(next);
@@ -46,22 +44,31 @@ export function useListControls<T>(
   const filtered = useMemo(() => {
     const n = name.trim().toLowerCase();
     const s = serial.trim().toLowerCase();
-    return items.filter((item) => {
+    const result = items.filter((item) => {
       const itemName = (options.getName(item) || "").toLowerCase();
       const itemSerial = (options.getSerial?.(item) || "").toLowerCase();
       const matchName = !n || itemName.includes(n);
       const matchSerial = !s || itemSerial.includes(s);
       return matchName && matchSerial;
     });
-  }, [items, name, serial, options]);
+
+    const sorter =
+      options.sortFn ||
+      ((a: T, b: T) =>
+        options.getName(a).localeCompare(options.getName(b), "es", {
+          sensitivity: "base",
+        }));
+
+    return [...result].sort(sorter);
+  }, [items, name, serial, options.getName, options.getSerial, options.sortFn]);
 
   useEffect(() => {
     setPage(1);
-  }, [name, serial, items.length]);
+  }, [name, serial, items]);
 
   const total = filtered.length;
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
-  const safePage = Math.min(page, totalPages);
+  const totalPages = Math.max(1, Math.ceil(total / pageSize) || 1);
+  const safePage = Math.min(Math.max(page, 1), totalPages);
   const start = (safePage - 1) * pageSize;
   const pageItems = filtered.slice(start, start + pageSize);
 
@@ -83,7 +90,6 @@ export function useListControls<T>(
     pageItems,
     total,
     totalPages,
-    ready,
     showingFrom: total === 0 ? 0 : start + 1,
     showingTo: Math.min(start + pageSize, total),
   };

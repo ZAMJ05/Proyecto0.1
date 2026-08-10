@@ -10,7 +10,7 @@ import {
   PageHeader,
   Textarea,
 } from "@/components/ui";
-import { ListToolbar } from "@/components/ListToolbar";
+import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { useListControls } from "@/hooks/useListControls";
 
 type Position = {
@@ -77,10 +77,11 @@ export default function PuestosPage() {
   }
 
   const list = useListControls(positions, {
-    storageKey: "puestos",
-    defaultView: "grid",
+    storageKey: "puestos-p25",
+    defaultView: "list",
     getName: (p) => `${p.name} ${p.description || ""}`,
     getSerial: (p) => p.employees.map((e) => e.name).join(" "),
+    sortFn: (a, b) => a.name.localeCompare(b.name, "es"),
   });
 
   return (
@@ -216,6 +217,15 @@ export default function PuestosPage() {
           </table>
         </div>
       )}
+
+      <ListFooter
+        page={list.page}
+        totalPages={list.totalPages}
+        onPageChange={list.setPage}
+        showingFrom={list.showingFrom}
+        showingTo={list.showingTo}
+        total={list.total}
+      />
     </div>
   );
 }

@@ -15,7 +15,7 @@ import {
   statusTone,
 } from "@/components/ui";
 import { AssetForm, AssetFormValues } from "@/components/AssetForm";
-import { ListToolbar } from "@/components/ListToolbar";
+import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { useListControls } from "@/hooks/useListControls";
 import { ASSET_CATEGORIES, ASSET_STATUSES } from "@/lib/constants";
 import { formatDate, toInputDate } from "@/lib/utils";
@@ -89,10 +89,11 @@ function InventarioContent() {
   }, [query]);
 
   const list = useListControls(assets, {
-    storageKey: "inventario",
+    storageKey: "inventario-p25",
     defaultView: "list",
     getName: (a) => a.name,
     getSerial: (a) => `${a.serialNumber} ${a.inventoryNumber}`,
+    sortFn: (a, b) => a.name.localeCompare(b.name, "es"),
   });
 
   async function saveAsset(values: AssetFormValues) {
@@ -421,6 +422,15 @@ function InventarioContent() {
           ))}
         </div>
       )}
+
+      <ListFooter
+        page={list.page}
+        totalPages={list.totalPages}
+        onPageChange={list.setPage}
+        showingFrom={list.showingFrom}
+        showingTo={list.showingTo}
+        total={list.total}
+      />
     </div>
   );
 }

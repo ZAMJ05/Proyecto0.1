@@ -8,7 +8,7 @@ import {
   EmptyState,
   PageHeader,
 } from "@/components/ui";
-import { ListToolbar } from "@/components/ListToolbar";
+import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { useListControls } from "@/hooks/useListControls";
 import { formatDate } from "@/lib/utils";
 
@@ -86,17 +86,20 @@ export default function CicloVidaPage() {
   }
 
   const renewalList = useListControls(renewals, {
-    storageKey: "ciclo-renovaciones",
-    defaultView: "grid",
+    storageKey: "ciclo-renovaciones-p25",
+    defaultView: "list",
     getName: (r) => r.name,
     getSerial: (r) => r.serialNumber,
+    sortFn: (a, b) => a.daysToRenewal - b.daysToRenewal,
   });
 
   const maintList = useListControls(maintenances, {
-    storageKey: "ciclo-mantenimientos",
-    defaultView: "grid",
+    storageKey: "ciclo-mantenimientos-p25",
+    defaultView: "list",
     getName: (m) => m.asset.name,
     getSerial: (m) => m.asset.serialNumber,
+    sortFn: (a, b) =>
+      new Date(a.scheduledDate).getTime() - new Date(b.scheduledDate).getTime(),
   });
 
   return (
@@ -210,6 +213,14 @@ export default function CicloVidaPage() {
               </table>
             </div>
           )}
+          <ListFooter
+            page={renewalList.page}
+            totalPages={renewalList.totalPages}
+            onPageChange={renewalList.setPage}
+            showingFrom={renewalList.showingFrom}
+            showingTo={renewalList.showingTo}
+            total={renewalList.total}
+          />
         </section>
 
         <section>
@@ -310,6 +321,14 @@ export default function CicloVidaPage() {
               </table>
             </div>
           )}
+          <ListFooter
+            page={maintList.page}
+            totalPages={maintList.totalPages}
+            onPageChange={maintList.setPage}
+            showingFrom={maintList.showingFrom}
+            showingTo={maintList.showingTo}
+            total={maintList.total}
+          />
         </section>
       </div>
     </div>

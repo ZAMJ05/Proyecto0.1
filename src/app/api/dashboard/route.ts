@@ -13,6 +13,7 @@ export async function GET() {
       inactive,
       baja,
       reparacion,
+      recentChangesCount,
       recentChanges,
       byCategory,
       byStatus,
@@ -23,8 +24,9 @@ export async function GET() {
       prisma.asset.count({ where: { status: "Inactivo" } }),
       prisma.asset.count({ where: { status: "Baja" } }),
       prisma.asset.count({ where: { status: "Reparacion" } }),
+      prisma.activityLog.count(),
       prisma.activityLog.findMany({
-        take: 10,
+        take: 200,
         orderBy: { createdAt: "desc" },
         include: { asset: { select: { name: true, serialNumber: true } } },
       }),
@@ -70,7 +72,7 @@ export async function GET() {
     return jsonOk({
       cards: {
         active,
-        recentChanges: recentChanges.length,
+        recentChanges: recentChangesCount,
         activeUnassigned,
         total,
         disabled,

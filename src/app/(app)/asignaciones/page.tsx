@@ -11,7 +11,7 @@ import {
   Select,
   Textarea,
 } from "@/components/ui";
-import { ListToolbar } from "@/components/ListToolbar";
+import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { useListControls } from "@/hooks/useListControls";
 import { formatDate } from "@/lib/utils";
 
@@ -108,17 +108,22 @@ export default function AsignacionesPage() {
   }
 
   const activeList = useListControls(assignments, {
-    storageKey: "asignaciones-activas",
+    storageKey: "asignaciones-activas-p25",
     defaultView: "list",
     getName: (a) => `${a.employee.name} ${a.asset.name}`,
     getSerial: (a) => a.asset.serialNumber,
+    sortFn: (a, b) =>
+      a.employee.name.localeCompare(b.employee.name, "es") ||
+      a.asset.name.localeCompare(b.asset.name, "es"),
   });
 
   const historyList = useListControls(history, {
-    storageKey: "asignaciones-historial",
-    defaultView: "grid",
+    storageKey: "asignaciones-historial-p25",
+    defaultView: "list",
     getName: (a) => `${a.employee.name} ${a.asset.name}`,
     getSerial: (a) => a.asset.serialNumber,
+    sortFn: (a, b) =>
+      new Date(b.assignedAt).getTime() - new Date(a.assignedAt).getTime(),
   });
 
   return (
@@ -276,6 +281,14 @@ export default function AsignacionesPage() {
             ))}
           </div>
         )}
+        <ListFooter
+          page={activeList.page}
+          totalPages={activeList.totalPages}
+          onPageChange={activeList.setPage}
+          showingFrom={activeList.showingFrom}
+          showingTo={activeList.showingTo}
+          total={activeList.total}
+        />
       </section>
 
       <section>
@@ -356,10 +369,18 @@ export default function AsignacionesPage() {
                     </td>
                   </tr>
                 ))}
-              </tbody>
-            </table>
-          </div>
+            </tbody>
+          </table>
+        </div>
         )}
+        <ListFooter
+          page={historyList.page}
+          totalPages={historyList.totalPages}
+          onPageChange={historyList.setPage}
+          showingFrom={historyList.showingFrom}
+          showingTo={historyList.showingTo}
+          total={historyList.total}
+        />
       </section>
     </div>
   );
