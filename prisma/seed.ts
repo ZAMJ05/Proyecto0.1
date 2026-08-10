@@ -373,8 +373,9 @@ async function main() {
   }
 
   console.log("Seed completado.");
-  console.log("Admin: admin@inventario.local / admin123");
-  console.log("User:  consulta@inventario.local / user123");
+  console.log("Credenciales iniciales (cámbialas después del primer acceso):");
+  console.log("  Admin -> admin@inventario.local / admin123");
+  console.log("  User  -> consulta@inventario.local / user123");
 }
 
 main()

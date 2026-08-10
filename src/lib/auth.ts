@@ -24,6 +24,21 @@ export async function verifyPassword(password: string, hash: string) {
   return bcrypt.compare(password, hash);
 }
 
+const SESSION_MAX_AGE_SECONDS = 60 * 60 * 8; // 8 horas
+
+function cookieOptions(maxAge: number) {
+  // En red local (http://IP:3000) Secure debe ir en false;
+  // actívalo solo con HTTPS: COOKIE_SECURE=true
+  const secure = process.env.COOKIE_SECURE === "true";
+  return {
+    httpOnly: true,
+    sameSite: "lax" as const,
+    secure,
+    path: "/",
+    maxAge,
+  };
+}
+
 export async function createSession(user: SessionUser) {
   const token = await new SignJWT({
     id: user.id,
@@ -33,25 +48,19 @@ export async function createSession(user: SessionUser) {
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("7d")
+    .setExpirationTime(`${SESSION_MAX_AGE_SECONDS}s`)
     .sign(secret());
 
-  // En red local (http://IP:3000) Secure debe ir en false;
-  // actívalo solo con HTTPS: COOKIE_SECURE=true
-  const secure = process.env.COOKIE_SECURE === "true";
-
   const cookieStore = await cookies();
-  cookieStore.set(COOKIE_NAME, token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure,
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7,
-  });
+  cookieStore.set(COOKIE_NAME, token, cookieOptions(SESSION_MAX_AGE_SECONDS));
 }
 
 export async function destroySession() {
   const cookieStore = await cookies();
+  cookieStore.set(COOKIE_NAME, "", {
+    ...cookieOptions(0),
+    maxAge: 0,
+  });
   cookieStore.delete(COOKIE_NAME);
 }
 

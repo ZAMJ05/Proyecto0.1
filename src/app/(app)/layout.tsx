@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { Sidebar } from "@/components/Sidebar";
 import { TopSearch } from "@/components/TopSearch";
+import { LogoutButton } from "@/components/LogoutButton";
 
 export default async function AppLayout({
   children,
@@ -18,13 +19,26 @@ export default async function AppLayout({
       </div>
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-20 border-b border-[var(--border)] bg-white/85 px-4 py-4 backdrop-blur md:px-8">
-          <div className="mb-3 flex items-center justify-between md:hidden">
-            <p className="font-[family-name:var(--font-display)] text-xl">
-              AssetDesk
-            </p>
-            <span className="rounded-lg bg-[var(--surface-2)] px-2 py-1 text-xs text-[var(--muted)]">
-              {session.role}
-            </span>
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div className="md:hidden">
+              <p className="font-[family-name:var(--font-display)] text-xl">
+                AssetDesk
+              </p>
+            </div>
+            <div className="ml-auto flex items-center gap-2">
+              <div className="hidden text-right sm:block">
+                <p className="text-sm font-medium text-[var(--ink)]">
+                  {session.name}
+                </p>
+                <p className="text-xs text-[var(--muted)]">
+                  {session.role === "ADMIN" ? "Administrador" : "Solo lectura"}
+                </p>
+              </div>
+              <span className="rounded-lg bg-[var(--surface-2)] px-2 py-1 text-xs text-[var(--muted)] md:hidden">
+                {session.role}
+              </span>
+              <LogoutButton />
+            </div>
           </div>
           <TopSearch />
           <nav className="mt-3 flex gap-2 overflow-x-auto pb-1 md:hidden">

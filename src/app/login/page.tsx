@@ -5,8 +5,8 @@ import { MonitorSmartphone } from "lucide-react";
 import { Button, Input, Label } from "@/components/ui";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("admin@inventario.local");
-  const [password, setPassword] = useState("admin123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -18,14 +18,21 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          password,
+        }),
+        credentials: "same-origin",
+        cache: "no-store",
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Error de acceso");
-      // Navegación completa para que el navegador envíe la cookie de sesión
-      window.location.assign("/dashboard");
+      setEmail("");
+      setPassword("");
+      window.location.replace("/dashboard");
       return;
     } catch (err) {
+      setPassword("");
       setError(err instanceof Error ? err.message : "Error de acceso");
     } finally {
       setLoading(false);
@@ -61,10 +68,10 @@ export default function LoginPage() {
                 renovaciones cada 4 años y mantenimiento cada 6 meses.
               </p>
             </div>
-            <div className="space-y-2 text-sm text-white/70">
-              <p>Admin: admin@inventario.local / admin123</p>
-              <p>Consulta: consulta@inventario.local / user123</p>
-            </div>
+            <p className="text-sm text-white/60">
+              Acceso restringido. Usa tu cuenta corporativa asignada por el
+              administrador.
+            </p>
           </div>
         </section>
 
@@ -79,26 +86,40 @@ export default function LoginPage() {
             Iniciar sesión
           </h2>
           <p className="mt-2 text-sm text-[var(--muted)]">
-            Accede para consultar o administrar el inventario.
+            Ingresa tus credenciales. La sesión no se guarda automáticamente.
           </p>
 
-          <form onSubmit={onSubmit} className="mt-8 space-y-4">
+          <form
+            onSubmit={onSubmit}
+            className="mt-8 space-y-4"
+            autoComplete="off"
+            method="post"
+          >
             <div>
               <Label>Email</Label>
               <Input
                 type="email"
+                name="email"
                 required
+                autoComplete="off"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                placeholder="correo@empresa.com"
               />
             </div>
             <div>
               <Label>Contraseña</Label>
               <Input
                 type="password"
+                name="password"
                 required
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
               />
             </div>
             {error && <p className="text-sm text-[var(--danger)]">{error}</p>}

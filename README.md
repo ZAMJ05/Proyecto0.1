@@ -74,12 +74,9 @@ COOKIE_SECURE="false"
 Luego reinicia (`npm run start:lan` o `npm run dev:lan`).
 Solo pon `COOKIE_SECURE="true"` cuando publiques con HTTPS.
 
-## Credenciales demo
+## Acceso inicial
 
-| Rol   | Email                         | Contraseña |
-|-------|-------------------------------|------------|
-| Admin | admin@inventario.local        | admin123   |
-| User  | consulta@inventario.local     | user123    |
+Las credenciales de demo **no se muestran en la app**. Solo se crean al ejecutar `npm run db:seed` / `db:setup` y se imprimen en la terminal del seed. Cámbialas después del primer acceso desde **Accesos app**.
 
 ## Scripts
 

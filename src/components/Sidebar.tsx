@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -10,12 +10,12 @@ import {
   Users,
   Briefcase,
   UserCog,
-  LogOut,
   MonitorSmartphone,
   ClipboardList,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SessionUser } from "@/lib/auth";
+import { LogoutButton } from "./LogoutButton";
 
 const links = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -29,13 +29,6 @@ const links = [
 
 export function Sidebar({ user }: { user: SessionUser }) {
   const pathname = usePathname();
-  const router = useRouter();
-
-  async function logout() {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/login");
-    router.refresh();
-  }
 
   return (
     <aside className="flex w-72 shrink-0 flex-col border-r border-[var(--border)] bg-[var(--sidebar)] text-white">
@@ -97,13 +90,7 @@ export function Sidebar({ user }: { user: SessionUser }) {
             {user.role === "ADMIN" ? "Administrador" : "Solo lectura"}
           </p>
         </div>
-        <button
-          onClick={logout}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/10 px-3 py-2 text-sm text-white/90 transition hover:bg-white/16"
-        >
-          <LogOut className="h-4 w-4" />
-          Cerrar sesión
-        </button>
+        <LogoutButton variant="sidebar" />
       </div>
     </aside>
   );
