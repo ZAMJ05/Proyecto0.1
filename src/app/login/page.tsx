@@ -1,12 +1,10 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
 import { MonitorSmartphone } from "lucide-react";
 import { Button, Input, Label } from "@/components/ui";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("admin@inventario.local");
   const [password, setPassword] = useState("admin123");
   const [error, setError] = useState("");
@@ -24,8 +22,9 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Error de acceso");
-      router.push("/dashboard");
-      router.refresh();
+      // Navegación completa para que el navegador envíe la cookie de sesión
+      window.location.assign("/dashboard");
+      return;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error de acceso");
     } finally {

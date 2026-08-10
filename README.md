@@ -64,6 +64,16 @@ npm run start:lan
 3. Si no carga, permite el puerto **3000** en el Firewall de Windows (entrada TCP).
 4. Tu PC y los demás deben estar en la misma red/VLAN (o con enrutamiento permitido).
 
+Si ves el login pero **no entra al dashboard**, es la cookie de sesión en HTTP.
+Asegúrate de tener en `.env`:
+
+```
+COOKIE_SECURE="false"
+```
+
+Luego reinicia (`npm run start:lan` o `npm run dev:lan`).
+Solo pon `COOKIE_SECURE="true"` cuando publiques con HTTPS.
+
 ## Credenciales demo
 
 | Rol   | Email                         | Contraseña |

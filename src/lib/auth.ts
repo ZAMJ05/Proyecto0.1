@@ -36,11 +36,15 @@ export async function createSession(user: SessionUser) {
     .setExpirationTime("7d")
     .sign(secret());
 
+  // En red local (http://IP:3000) Secure debe ir en false;
+  // actívalo solo con HTTPS: COOKIE_SECURE=true
+  const secure = process.env.COOKIE_SECURE === "true";
+
   const cookieStore = await cookies();
   cookieStore.set(COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure,
     path: "/",
     maxAge: 60 * 60 * 24 * 7,
   });
