@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String   @default("USER") // ADMIN | USER
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Position {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  employees   Employee[]
+}
+
+model Employee {
+  id          String       @id @default(cuid())
+  name        String
+  email       String?      @unique
+  department  String?
+  active      Boolean      @default(true)
+  positionId  String?
+  position    Position?    @relation(fields: [positionId], references: [id])
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  assignments Assignment[]
+}
+
+model Asset {
+  id              String         @id @default(cuid())
+  name            String
+  category        String
+  brand           String
+  model           String
+  serialNumber    String         @unique
+  inventoryNumber String         @unique
+  status          String         @default("Stock")
+  purchaseDate    DateTime
+  renewalDate     DateTime
+  anydesk         String?
+  notes           String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  assignments     Assignment[]
+  maintenances    Maintenance[]
+  activityLogs    ActivityLog[]
+}
+
+model Assignment {
+  id           String    @id @default(cuid())
+  assetId      String
+  employeeId   String
+  assignedAt   DateTime  @default(now())
+  unassignedAt DateTime?
+  notes        String?
+  asset        Asset     @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  employee     Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@index([assetId])
+  @@index([employeeId])
+}
+
+model Maintenance {
+  id            String    @id @default(cuid())
+  assetId       String
+  scheduledDate DateTime
+  completedDate DateTime?
+  status        String    @default("Pendiente")
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  asset         Asset     @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@index([assetId])
+  @@index([scheduledDate])
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  assetId   String?
+  action    String
+  details   String
+  createdAt DateTime @default(now())
+  asset     Asset?   @relation(fields: [assetId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+}
