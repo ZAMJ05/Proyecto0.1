@@ -7,9 +7,10 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
+    "env:init": "node scripts/ensure-env.js",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
-    "db:setup": "prisma db push && tsx prisma/seed.ts",
+    "db:setup": "node scripts/ensure-env.js && prisma db push && tsx prisma/seed.ts",
     "postinstall": "prisma generate"
   },
   "prisma": {

@@ -28,6 +28,20 @@ npm run db:setup
 npm run dev
 ```
 
+`db:setup` crea `.env` desde `.env.example` si no existe, prepara SQLite y carga datos demo.
+
+Si ves el error `Environment variable not found: DATABASE_URL`, crea el `.env` así:
+
+```bash
+# Windows (CMD)
+copy .env.example .env
+
+# Windows (PowerShell) / macOS / Linux
+cp .env.example .env
+```
+
+Luego vuelve a ejecutar `npm run db:setup` y `npm run dev`.
+
 Abre [http://localhost:3000](http://localhost:3000).
 
 ## Credenciales demo
