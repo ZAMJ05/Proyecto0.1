@@ -11,6 +11,7 @@
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "db:setup": "node scripts/ensure-env.js && prisma db push && tsx prisma/seed.ts",
+    "db:import": "node scripts/ensure-env.js && tsx scripts/import-from-mongo.ts",
     "postinstall": "prisma generate"
   },
   "prisma": {

@@ -1,0 +1,15 @@
+[
+  {
+    "_id": { "$oid": "64f000000000000000000001" },
+    "nombre": "Laptop Ana",
+    "categoria": "Laptop",
+    "marca": "Dell",
+    "modelo": "Latitude 5440",
+    "serial": "DL-5440-001",
+    "inventario": "INV-L-001",
+    "estado": "Activo",
+    "fechaCompra": "2024-01-15",
+    "anydesk": "123456789",
+    "notas": "Equipo migrado desde Mongo"
+  }
+]

@@ -57,6 +57,9 @@ Abre [http://localhost:3000](http://localhost:3000).
 - `npm run build` / `npm start` — producción
 - `npm run db:setup` — crea esquema y carga datos demo
 - `npm run db:seed` — vuelve a sembrar datos
+- `npm run db:import` — importa JSON exportados de MongoDB (`data/mongo-export/`)
+
+Para migrar desde MongoDB, ver `data/mongo-export/README.md`.
 
 ## Variables de entorno
 
