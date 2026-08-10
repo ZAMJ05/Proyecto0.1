@@ -1,14 +1,22 @@
-# Elimina el arranque automatico de AssetDesk.
-#   powershell -ExecutionPolicy Bypass -File .\scripts\windows\uninstall-autostart.ps1
-
+# Quita arranque automatico (tarea + acceso Inicio)
 $ErrorActionPreference = "Continue"
 $taskName = "AssetDeskAutoStart"
 
-$existing = schtasks /Query /TN $taskName 2>&1
-if ($LASTEXITCODE -ne 0) {
-  Write-Host "No hay tarea $taskName registrada."
-  exit 0
+$existing = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
+if ($existing) {
+  Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
+  Write-Host "Tarea $taskName eliminada."
+} else {
+  Write-Host "No habia tarea $taskName."
 }
 
-schtasks /Delete /TN $taskName /F 2>&1 | Out-Null
-Write-Host "Tarea $taskName eliminada. AssetDesk ya no iniciara al encender."
+$startup = [Environment]::GetFolderPath("Startup")
+$shortcutPath = Join-Path $startup "AssetDesk.lnk"
+if (Test-Path $shortcutPath) {
+  Remove-Item $shortcutPath -Force
+  Write-Host "Acceso Inicio eliminado: $shortcutPath"
+} else {
+  Write-Host "No habia acceso en Inicio."
+}
+
+Write-Host "Listo. AssetDesk ya no iniciara automaticamente."

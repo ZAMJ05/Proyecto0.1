@@ -1,43 +1,97 @@
-# Registra AssetDesk para que inicie al encender Windows (inicio de sesion).
-# Ejecutar una vez en PowerShell:
+# Instala arranque automatico de AssetDesk (Tarea programada + carpeta Inicio).
+# Ejecutar:
 #   powershell -ExecutionPolicy Bypass -File .\scripts\windows\install-autostart.ps1
 
-$ErrorActionPreference = "Continue"
+$ErrorActionPreference = "Stop"
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $batPath = (Resolve-Path (Join-Path $scriptDir "start-assetdesk.bat")).Path
+$vbsPath = (Resolve-Path (Join-Path $scriptDir "start-assetdesk-hidden.vbs")).Path
+$appDir = (Resolve-Path (Join-Path $scriptDir "..\..")).Path
 $taskName = "AssetDeskAutoStart"
 
-if (-not (Test-Path -LiteralPath $batPath)) {
-  throw "No se encontro start-assetdesk.bat en $scriptDir"
+Write-Host "App:  $appDir"
+Write-Host "BAT:  $batPath"
+Write-Host "VBS:  $vbsPath"
+Write-Host ""
+
+# --- 1) Tarea programada robusta ---
+$existing = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
+if ($existing) {
+  Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
+  Write-Host "Tarea anterior eliminada."
 }
 
-# Comprobar si ya existe sin tumbar el script cuando no esta
-$existing = schtasks /Query /TN $taskName 2>&1
-if ($LASTEXITCODE -eq 0) {
-  schtasks /Delete /TN $taskName /F 2>&1 | Out-Null
-}
+$action = New-ScheduledTaskAction `
+  -Execute "wscript.exe" `
+  -Argument "`"$vbsPath`"" `
+  -WorkingDirectory $appDir
 
-# /SC ONLOGON = al iniciar sesion del usuario actual
-# Rutas con espacios van entre comillas
-$tr = "`"$batPath`""
+$trigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
+# Espera 45s tras iniciar sesion (red/Node listos)
+try { $trigger.Delay = "PT45S" } catch { }
 
-$createOutput = schtasks /Create /TN $taskName /TR $tr /SC ONLOGON /RL LIMITED /F 2>&1
-$createCode = $LASTEXITCODE
+$settings = New-ScheduledTaskSettingsSet `
+  -AllowStartIfOnBatteries `
+  -DontStopIfGoingOnBatteries `
+  -StartWhenAvailable `
+  -ExecutionTimeLimit ([TimeSpan]::Zero) `
+  -RestartCount 3 `
+  -RestartInterval (New-TimeSpan -Minutes 1)
 
-if ($createCode -ne 0) {
-  Write-Host $createOutput
-  throw "No se pudo crear la tarea programada (codigo $createCode)."
+$principal = New-ScheduledTaskPrincipal `
+  -UserId $env:USERNAME `
+  -LogonType Interactive `
+  -RunLevel Limited
+
+Register-ScheduledTask `
+  -TaskName $taskName `
+  -Action $action `
+  -Trigger $trigger `
+  -Settings $settings `
+  -Principal $principal `
+  -Force | Out-Null
+
+Write-Host "OK: Tarea programada '$taskName' creada (delay 45s al iniciar sesion)."
+
+# --- 2) Acceso directo en carpeta Inicio (mas fiable en muchas PCs) ---
+$startup = [Environment]::GetFolderPath("Startup")
+$shortcutPath = Join-Path $startup "AssetDesk.lnk"
+$wsh = New-Object -ComObject WScript.Shell
+$sc = $wsh.CreateShortcut($shortcutPath)
+$sc.TargetPath = "wscript.exe"
+$sc.Arguments = "`"$vbsPath`""
+$sc.WorkingDirectory = $appDir
+$sc.WindowStyle = 7
+$sc.Description = "Inicia AssetDesk inventario IT"
+$sc.Save()
+Write-Host "OK: Acceso directo en Inicio: $shortcutPath"
+
+# --- 3) Preparacion minima ---
+Push-Location $appDir
+try {
+  if (-not (Test-Path ".env") -and (Test-Path ".env.example")) {
+    Copy-Item ".env.example" ".env" -Force
+    Write-Host "OK: Se creo .env"
+  }
+  if (-not (Test-Path ".next\BUILD_ID")) {
+    Write-Host "Compilando app (primera vez, puede tardar)..."
+    npm run build
+  }
+} finally {
+  Pop-Location
 }
 
 Write-Host ""
-Write-Host "Listo. Tarea creada: $taskName"
-Write-Host "Script: $batPath"
-Write-Host "La app arrancara al iniciar sesion de Windows."
+Write-Host "=============================="
+Write-Host " Instalacion completada"
+Write-Host "=============================="
+Write-Host "Probar ahora (sin reiniciar):"
+Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\windows\test-autostart.ps1"
 Write-Host ""
-Write-Host "Comandos utiles:"
-Write-Host "  Probar ahora:     schtasks /Run /TN $taskName"
-Write-Host "  Ver estado:       schtasks /Query /TN $taskName /V /FO LIST"
-Write-Host "  Desactivar:       powershell -ExecutionPolicy Bypass -File .\scripts\windows\uninstall-autostart.ps1"
-Write-Host "  Log:              logs\assetdesk-startup.log"
+Write-Host "Ver log:"
+Write-Host "  notepad .\logs\assetdesk-startup.log"
+Write-Host ""
+Write-Host "Desactivar:"
+Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\windows\uninstall-autostart.ps1"
 Write-Host ""
