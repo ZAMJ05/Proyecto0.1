@@ -2,8 +2,12 @@ import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
 import { prisma } from "./prisma";
+import {
+  SESSION_COOKIE_NAME,
+  SESSION_MAX_AGE_SECONDS,
+  sessionCookieOptions,
+} from "./session-cookie";
 
-const COOKIE_NAME = "it_session";
 const secret = () =>
   new TextEncoder().encode(process.env.JWT_SECRET || "dev-secret");
 
@@ -24,21 +28,6 @@ export async function verifyPassword(password: string, hash: string) {
   return bcrypt.compare(password, hash);
 }
 
-const SESSION_MAX_AGE_SECONDS = 60 * 60 * 8; // 8 horas
-
-function cookieOptions(maxAge: number) {
-  // En red local (http://IP:3000) Secure debe ir en false;
-  // actívalo solo con HTTPS: COOKIE_SECURE=true
-  const secure = process.env.COOKIE_SECURE === "true";
-  return {
-    httpOnly: true,
-    sameSite: "lax" as const,
-    secure,
-    path: "/",
-    maxAge,
-  };
-}
-
 export async function createSession(user: SessionUser) {
   const token = await new SignJWT({
     id: user.id,
@@ -52,21 +41,30 @@ export async function createSession(user: SessionUser) {
     .sign(secret());
 
   const cookieStore = await cookies();
-  cookieStore.set(COOKIE_NAME, token, cookieOptions(SESSION_MAX_AGE_SECONDS));
+  cookieStore.set(
+    SESSION_COOKIE_NAME,
+    token,
+    sessionCookieOptions(SESSION_MAX_AGE_SECONDS)
+  );
 }
 
 export async function destroySession() {
   const cookieStore = await cookies();
-  cookieStore.set(COOKIE_NAME, "", {
-    ...cookieOptions(0),
+  cookieStore.set(SESSION_COOKIE_NAME, "", {
+    ...sessionCookieOptions(0),
     maxAge: 0,
+    expires: new Date(0),
   });
-  cookieStore.delete(COOKIE_NAME);
+  try {
+    cookieStore.delete(SESSION_COOKIE_NAME);
+  } catch {
+    // ignore
+  }
 }
 
 export async function getSession(): Promise<SessionUser | null> {
   const cookieStore = await cookies();
-  const token = cookieStore.get(COOKIE_NAME)?.value;
+  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   if (!token) return null;
 
   try {
