@@ -88,6 +88,14 @@ Las credenciales de demo **no se muestran en la app**. Solo se crean al ejecutar
 
 Para migrar desde MongoDB, ver `data/mongo-export/README.md`.
 
+### Arranque automático en Windows
+
+Ver `scripts/windows/README.md`. Resumen:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\windows\install-autostart.ps1
+```
+
 ## Variables de entorno
 
 Copia `.env.example` a `.env`:
