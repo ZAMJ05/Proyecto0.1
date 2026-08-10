@@ -55,7 +55,28 @@ export async function DELETE(_request: Request, { params }: Params) {
   try {
     await requireAdmin();
     const { id } = await params;
+
+    const employee = await prisma.employee.findUnique({ where: { id } });
+    if (!employee) return jsonError("Usuario no encontrado", 404);
+
+    const activeAssignments = await prisma.assignment.count({
+      where: { employeeId: id, unassignedAt: null },
+    });
+    if (activeAssignments > 0) {
+      return jsonError(
+        "Este usuario tiene equipos asignados. Libéralos en Asignaciones antes de eliminarlo.",
+        400
+      );
+    }
+
     await prisma.employee.delete({ where: { id } });
+    await prisma.activityLog.create({
+      data: {
+        action: "Usuario inventario",
+        details: `Se eliminó el usuario ${employee.name}`,
+      },
+    });
+
     return jsonOk({ ok: true });
   } catch (error) {
     return handleApiError(error);

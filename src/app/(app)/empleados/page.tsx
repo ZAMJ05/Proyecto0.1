@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { Trash2 } from "lucide-react";
 import {
   Badge,
   Button,
@@ -81,6 +82,28 @@ export default function EmpleadosPage() {
     await load();
   }
 
+  async function removeEmployee(emp: Employee) {
+    const assigned = emp.assignments.length;
+    const message =
+      assigned > 0
+        ? `${emp.name} tiene ${assigned} activo(s) asignado(s). Debes liberarlos en Asignaciones antes de eliminarlo.`
+        : `¿Eliminar a ${emp.name}? Esta acción no se puede deshacer.`;
+
+    if (assigned > 0) {
+      alert(message);
+      return;
+    }
+    if (!confirm(message)) return;
+
+    const res = await fetch(`/api/employees/${emp.id}`, { method: "DELETE" });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.error || "No se pudo eliminar");
+      return;
+    }
+    await load();
+  }
+
   return (
     <div>
       <PageHeader
@@ -152,9 +175,22 @@ export default function EmpleadosPage() {
                     {emp.position?.name || "Sin puesto"}
                   </p>
                 </div>
-                <Badge tone={emp.active ? "success" : "danger"}>
-                  {emp.active ? "Activo" : "Inactivo"}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge tone={emp.active ? "success" : "danger"}>
+                    {emp.active ? "Activo" : "Inactivo"}
+                  </Badge>
+                  {role === "ADMIN" && (
+                    <Button
+                      variant="danger"
+                      className="px-2 py-1"
+                      title="Eliminar usuario"
+                      onClick={() => removeEmployee(emp)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Eliminar
+                    </Button>
+                  )}
+                </div>
               </div>
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
                 Activos asignados ({emp.assignments.length})
