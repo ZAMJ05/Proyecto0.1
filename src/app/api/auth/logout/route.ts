@@ -1,18 +1,17 @@
 import { NextResponse } from "next/server";
 import { clearSessionCookie } from "@/lib/session-cookie";
+import { publicUrl } from "@/lib/request-origin";
 
 function logoutResponse(request: Request) {
-  const url = new URL("/login", request.url);
-  url.searchParams.set("loggedOut", "1");
+  const url = publicUrl(request, "/login", "loggedOut=1");
 
-  // Respuesta JSON para fetch; también sirve redirect para formularios
   const accept = request.headers.get("accept") || "";
-  const wantsHtml = accept.includes("text/html");
+  const wantsHtml = accept.includes("text/html") || !accept.includes("json");
 
   const res = wantsHtml
     ? NextResponse.redirect(url, 303)
     : NextResponse.json(
-        { ok: true },
+        { ok: true, redirectTo: url.toString() },
         {
           status: 200,
           headers: {

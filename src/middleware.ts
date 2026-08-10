@@ -5,6 +5,7 @@ import {
   SESSION_COOKIE_NAME,
   sessionCookieOptions,
 } from "@/lib/session-cookie";
+import { publicUrl } from "@/lib/request-origin";
 
 const publicPaths = ["/login", "/api/auth/login", "/api/auth/logout"];
 
@@ -22,7 +23,6 @@ export async function middleware(request: NextRequest) {
   const isPublic = publicPaths.some((p) => pathname.startsWith(p));
   const loggedOut = request.nextUrl.searchParams.get("loggedOut") === "1";
 
-  // Tras cerrar sesión, fuerza borrado de cookie aunque el cliente la reenvie
   if (pathname === "/login" && loggedOut) {
     const res = NextResponse.next();
     res.cookies.set(SESSION_COOKIE_NAME, "", {
@@ -52,24 +52,17 @@ export async function middleware(request: NextRequest) {
     if (pathname.startsWith("/api/")) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 });
     }
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    url.search = "";
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(publicUrl(request, "/login"));
   }
 
   if (valid && pathname === "/login" && !loggedOut) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    url.search = "";
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(publicUrl(request, "/dashboard"));
   }
 
   if (pathname === "/") {
-    const url = request.nextUrl.clone();
-    url.pathname = valid ? "/dashboard" : "/login";
-    url.search = "";
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(
+      publicUrl(request, valid ? "/dashboard" : "/login")
+    );
   }
 
   return NextResponse.next();
