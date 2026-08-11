@@ -106,13 +106,13 @@ export default function CicloVidaPage() {
     <div>
       <PageHeader
         title="Ciclo de vida"
-        subtitle="Renovación cada 4 años desde la compra y mantenimiento de cómputo cada 6 meses."
+        subtitle="Solo laptops: renovación a 4 años desde la compra y mantenimiento preventivo cada 6 meses. Las bajas no se incluyen."
       />
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2">
         <Card className="animate-rise">
           <p className="text-xs uppercase tracking-wide text-[var(--muted)]">
-            Renovaciones por atender
+            Renovaciones de laptops
           </p>
           <p className="mt-2 font-[family-name:var(--font-display)] text-4xl">
             {summary.renewalsDue}
@@ -120,7 +120,7 @@ export default function CicloVidaPage() {
         </Card>
         <Card className="animate-rise stagger-1">
           <p className="text-xs uppercase tracking-wide text-[var(--muted)]">
-            Mantenimientos próximos
+            Mantenimientos de laptops
           </p>
           <p className="mt-2 font-[family-name:var(--font-display)] text-4xl">
             {summary.maintenanceDue}
@@ -131,7 +131,7 @@ export default function CicloVidaPage() {
       <div className="grid gap-6 xl:grid-cols-2">
         <section>
           <h2 className="mb-3 font-[family-name:var(--font-display)] text-2xl">
-            Control de renovación (4 años)
+            Renovación de laptops (4 años)
           </h2>
           <ListToolbar
             name={renewalList.name}
@@ -186,7 +186,7 @@ export default function CicloVidaPage() {
               ))}
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white">
+            <div className="table-shell">
               <table className="min-w-full text-sm">
                 <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
                   <tr>
@@ -225,7 +225,7 @@ export default function CicloVidaPage() {
 
         <section>
           <h2 className="mb-3 font-[family-name:var(--font-display)] text-2xl">
-            Mantenimiento (6 meses)
+            Mantenimiento de laptops (6 meses)
           </h2>
           <ListToolbar
             name={maintList.name}
@@ -279,7 +279,7 @@ export default function CicloVidaPage() {
               ))}
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white">
+            <div className="table-shell">
               <table className="min-w-full text-sm">
                 <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
                   <tr>

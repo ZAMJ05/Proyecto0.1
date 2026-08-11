@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { MonitorSmartphone } from "lucide-react";
 import { Button, Input, Label } from "@/components/ui";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -41,12 +42,15 @@ export default function LoginPage() {
 
   return (
     <main className="relative flex min-h-screen items-center justify-center px-4 py-10">
+      <div className="absolute right-4 top-4 z-20">
+        <ThemeToggle />
+      </div>
       <div className="absolute inset-0 overflow-hidden">
         <div className="animate-pulse-soft absolute -left-20 top-10 h-72 w-72 rounded-full bg-teal-500/15 blur-3xl" />
         <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-sky-500/10 blur-3xl" />
       </div>
 
-      <div className="animate-rise relative grid w-full max-w-5xl overflow-hidden rounded-[2rem] border border-[var(--border)] bg-white shadow-[0_30px_80px_rgba(16,36,51,0.12)] lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="animate-rise relative grid w-full max-w-5xl overflow-hidden rounded-[2rem] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow)] lg:grid-cols-[1.1fr_0.9fr]">
         <section className="relative hidden overflow-hidden bg-[var(--sidebar)] p-10 text-white lg:block">
           <div
             className="absolute inset-0 opacity-40"
@@ -65,7 +69,7 @@ export default function LoginPage() {
               </h1>
               <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/75">
                 Control centralizado de inventario IT: activos, stock,
-                renovaciones cada 4 años y mantenimiento cada 6 meses.
+                renovación y mantenimiento de laptops.
               </p>
             </div>
             <p className="text-sm text-white/60">

@@ -172,7 +172,7 @@ export default function StockPage() {
           ))}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white">
+        <div className="table-shell">
           <table className="min-w-full text-sm">
             <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
               <tr>

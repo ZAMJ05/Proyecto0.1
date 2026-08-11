@@ -1,7 +1,7 @@
 "use client";
 
 import { LayoutGrid, List, ChevronLeft, ChevronRight } from "lucide-react";
-import { Button, Card, Input, Label } from "./ui";
+import { Button, Input } from "./ui";
 import type { ListViewMode } from "@/hooks/useListControls";
 import { LIST_PAGE_SIZE } from "@/hooks/useListControls";
 import { cn } from "@/lib/utils";
@@ -44,10 +44,10 @@ export function Pager({
   const pages = pageNumbers(page, totalPages);
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-[var(--border)] bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between">
       <p className="text-xs text-[var(--muted)]">
-        Grupo {page} de {totalPages} · mostrando {showingFrom}-{showingTo} de{" "}
-        {total} · {pageSize} por página
+        {showingFrom}-{showingTo} de {total} · pág. {page}/{totalPages} ·{" "}
+        {pageSize}/página
       </p>
       <div className="flex flex-wrap items-center gap-1">
         <Button
@@ -58,7 +58,7 @@ export function Pager({
           onClick={() => onPageChange(page - 1)}
         >
           <ChevronLeft className="h-4 w-4" />
-          Anterior
+          <span className="hidden sm:inline">Anterior</span>
         </Button>
         {pages.map((p, idx) => {
           const prev = pages[idx - 1];
@@ -90,7 +90,7 @@ export function Pager({
           disabled={page >= totalPages}
           onClick={() => onPageChange(page + 1)}
         >
-          Siguiente
+          <span className="hidden sm:inline">Siguiente</span>
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
@@ -112,8 +112,6 @@ export function ListToolbar({
   showingTo,
   total,
   showSerial = true,
-  nameLabel = "Nombre",
-  serialLabel = "Número de serie",
   namePlaceholder = "Buscar por nombre...",
   serialPlaceholder = "Buscar por serial...",
 }: {
@@ -136,67 +134,61 @@ export function ListToolbar({
   serialPlaceholder?: string;
 }) {
   return (
-    <div className="mb-4 space-y-3">
-      <Card className="animate-rise">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div
-            className={cn(
-              "grid flex-1 gap-3",
-              showSerial ? "md:grid-cols-2" : "md:grid-cols-1"
-            )}
-          >
-            <div>
-              <Label>{nameLabel}</Label>
-              <Input
-                value={name}
-                onChange={(e) => onNameChange(e.target.value)}
-                placeholder={namePlaceholder}
-              />
-            </div>
-            {showSerial && (
-              <div>
-                <Label>{serialLabel}</Label>
-                <Input
-                  value={serial}
-                  onChange={(e) => onSerialChange(e.target.value)}
-                  placeholder={serialPlaceholder}
-                />
-              </div>
-            )}
-          </div>
-
-          <div className="flex rounded-xl border border-[var(--border)] bg-white p-1">
-            <button
-              type="button"
-              onClick={() => onViewChange("list")}
-              className={cn(
-                "inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium transition",
-                view === "list"
-                  ? "bg-[var(--accent)] text-white"
-                  : "text-[var(--muted)] hover:bg-[var(--surface-2)]"
-              )}
-              title="Vista en lista"
-            >
-              <List className="h-3.5 w-3.5" />
-              Lista
-            </button>
-            <button
-              type="button"
-              onClick={() => onViewChange("grid")}
-              className={cn(
-                "inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium transition",
-                view === "grid"
-                  ? "bg-[var(--accent)] text-white"
-                  : "text-[var(--muted)] hover:bg-[var(--surface-2)]"
-              )}
-              title="Vista en recuadros"
-            >
-              <LayoutGrid className="h-3.5 w-3.5" />
-              Recuadros
-            </button>
-          </div>
+    <div className="mb-3 space-y-2">
+      <div className="flex flex-col gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3 sm:flex-row sm:items-center">
+        <div
+          className={cn(
+            "grid flex-1 gap-2",
+            showSerial ? "md:grid-cols-2" : "md:grid-cols-1"
+          )}
+        >
+          <Input
+            value={name}
+            onChange={(e) => onNameChange(e.target.value)}
+            placeholder={namePlaceholder}
+            aria-label="Buscar por nombre"
+          />
+          {showSerial && (
+            <Input
+              value={serial}
+              onChange={(e) => onSerialChange(e.target.value)}
+              placeholder={serialPlaceholder}
+              aria-label="Buscar por serial"
+            />
+          )}
         </div>
-      </Card>
+
+        <div className="flex shrink-0 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-1">
+          <button
+            type="button"
+            onClick={() => onViewChange("list")}
+            className={cn(
+              "inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium transition",
+              view === "list"
+                ? "bg-[var(--accent)] text-white"
+                : "text-[var(--muted)] hover:bg-[var(--surface)]"
+            )}
+            title="Vista en lista"
+          >
+            <List className="h-3.5 w-3.5" />
+            Lista
+          </button>
+          <button
+            type="button"
+            onClick={() => onViewChange("grid")}
+            className={cn(
+              "inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium transition",
+              view === "grid"
+                ? "bg-[var(--accent)] text-white"
+                : "text-[var(--muted)] hover:bg-[var(--surface)]"
+            )}
+            title="Vista en recuadros"
+          >
+            <LayoutGrid className="h-3.5 w-3.5" />
+            Tarjetas
+          </button>
+        </div>
+      </div>
 
       <Pager
         page={page}
@@ -221,7 +213,7 @@ export function ListFooter(props: {
 }) {
   if (props.total === 0) return null;
   return (
-    <div className="mt-4">
+    <div className="mt-3">
       <Pager {...props} />
     </div>
   );

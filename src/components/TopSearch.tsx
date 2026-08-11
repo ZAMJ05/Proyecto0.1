@@ -353,7 +353,7 @@ export function TopSearch() {
           className="pl-10"
         />
         {open && results && (
-          <div className="absolute z-30 mt-2 max-h-96 w-full overflow-auto rounded-2xl border border-[var(--border)] bg-white p-3 shadow-xl">
+          <div className="absolute z-30 mt-2 max-h-96 w-full overflow-auto rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3 shadow-xl">
             {pending && (
               <p className="px-2 py-1 text-xs text-[var(--muted)]">Buscando...</p>
             )}

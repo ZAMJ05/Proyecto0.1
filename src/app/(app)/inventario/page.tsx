@@ -52,7 +52,7 @@ function InventarioContent() {
   const [submitting, setSubmitting] = useState(false);
   const [filters, setFilters] = useState({
     q: "",
-    category: "",
+    category: searchParams.get("category") || "",
     status: searchParams.get("status") || "",
     brand: "",
     serialNumber: "",
@@ -297,7 +297,7 @@ function InventarioContent() {
       ) : list.total === 0 ? (
         <EmptyState text="No hay equipos con estos filtros." />
       ) : list.view === "list" ? (
-        <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white shadow-sm">
+        <div className="table-shell">
           <table className="min-w-full text-left text-sm">
             <thead className="bg-[var(--surface-2)] text-xs uppercase tracking-wide text-[var(--muted)]">
               <tr>

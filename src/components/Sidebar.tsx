@@ -31,22 +31,22 @@ export function Sidebar({ user }: { user: SessionUser }) {
   const pathname = usePathname();
 
   return (
-    <aside className="flex w-72 shrink-0 flex-col border-r border-[var(--border)] bg-[var(--sidebar)] text-white">
-      <div className="border-b border-white/10 px-5 py-6">
+    <aside className="flex w-64 shrink-0 flex-col border-r border-[var(--border)] bg-[var(--sidebar)] text-[var(--sidebar-text)]">
+      <div className="border-b border-white/10 px-4 py-5">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--accent)] shadow-lg shadow-teal-900/30">
-            <MonitorSmartphone className="h-5 w-5" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent)]">
+            <MonitorSmartphone className="h-5 w-5 text-white" />
           </div>
           <div>
-            <p className="font-[family-name:var(--font-display)] text-xl leading-none tracking-tight">
+            <p className="font-[family-name:var(--font-display)] text-lg leading-none tracking-tight">
               AssetDesk
             </p>
-            <p className="mt-1 text-xs text-white/60">Inventario IT</p>
+            <p className="mt-1 text-xs text-white/55">Inventario IT</p>
           </div>
         </div>
       </div>
 
-      <nav className="flex-1 space-y-1 px-3 py-4">
+      <nav className="flex-1 space-y-0.5 px-2 py-3">
         {links.map((link) => {
           const active = pathname.startsWith(link.href);
           const Icon = link.icon;
@@ -55,13 +55,13 @@ export function Sidebar({ user }: { user: SessionUser }) {
               key={link.href}
               href={link.href}
               className={cn(
-                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition",
+                "flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition",
                 active
                   ? "bg-white/12 text-white"
-                  : "text-white/70 hover:bg-white/8 hover:text-white"
+                  : "text-white/65 hover:bg-white/8 hover:text-white"
               )}
             >
-              <Icon className="h-4 w-4" />
+              <Icon className="h-4 w-4 shrink-0" />
               {link.label}
             </Link>
           );
@@ -70,23 +70,23 @@ export function Sidebar({ user }: { user: SessionUser }) {
           <Link
             href="/usuarios"
             className={cn(
-              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition",
+              "flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition",
               pathname.startsWith("/usuarios")
                 ? "bg-white/12 text-white"
-                : "text-white/70 hover:bg-white/8 hover:text-white"
+                : "text-white/65 hover:bg-white/8 hover:text-white"
             )}
           >
-            <UserCog className="h-4 w-4" />
+            <UserCog className="h-4 w-4 shrink-0" />
             Accesos app
           </Link>
         )}
       </nav>
 
-      <div className="border-t border-white/10 p-4">
-        <div className="mb-3 rounded-xl bg-white/8 px-3 py-3">
-          <p className="text-sm font-medium">{user.name}</p>
-          <p className="text-xs text-white/60">{user.email}</p>
-          <p className="mt-1 text-[11px] uppercase tracking-wide text-teal-200">
+      <div className="border-t border-white/10 p-3">
+        <div className="mb-2 rounded-xl bg-white/8 px-3 py-2.5">
+          <p className="truncate text-sm font-medium">{user.name}</p>
+          <p className="truncate text-xs text-white/55">{user.email}</p>
+          <p className="mt-1 text-[11px] uppercase tracking-wide text-teal-200/90">
             {user.role === "ADMIN" ? "Administrador" : "Solo lectura"}
           </p>
         </div>

@@ -14,11 +14,17 @@ export async function GET(request: Request) {
     soon.setDate(soon.getDate() + 90);
 
     const maintenances = await prisma.maintenance.findMany({
-      where: lifecycle
-        ? undefined
-        : {
-            completedDate: null,
-          },
+      where: {
+        ...(lifecycle
+          ? {}
+          : {
+              completedDate: null,
+            }),
+        asset: {
+          category: "Laptop",
+          status: { not: "Baja" },
+        },
+      },
       orderBy: { scheduledDate: "asc" },
       include: {
         asset: {
@@ -34,6 +40,7 @@ export async function GET(request: Request) {
 
     const renewals = await prisma.asset.findMany({
       where: {
+        category: "Laptop",
         status: { in: ["Activo", "Stock", "Reparacion", "Inactivo"] },
       },
       orderBy: { renewalDate: "asc" },
@@ -46,10 +53,9 @@ export async function GET(request: Request) {
     });
 
     const lifecycleItems = renewals.map((asset) => {
-      const days =
-        Math.ceil(
-          (asset.renewalDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-        );
+      const days = Math.ceil(
+        (asset.renewalDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+      );
       let renewalStatus = "Vigente";
       if (days < 0) renewalStatus = "Vencido";
       else if (days <= 90) renewalStatus = "Por renovar";
@@ -90,6 +96,9 @@ export async function POST(request: Request) {
       include: { asset: true },
     });
     if (!maintenance) return jsonError("Mantenimiento no encontrado", 404);
+    if (maintenance.asset.category !== "Laptop") {
+      return jsonError("El mantenimiento solo aplica a laptops", 400);
+    }
 
     if (action === "complete") {
       const completed = await prisma.maintenance.update({
@@ -107,7 +116,7 @@ export async function POST(request: Request) {
           assetId: maintenance.assetId,
           scheduledDate: nextDate,
           status: "Pendiente",
-          notes: "Mantenimiento preventivo cada 6 meses",
+          notes: "Mantenimiento preventivo cada 6 meses (laptops)",
         },
       });
 

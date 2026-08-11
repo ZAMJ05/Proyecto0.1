@@ -207,7 +207,7 @@ export default function AsignacionesPage() {
         {activeList.total === 0 ? (
           <EmptyState text="No hay asignaciones activas." />
         ) : activeList.view === "list" ? (
-          <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white">
+          <div className="table-shell">
             <table className="min-w-full text-sm">
               <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
                 <tr>
@@ -339,7 +339,7 @@ export default function AsignacionesPage() {
             ))}
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white">
+          <div className="table-shell">
             <table className="min-w-full text-sm">
               <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
                 <tr>

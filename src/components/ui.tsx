@@ -19,7 +19,7 @@ export function Card({
       id={id}
       onClick={onClick}
       className={cn(
-        "rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[0_8px_30px_rgba(15,36,52,0.06)]",
+        "rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[var(--shadow)] sm:p-5",
         onClick && "cursor-pointer transition hover:-translate-y-0.5 hover:border-[var(--accent)]",
         className
       )}
@@ -40,7 +40,7 @@ export function Button({
     primary:
       "bg-[var(--accent)] text-white hover:bg-[var(--accent-strong)] shadow-sm",
     secondary:
-      "bg-white text-[var(--ink)] border border-[var(--border)] hover:bg-[var(--surface-2)]",
+      "bg-[var(--surface)] text-[var(--ink)] border border-[var(--border)] hover:bg-[var(--surface-2)]",
     danger: "bg-[var(--danger)] text-white hover:opacity-90",
     ghost: "bg-transparent text-[var(--muted)] hover:bg-[var(--surface-2)]",
   };
@@ -63,7 +63,7 @@ export function Input({
   return (
     <input
       className={cn(
-        "w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-sm outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]",
+        "w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]",
         className
       )}
       {...props}
@@ -79,7 +79,7 @@ export function Select({
   return (
     <select
       className={cn(
-        "w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-sm outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]",
+        "w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]",
         className
       )}
       {...props}
@@ -96,7 +96,7 @@ export function Textarea({
   return (
     <textarea
       className={cn(
-        "w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-sm outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]",
+        "w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]",
         className
       )}
       {...props}
@@ -120,11 +120,11 @@ export function Badge({
   tone?: "neutral" | "success" | "warn" | "danger" | "info";
 }) {
   const tones = {
-    neutral: "bg-slate-100 text-slate-700",
-    success: "bg-emerald-100 text-emerald-800",
-    warn: "bg-amber-100 text-amber-800",
-    danger: "bg-rose-100 text-rose-800",
-    info: "bg-sky-100 text-sky-800",
+    neutral: "bg-[var(--badge-neutral-bg)] text-[var(--badge-neutral-fg)]",
+    success: "bg-[var(--badge-success-bg)] text-[var(--badge-success-fg)]",
+    warn: "bg-[var(--badge-warn-bg)] text-[var(--badge-warn-fg)]",
+    danger: "bg-[var(--badge-danger-bg)] text-[var(--badge-danger-fg)]",
+    info: "bg-[var(--badge-info-bg)] text-[var(--badge-info-fg)]",
   };
   return (
     <span
@@ -148,13 +148,13 @@ export function PageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <h1 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-[var(--ink)]">
+        <h1 className="font-[family-name:var(--font-display)] text-2xl tracking-tight text-[var(--ink)] sm:text-3xl">
           {title}
         </h1>
         {subtitle && (
-          <p className="mt-1 text-sm text-[var(--muted)]">{subtitle}</p>
+          <p className="mt-1 max-w-2xl text-sm text-[var(--muted)]">{subtitle}</p>
         )}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
@@ -164,7 +164,7 @@ export function PageHeader({
 
 export function EmptyState({ text }: { text: string }) {
   return (
-    <div className="rounded-2xl border border-dashed border-[var(--border)] bg-white/60 px-6 py-12 text-center text-sm text-[var(--muted)]">
+    <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface-2)] px-6 py-10 text-center text-sm text-[var(--muted)]">
       {text}
     </div>
   );

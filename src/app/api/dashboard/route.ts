@@ -17,8 +17,12 @@ export async function GET() {
       recentChanges,
       byCategory,
       byStatus,
+      laptopsActive,
+      laptopsInactive,
+      laptopsStock,
+      laptopsReparacion,
     ] = await Promise.all([
-      prisma.asset.count(),
+      prisma.asset.count({ where: { status: { not: "Baja" } } }),
       prisma.asset.count({ where: { status: "Activo" } }),
       prisma.asset.count({ where: { status: "Stock" } }),
       prisma.asset.count({ where: { status: "Inactivo" } }),
@@ -30,8 +34,28 @@ export async function GET() {
         orderBy: { createdAt: "desc" },
         include: { asset: { select: { name: true, serialNumber: true } } },
       }),
-      prisma.asset.groupBy({ by: ["category"], _count: { _all: true } }),
-      prisma.asset.groupBy({ by: ["status"], _count: { _all: true } }),
+      prisma.asset.groupBy({
+        by: ["category"],
+        where: { status: { not: "Baja" } },
+        _count: { _all: true },
+      }),
+      prisma.asset.groupBy({
+        by: ["status"],
+        where: { status: { not: "Baja" } },
+        _count: { _all: true },
+      }),
+      prisma.asset.count({
+        where: { category: "Laptop", status: "Activo" },
+      }),
+      prisma.asset.count({
+        where: { category: "Laptop", status: "Inactivo" },
+      }),
+      prisma.asset.count({
+        where: { category: "Laptop", status: "Stock" },
+      }),
+      prisma.asset.count({
+        where: { category: "Laptop", status: "Reparacion" },
+      }),
     ]);
 
     const activeAssets = await prisma.asset.findMany({
@@ -48,7 +72,7 @@ export async function GET() {
       (a) => a.assignments.length === 0
     ).length;
 
-    const disabled = inactive + baja;
+    const disabled = inactive;
 
     const now = new Date();
     const in90 = new Date();
@@ -56,7 +80,8 @@ export async function GET() {
 
     const renewalsDue = await prisma.asset.count({
       where: {
-        status: { in: ["Activo", "Stock", "Reparacion"] },
+        category: "Laptop",
+        status: { in: ["Activo", "Stock", "Reparacion", "Inactivo"] },
         renewalDate: { lte: in90 },
       },
     });
@@ -66,6 +91,10 @@ export async function GET() {
         status: { in: ["Pendiente", "Próximo"] },
         scheduledDate: { lte: in90 },
         completedDate: null,
+        asset: {
+          category: "Laptop",
+          status: { not: "Baja" },
+        },
       },
     });
 
@@ -76,10 +105,18 @@ export async function GET() {
         activeUnassigned,
         total,
         disabled,
+        baja,
         stock,
         reparacion,
         renewalsDue,
         maintenancesDue,
+        laptops: {
+          active: laptopsActive,
+          inactive: laptopsInactive,
+          stock: laptopsStock,
+          reparacion: laptopsReparacion,
+          tracked: laptopsActive + laptopsInactive + laptopsStock + laptopsReparacion,
+        },
       },
       recentChanges,
       charts: {
@@ -91,6 +128,12 @@ export async function GET() {
           name: s.status,
           value: s._count._all,
         })),
+        laptopsByStatus: [
+          { name: "Activas", value: laptopsActive },
+          { name: "Inactivas", value: laptopsInactive },
+          { name: "Stock", value: laptopsStock },
+          { name: "Reparación", value: laptopsReparacion },
+        ].filter((x) => x.value > 0),
       },
     });
   } catch (error) {

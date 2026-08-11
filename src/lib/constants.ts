@@ -20,7 +20,7 @@ export const ASSET_STATUSES = [
   "Reparacion",
 ] as const;
 
-export const COMPUTING_CATEGORIES = ["Laptop", "Monitor", "MeetingBar"] as const;
+export const COMPUTING_CATEGORIES = ["Laptop"] as const;
 
 export const CATEGORY_LABELS: Record<string, string> = {
   Laptop: "Laptop",

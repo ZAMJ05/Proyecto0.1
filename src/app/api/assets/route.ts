@@ -174,13 +174,13 @@ export async function POST(request: Request) {
       },
     });
 
-    if (["Laptop", "Monitor", "MeetingBar"].includes(category)) {
+    if (category === "Laptop") {
       await prisma.maintenance.create({
         data: {
           assetId: asset.id,
           scheduledDate: addMonths(purchaseDate, 6),
           status: "Pendiente",
-          notes: "Mantenimiento preventivo cada 6 meses",
+          notes: "Mantenimiento preventivo cada 6 meses (laptops)",
         },
       });
     }
