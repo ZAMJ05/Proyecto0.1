@@ -98,6 +98,13 @@ powershell -ExecutionPolicy Bypass -File .\scripts\windows\test-autostart.ps1
 
 Si falla, revisa `logs\assetdesk-startup.log`.
 
+Si `npm run build` marca **EPERM** con `query_engine-windows.dll.node`, detén la app primero:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\windows\stop-assetdesk.ps1
+npm run build
+```
+
 ## Variables de entorno
 
 Copia `.env.example` a `.env`:

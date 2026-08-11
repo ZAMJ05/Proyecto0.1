@@ -28,7 +28,17 @@ powershell -ExecutionPolicy Bypass -File .\scripts\windows\test-autostart.ps1
 
 Luego abre: http://localhost:3000
 
-## Si no funciona
+## Error EPERM al hacer `npm run build`
+
+Significa que la app **sigue corriendo** y Windows bloquea el DLL de Prisma.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\windows\stop-assetdesk.ps1
+npm run build
+npm run start:lan
+```
+
+## Si el autostart no funciona
 
 1. Mira el log:
    ```powershell
