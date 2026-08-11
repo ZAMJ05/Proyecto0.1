@@ -128,6 +128,9 @@ function InventarioContent() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "No se pudo guardar");
+      if (!editing && data.createdCount > 1) {
+        alert(`Se registraron ${data.createdCount} productos correctamente.`);
+      }
       setShowForm(false);
       setEditing(null);
       await load();
@@ -306,6 +309,7 @@ function InventarioContent() {
                   }
                 : undefined
             }
+            mode={editing ? "edit" : "create"}
             submitting={submitting}
             onCancel={() => {
               setShowForm(false);

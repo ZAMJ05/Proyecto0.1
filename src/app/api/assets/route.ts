@@ -7,7 +7,14 @@ import {
   addYears,
   ASSET_CATEGORIES,
   ASSET_STATUSES,
+  supportsQuantity,
 } from "@/lib/constants";
+
+function withIndex(base: string, index: number, total: number) {
+  if (total <= 1) return base;
+  const pad = String(index).padStart(Math.max(2, String(total).length), "0");
+  return `${base}-${pad}`;
+}
 
 function buildWhere(searchParams: URLSearchParams): Prisma.AssetWhereInput {
   const where: Prisma.AssetWhereInput = {};
@@ -150,42 +157,89 @@ export async function POST(request: Request) {
       ? new Date(body.renewalDate)
       : addYears(purchaseDate, 4);
 
-    const asset = await prisma.asset.create({
-      data: {
-        name,
-        category,
-        brand,
-        model,
-        serialNumber,
-        inventoryNumber,
-        status,
-        purchaseDate,
-        renewalDate,
-        anydesk,
-        notes,
-      },
-    });
+    const rawQty = Number(body.quantity ?? 1);
+    const quantity = supportsQuantity(category)
+      ? Math.max(1, Math.min(100, Number.isFinite(rawQty) ? Math.floor(rawQty) : 1))
+      : 1;
 
-    await prisma.activityLog.create({
-      data: {
-        assetId: asset.id,
-        action: "Alta",
-        details: `Equipo ${asset.name} dado de alta (${asset.status})`,
-      },
-    });
+    const planned = Array.from({ length: quantity }, (_, i) => ({
+      serialNumber: withIndex(serialNumber, i + 1, quantity),
+      inventoryNumber: withIndex(inventoryNumber, i + 1, quantity),
+    }));
 
-    if (category === "Laptop") {
-      await prisma.maintenance.create({
-        data: {
-          assetId: asset.id,
-          scheduledDate: addMonths(purchaseDate, 6),
-          status: "Pendiente",
-          notes: "Mantenimiento preventivo cada 6 meses (laptops)",
-        },
-      });
+    const serials = planned.map((p) => p.serialNumber);
+    const inventories = planned.map((p) => p.inventoryNumber);
+
+    const conflicts = await prisma.asset.findMany({
+      where: {
+        OR: [
+          { serialNumber: { in: serials } },
+          { inventoryNumber: { in: inventories } },
+        ],
+      },
+      select: { serialNumber: true, inventoryNumber: true },
+    });
+    if (conflicts.length > 0) {
+      const detail = conflicts
+        .map((c) => `${c.serialNumber}/${c.inventoryNumber}`)
+        .slice(0, 5)
+        .join(", ");
+      return jsonError(
+        `Ya existen serial o inventario en conflicto: ${detail}`,
+        400
+      );
     }
 
-    return jsonOk({ asset }, 201);
+    const created = [];
+    for (let i = 0; i < quantity; i++) {
+      const asset = await prisma.asset.create({
+        data: {
+          name: quantity > 1 ? `${name} (${i + 1}/${quantity})` : name,
+          category,
+          brand,
+          model,
+          serialNumber: planned[i].serialNumber,
+          inventoryNumber: planned[i].inventoryNumber,
+          status,
+          purchaseDate,
+          renewalDate,
+          anydesk: quantity > 1 ? null : anydesk,
+          notes,
+        },
+      });
+      created.push(asset);
+
+      await prisma.activityLog.create({
+        data: {
+          assetId: asset.id,
+          action: "Alta",
+          details:
+            quantity > 1
+              ? `Equipo ${asset.name} dado de alta (${asset.status}) · lote ${i + 1}/${quantity}`
+              : `Equipo ${asset.name} dado de alta (${asset.status})`,
+        },
+      });
+
+      if (category === "Laptop") {
+        await prisma.maintenance.create({
+          data: {
+            assetId: asset.id,
+            scheduledDate: addMonths(purchaseDate, 6),
+            status: "Pendiente",
+            notes: "Mantenimiento preventivo cada 6 meses (laptops)",
+          },
+        });
+      }
+    }
+
+    return jsonOk(
+      {
+        asset: created[0],
+        assets: created,
+        createdCount: created.length,
+      },
+      201
+    );
   } catch (error) {
     return handleApiError(error);
   }

@@ -2,7 +2,12 @@
 
 import { useMemo, useState } from "react";
 import { Button, Input, Label, Select, Textarea } from "./ui";
-import { ASSET_CATEGORIES, ASSET_STATUSES, addYears } from "@/lib/constants";
+import {
+  ASSET_CATEGORIES,
+  ASSET_STATUSES,
+  addYears,
+  supportsQuantity,
+} from "@/lib/constants";
 import { toInputDate } from "@/lib/utils";
 
 export type AssetFormValues = {
@@ -17,6 +22,7 @@ export type AssetFormValues = {
   renewalDate: string;
   anydesk: string;
   notes: string;
+  quantity: number;
 };
 
 const empty: AssetFormValues = {
@@ -31,6 +37,7 @@ const empty: AssetFormValues = {
   renewalDate: toInputDate(addYears(new Date(), 4)),
   anydesk: "",
   notes: "",
+  quantity: 1,
 };
 
 export function AssetForm({
@@ -38,22 +45,32 @@ export function AssetForm({
   onSubmit,
   onCancel,
   submitting,
+  mode = "create",
 }: {
   initial?: Partial<AssetFormValues>;
   onSubmit: (values: AssetFormValues) => Promise<void> | void;
   onCancel: () => void;
   submitting?: boolean;
+  mode?: "create" | "edit";
 }) {
-  const [values, setValues] = useState<AssetFormValues>({ ...empty, ...initial });
+  const [values, setValues] = useState<AssetFormValues>({
+    ...empty,
+    ...initial,
+    quantity: 1,
+  });
   const [error, setError] = useState("");
 
   const showAnydesk = values.category === "Laptop" && values.status === "Activo";
+  const showQuantity = mode === "create" && supportsQuantity(values.category);
   const statusOptions = useMemo(() => {
     if (values.category === "Laptop") return ASSET_STATUSES;
     return ASSET_STATUSES.filter((s) => s !== "Reparacion");
   }, [values.category]);
 
-  function update<K extends keyof AssetFormValues>(key: K, value: AssetFormValues[K]) {
+  function update<K extends keyof AssetFormValues>(
+    key: K,
+    value: AssetFormValues[K]
+  ) {
     setValues((prev) => {
       const next = { ...prev, [key]: value };
       if (key === "purchaseDate" && value) {
@@ -62,6 +79,9 @@ export function AssetForm({
       if (key === "category" && value !== "Laptop" && next.status === "Reparacion") {
         next.status = "Activo";
       }
+      if (key === "category" && !supportsQuantity(String(value))) {
+        next.quantity = 1;
+      }
       return next;
     });
   }
@@ -69,8 +89,9 @@ export function AssetForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    const qty = showQuantity ? Math.max(1, Math.min(100, Number(values.quantity) || 1)) : 1;
     try {
-      await onSubmit(values);
+      await onSubmit({ ...values, quantity: qty });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al guardar");
     }
@@ -130,7 +151,11 @@ export function AssetForm({
           />
         </div>
         <div>
-          <Label>Número serial</Label>
+          <Label>
+            {showQuantity && values.quantity > 1
+              ? "Serial base"
+              : "Número serial"}
+          </Label>
           <Input
             required
             value={values.serialNumber}
@@ -138,13 +163,37 @@ export function AssetForm({
           />
         </div>
         <div>
-          <Label>No. inventario</Label>
+          <Label>
+            {showQuantity && values.quantity > 1
+              ? "No. inventario base"
+              : "No. inventario"}
+          </Label>
           <Input
             required
             value={values.inventoryNumber}
             onChange={(e) => update("inventoryNumber", e.target.value)}
           />
         </div>
+        {showQuantity && (
+          <div className="sm:col-span-2">
+            <Label>Cantidad de productos</Label>
+            <Input
+              type="number"
+              min={1}
+              max={100}
+              required
+              value={values.quantity}
+              onChange={(e) =>
+                update("quantity", Math.max(1, Number(e.target.value) || 1))
+              }
+            />
+            <p className="mt-1 text-xs text-[var(--muted)]">
+              {values.quantity > 1
+                ? `Se crearán ${values.quantity} registros con sufijos -01, -02… en serial e inventario.`
+                : "Usa más de 1 si registras varias unidades iguales (mouse, teclado, dock, etc.)."}
+            </p>
+          </div>
+        )}
         <div>
           <Label>Fecha de compra</Label>
           <Input
@@ -188,7 +237,11 @@ export function AssetForm({
           Cancelar
         </Button>
         <Button type="submit" disabled={submitting}>
-          {submitting ? "Guardando..." : "Guardar"}
+          {submitting
+            ? "Guardando..."
+            : showQuantity && values.quantity > 1
+              ? `Registrar ${values.quantity}`
+              : "Guardar"}
         </Button>
       </div>
     </form>

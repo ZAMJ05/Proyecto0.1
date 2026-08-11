@@ -22,6 +22,21 @@ export const ASSET_STATUSES = [
 
 export const COMPUTING_CATEGORIES = ["Laptop"] as const;
 
+/** Categorías donde suele aplicar registrar varias unidades a la vez */
+export const QUANTITY_CATEGORIES = [
+  "Mouse",
+  "Teclado",
+  "Adaptador",
+  "Dock",
+  "AccesPoint",
+  "Switch",
+  "Otros",
+] as const;
+
+export function supportsQuantity(category: string) {
+  return (QUANTITY_CATEGORIES as readonly string[]).includes(category);
+}
+
 export const CATEGORY_LABELS: Record<string, string> = {
   Laptop: "Laptop",
   Monitor: "Monitor",
