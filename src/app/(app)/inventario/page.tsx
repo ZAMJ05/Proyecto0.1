@@ -16,6 +16,7 @@ import {
 } from "@/components/ui";
 import { AssetForm, AssetFormValues } from "@/components/AssetForm";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
+import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
 import { ASSET_CATEGORIES, ASSET_STATUSES } from "@/lib/constants";
 import { formatDate, toInputDate } from "@/lib/utils";
@@ -93,7 +94,26 @@ function InventarioContent() {
     defaultView: "list",
     getName: (a) => a.name,
     getSerial: (a) => `${a.serialNumber} ${a.inventoryNumber}`,
-    sortFn: (a, b) => a.name.localeCompare(b.name, "es"),
+    defaultSortKey: "name",
+    sortFields: {
+      name: { label: "Nombre", getValue: (a) => a.name },
+      category: { label: "Categoría", getValue: (a) => a.category },
+      serial: { label: "Serial", getValue: (a) => a.serialNumber },
+      status: { label: "Estado", getValue: (a) => a.status },
+      assigned: {
+        label: "Asignado",
+        getValue: (a) => a.assignments[0]?.employee.name || "",
+      },
+      purchase: {
+        label: "Compra",
+        getValue: (a) => new Date(a.purchaseDate).getTime(),
+      },
+      renewal: {
+        label: "Renovación",
+        getValue: (a) => new Date(a.renewalDate).getTime(),
+      },
+      anydesk: { label: "AnyDesk", getValue: (a) => a.anydesk || "" },
+    },
   });
 
   async function saveAsset(values: AssetFormValues) {
@@ -257,6 +277,10 @@ function InventarioContent() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
+        sortOptions={list.sortOptions}
+        sortKey={list.sortKey}
+        sortDir={list.sortDir}
+        onSortChange={list.setSort}
       />
 
       {showForm && role === "ADMIN" && (
@@ -301,13 +325,55 @@ function InventarioContent() {
           <table className="min-w-full text-left text-sm">
             <thead className="bg-[var(--surface-2)] text-xs uppercase tracking-wide text-[var(--muted)]">
               <tr>
-                <th className="px-4 py-3">Activo</th>
-                <th className="px-4 py-3">Categoría</th>
-                <th className="px-4 py-3">Serial / Inv.</th>
-                <th className="px-4 py-3">Estado</th>
-                <th className="px-4 py-3">Asignado</th>
-                <th className="px-4 py-3">Compra / Renov.</th>
-                <th className="px-4 py-3">AnyDesk</th>
+                <SortableTh
+                  label="Activo"
+                  columnKey="name"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="Categoría"
+                  columnKey="category"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="Serial / Inv."
+                  columnKey="serial"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="Estado"
+                  columnKey="status"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="Asignado"
+                  columnKey="assigned"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="Compra / Renov."
+                  columnKey="purchase"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="AnyDesk"
+                  columnKey="anydesk"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
                 {role === "ADMIN" && <th className="px-4 py-3">Acciones</th>}
               </tr>
             </thead>

@@ -3,12 +3,41 @@
 import { useEffect, useMemo, useState } from "react";
 
 export type ListViewMode = "grid" | "list";
+export type SortDir = "asc" | "desc";
+export type SortValue = string | number | null | undefined;
 export const LIST_PAGE_SIZE = 25;
+
+export type SortFieldDef<T> = {
+  label: string;
+  getValue: (item: T) => SortValue;
+};
 
 function readView(storageKey: string, fallback: ListViewMode): ListViewMode {
   if (typeof window === "undefined") return fallback;
   const saved = window.localStorage.getItem(`assetdesk-view:${storageKey}`);
   return saved === "list" || saved === "grid" ? saved : fallback;
+}
+
+export function compareSortValues(
+  a: SortValue,
+  b: SortValue,
+  dir: SortDir
+): number {
+  const mul = dir === "asc" ? 1 : -1;
+  const emptyA = a == null || a === "";
+  const emptyB = b == null || b === "";
+  if (emptyA && emptyB) return 0;
+  if (emptyA) return 1;
+  if (emptyB) return -1;
+  if (typeof a === "number" && typeof b === "number") {
+    return (a - b) * mul;
+  }
+  return (
+    String(a).localeCompare(String(b), "es", {
+      sensitivity: "base",
+      numeric: true,
+    }) * mul
+  );
 }
 
 export function useListControls<T>(
@@ -17,18 +46,29 @@ export function useListControls<T>(
     storageKey: string;
     getName: (item: T) => string;
     getSerial?: (item: T) => string;
-    /** Orden estable antes de paginar */
+    /** @deprecated Prefer sortFields + defaultSortKey */
     sortFn?: (a: T, b: T) => number;
+    sortFields?: Record<string, SortFieldDef<T>>;
+    defaultSortKey?: string;
+    defaultSortDir?: SortDir;
     defaultView?: ListViewMode;
     pageSize?: number;
   }
 ) {
   const pageSize = options.pageSize ?? LIST_PAGE_SIZE;
   const defaultView = options.defaultView ?? "list";
+  const sortFields = options.sortFields;
+  const defaultSortKey =
+    options.defaultSortKey ||
+    (sortFields ? Object.keys(sortFields)[0] : undefined);
+  const defaultSortDir = options.defaultSortDir ?? "asc";
+
   const [name, setName] = useState("");
   const [serial, setSerial] = useState("");
   const [view, setViewState] = useState<ListViewMode>(defaultView);
   const [page, setPage] = useState(1);
+  const [sortKey, setSortKey] = useState<string | undefined>(defaultSortKey);
+  const [sortDir, setSortDir] = useState<SortDir>(defaultSortDir);
 
   useEffect(() => {
     setViewState(readView(options.storageKey, defaultView));
@@ -39,6 +79,24 @@ export function useListControls<T>(
     if (typeof window !== "undefined") {
       window.localStorage.setItem(`assetdesk-view:${options.storageKey}`, next);
     }
+  }
+
+  function toggleSort(key: string) {
+    if (!sortFields?.[key]) return;
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+    setPage(1);
+  }
+
+  function setSort(key: string, dir?: SortDir) {
+    if (!sortFields?.[key]) return;
+    setSortKey(key);
+    setSortDir(dir ?? "asc");
+    setPage(1);
   }
 
   const filtered = useMemo(() => {
@@ -52,6 +110,13 @@ export function useListControls<T>(
       return matchName && matchSerial;
     });
 
+    if (sortFields && sortKey && sortFields[sortKey]) {
+      const getter = sortFields[sortKey].getValue;
+      return [...result].sort((a, b) =>
+        compareSortValues(getter(a), getter(b), sortDir)
+      );
+    }
+
     const sorter =
       options.sortFn ||
       ((a: T, b: T) =>
@@ -60,7 +125,17 @@ export function useListControls<T>(
         }));
 
     return [...result].sort(sorter);
-  }, [items, name, serial, options.getName, options.getSerial, options.sortFn]);
+  }, [
+    items,
+    name,
+    serial,
+    options.getName,
+    options.getSerial,
+    options.sortFn,
+    sortFields,
+    sortKey,
+    sortDir,
+  ]);
 
   useEffect(() => {
     setPage(1);
@@ -75,6 +150,13 @@ export function useListControls<T>(
   useEffect(() => {
     if (page !== safePage) setPage(safePage);
   }, [page, safePage]);
+
+  const sortOptions = sortFields
+    ? Object.entries(sortFields).map(([key, def]) => ({
+        key,
+        label: def.label,
+      }))
+    : [];
 
   return {
     name,
@@ -92,5 +174,10 @@ export function useListControls<T>(
     totalPages,
     showingFrom: total === 0 ? 0 : start + 1,
     showingTo: Math.min(start + pageSize, total),
+    sortKey,
+    sortDir,
+    toggleSort,
+    setSort,
+    sortOptions,
   };
 }
