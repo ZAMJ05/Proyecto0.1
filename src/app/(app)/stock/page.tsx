@@ -11,6 +11,7 @@ import {
   statusTone,
 } from "@/components/ui";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
+import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
 import { CATEGORY_LABELS } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
@@ -53,9 +54,20 @@ export default function StockPage() {
     defaultView: "list",
     getName: (a) => a.name,
     getSerial: (a) => `${a.serialNumber} ${a.inventoryNumber}`,
-    sortFn: (a, b) =>
-      a.category.localeCompare(b.category, "es") ||
-      a.name.localeCompare(b.name, "es"),
+    defaultSortKey: "name",
+    sortFields: {
+      name: { label: "Nombre", getValue: (a) => a.name },
+      category: { label: "Categoría", getValue: (a) => a.category },
+      serial: { label: "Serial", getValue: (a) => a.serialNumber },
+      inventory: {
+        label: "Inventario",
+        getValue: (a) => a.inventoryNumber,
+      },
+      purchase: {
+        label: "Compra",
+        getValue: (a) => new Date(a.purchaseDate).getTime(),
+      },
+    },
   });
 
   return (
@@ -130,6 +142,10 @@ export default function StockPage() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
+        sortOptions={list.sortOptions}
+        sortKey={list.sortKey}
+        sortDir={list.sortDir}
+        onSortChange={list.setSort}
       />
 
       {list.total === 0 ? (
@@ -176,11 +192,41 @@ export default function StockPage() {
           <table className="min-w-full text-sm">
             <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
               <tr>
-                <th className="px-4 py-3 text-left">Nombre</th>
-                <th className="px-4 py-3 text-left">Categoría</th>
-                <th className="px-4 py-3 text-left">Serial</th>
-                <th className="px-4 py-3 text-left">Inventario</th>
-                <th className="px-4 py-3 text-left">Compra</th>
+                <SortableTh
+                  label="Nombre"
+                  columnKey="name"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="Categoría"
+                  columnKey="category"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="Serial"
+                  columnKey="serial"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="Inventario"
+                  columnKey="inventory"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="Compra"
+                  columnKey="purchase"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
               </tr>
             </thead>
             <tbody>

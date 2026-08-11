@@ -13,6 +13,7 @@ import {
   Select,
 } from "@/components/ui";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
+import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
 
 type Position = { id: string; name: string };
@@ -117,7 +118,23 @@ export default function EmpleadosPage() {
     getName: (e) => `${e.name} ${e.email || ""}`,
     getSerial: (e) =>
       e.assignments.map((a) => a.asset.serialNumber).join(" "),
-    sortFn: (a, b) => a.name.localeCompare(b.name, "es"),
+    defaultSortKey: "name",
+    sortFields: {
+      name: { label: "Usuario", getValue: (e) => e.name },
+      position: {
+        label: "Puesto",
+        getValue: (e) => e.position?.name || "",
+      },
+      assets: {
+        label: "Activos",
+        getValue: (e) => e.assignments.length,
+      },
+      serials: {
+        label: "Seriales",
+        getValue: (e) =>
+          e.assignments.map((a) => a.asset.serialNumber).join(", "),
+      },
+    },
   });
 
   return (
@@ -193,6 +210,10 @@ export default function EmpleadosPage() {
         total={list.total}
         namePlaceholder="Nombre o email..."
         serialPlaceholder="Serial de equipo asignado..."
+        sortOptions={list.sortOptions}
+        sortKey={list.sortKey}
+        sortDir={list.sortDir}
+        onSortChange={list.setSort}
       />
 
       {list.total === 0 ? (
@@ -263,10 +284,34 @@ export default function EmpleadosPage() {
           <table className="min-w-full text-sm">
             <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
               <tr>
-                <th className="px-4 py-3 text-left">Usuario</th>
-                <th className="px-4 py-3 text-left">Puesto</th>
-                <th className="px-4 py-3 text-left">Activos</th>
-                <th className="px-4 py-3 text-left">Seriales</th>
+                <SortableTh
+                  label="Usuario"
+                  columnKey="name"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="Puesto"
+                  columnKey="position"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="Activos"
+                  columnKey="assets"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="Seriales"
+                  columnKey="serials"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
                 {role === "ADMIN" && (
                   <th className="px-4 py-3 text-left">Acciones</th>
                 )}

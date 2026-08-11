@@ -9,6 +9,7 @@ import {
   PageHeader,
 } from "@/components/ui";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
+import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
 import { formatDate } from "@/lib/utils";
 
@@ -90,7 +91,24 @@ export default function CicloVidaPage() {
     defaultView: "list",
     getName: (r) => r.name,
     getSerial: (r) => r.serialNumber,
-    sortFn: (a, b) => a.daysToRenewal - b.daysToRenewal,
+    defaultSortKey: "daysToRenewal",
+    defaultSortDir: "asc",
+    sortFields: {
+      name: { label: "Equipo", getValue: (r) => r.name },
+      serial: { label: "Serial", getValue: (r) => r.serialNumber },
+      renewalDate: {
+        label: "Renovación",
+        getValue: (r) => new Date(r.renewalDate).getTime(),
+      },
+      renewalStatus: {
+        label: "Estado",
+        getValue: (r) => r.renewalStatus,
+      },
+      daysToRenewal: {
+        label: "Días",
+        getValue: (r) => r.daysToRenewal,
+      },
+    },
   });
 
   const maintList = useListControls(maintenances, {
@@ -98,8 +116,20 @@ export default function CicloVidaPage() {
     defaultView: "list",
     getName: (m) => m.asset.name,
     getSerial: (m) => m.asset.serialNumber,
-    sortFn: (a, b) =>
-      new Date(a.scheduledDate).getTime() - new Date(b.scheduledDate).getTime(),
+    defaultSortKey: "scheduledDate",
+    defaultSortDir: "asc",
+    sortFields: {
+      name: { label: "Equipo", getValue: (m) => m.asset.name },
+      serial: {
+        label: "Serial",
+        getValue: (m) => m.asset.serialNumber,
+      },
+      scheduledDate: {
+        label: "Programado",
+        getValue: (m) => new Date(m.scheduledDate).getTime(),
+      },
+      status: { label: "Estado", getValue: (m) => m.status },
+    },
   });
 
   return (
@@ -146,6 +176,10 @@ export default function CicloVidaPage() {
             showingFrom={renewalList.showingFrom}
             showingTo={renewalList.showingTo}
             total={renewalList.total}
+            sortOptions={renewalList.sortOptions}
+            sortKey={renewalList.sortKey}
+            sortDir={renewalList.sortDir}
+            onSortChange={renewalList.setSort}
           />
           {renewalList.total === 0 ? (
             <EmptyState text="Sin equipos para renovación." />
@@ -190,10 +224,34 @@ export default function CicloVidaPage() {
               <table className="min-w-full text-sm">
                 <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
                   <tr>
-                    <th className="px-4 py-3 text-left">Equipo</th>
-                    <th className="px-4 py-3 text-left">Serial</th>
-                    <th className="px-4 py-3 text-left">Renovación</th>
-                    <th className="px-4 py-3 text-left">Estado</th>
+                    <SortableTh
+                      label="Equipo"
+                      columnKey="name"
+                      activeKey={renewalList.sortKey}
+                      direction={renewalList.sortDir}
+                      onSort={renewalList.toggleSort}
+                    />
+                    <SortableTh
+                      label="Serial"
+                      columnKey="serial"
+                      activeKey={renewalList.sortKey}
+                      direction={renewalList.sortDir}
+                      onSort={renewalList.toggleSort}
+                    />
+                    <SortableTh
+                      label="Renovación"
+                      columnKey="renewalDate"
+                      activeKey={renewalList.sortKey}
+                      direction={renewalList.sortDir}
+                      onSort={renewalList.toggleSort}
+                    />
+                    <SortableTh
+                      label="Estado"
+                      columnKey="renewalStatus"
+                      activeKey={renewalList.sortKey}
+                      direction={renewalList.sortDir}
+                      onSort={renewalList.toggleSort}
+                    />
                   </tr>
                 </thead>
                 <tbody>
@@ -240,6 +298,10 @@ export default function CicloVidaPage() {
             showingFrom={maintList.showingFrom}
             showingTo={maintList.showingTo}
             total={maintList.total}
+            sortOptions={maintList.sortOptions}
+            sortKey={maintList.sortKey}
+            sortDir={maintList.sortDir}
+            onSortChange={maintList.setSort}
           />
           {maintList.total === 0 ? (
             <EmptyState text="No hay mantenimientos pendientes." />
@@ -283,10 +345,34 @@ export default function CicloVidaPage() {
               <table className="min-w-full text-sm">
                 <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
                   <tr>
-                    <th className="px-4 py-3 text-left">Equipo</th>
-                    <th className="px-4 py-3 text-left">Serial</th>
-                    <th className="px-4 py-3 text-left">Programado</th>
-                    <th className="px-4 py-3 text-left">Estado</th>
+                    <SortableTh
+                      label="Equipo"
+                      columnKey="name"
+                      activeKey={maintList.sortKey}
+                      direction={maintList.sortDir}
+                      onSort={maintList.toggleSort}
+                    />
+                    <SortableTh
+                      label="Serial"
+                      columnKey="serial"
+                      activeKey={maintList.sortKey}
+                      direction={maintList.sortDir}
+                      onSort={maintList.toggleSort}
+                    />
+                    <SortableTh
+                      label="Programado"
+                      columnKey="scheduledDate"
+                      activeKey={maintList.sortKey}
+                      direction={maintList.sortDir}
+                      onSort={maintList.toggleSort}
+                    />
+                    <SortableTh
+                      label="Estado"
+                      columnKey="status"
+                      activeKey={maintList.sortKey}
+                      direction={maintList.sortDir}
+                      onSort={maintList.toggleSort}
+                    />
                     {role === "ADMIN" && (
                       <th className="px-4 py-3 text-left">Acción</th>
                     )}

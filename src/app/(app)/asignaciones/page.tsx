@@ -12,6 +12,7 @@ import {
   Textarea,
 } from "@/components/ui";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
+import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
 import { formatDate } from "@/lib/utils";
 
@@ -112,9 +113,16 @@ export default function AsignacionesPage() {
     defaultView: "list",
     getName: (a) => `${a.employee.name} ${a.asset.name}`,
     getSerial: (a) => a.asset.serialNumber,
-    sortFn: (a, b) =>
-      a.employee.name.localeCompare(b.employee.name, "es") ||
-      a.asset.name.localeCompare(b.asset.name, "es"),
+    defaultSortKey: "employee",
+    sortFields: {
+      employee: { label: "Usuario", getValue: (a) => a.employee.name },
+      asset: { label: "Equipo", getValue: (a) => a.asset.name },
+      assignedAt: {
+        label: "Desde",
+        getValue: (a) => new Date(a.assignedAt).getTime(),
+      },
+      status: { label: "Estado", getValue: () => "Activa" },
+    },
   });
 
   const historyList = useListControls(history, {
@@ -122,8 +130,24 @@ export default function AsignacionesPage() {
     defaultView: "list",
     getName: (a) => `${a.employee.name} ${a.asset.name}`,
     getSerial: (a) => a.asset.serialNumber,
-    sortFn: (a, b) =>
-      new Date(b.assignedAt).getTime() - new Date(a.assignedAt).getTime(),
+    defaultSortKey: "assignedAt",
+    defaultSortDir: "desc",
+    sortFields: {
+      employee: { label: "Usuario", getValue: (a) => a.employee.name },
+      asset: { label: "Equipo", getValue: (a) => a.asset.name },
+      serial: {
+        label: "Serial",
+        getValue: (a) => a.asset.serialNumber,
+      },
+      assignedAt: {
+        label: "Periodo",
+        getValue: (a) => new Date(a.assignedAt).getTime(),
+      },
+      status: {
+        label: "Estado",
+        getValue: (a) => (a.unassignedAt ? "Histórica" : "Activa"),
+      },
+    },
   });
 
   return (
@@ -203,6 +227,10 @@ export default function AsignacionesPage() {
           showingTo={activeList.showingTo}
           total={activeList.total}
           namePlaceholder="Usuario o equipo..."
+          sortOptions={activeList.sortOptions}
+          sortKey={activeList.sortKey}
+          sortDir={activeList.sortDir}
+          onSortChange={activeList.setSort}
         />
         {activeList.total === 0 ? (
           <EmptyState text="No hay asignaciones activas." />
@@ -211,10 +239,34 @@ export default function AsignacionesPage() {
             <table className="min-w-full text-sm">
               <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
                 <tr>
-                  <th className="px-4 py-3 text-left">Usuario</th>
-                  <th className="px-4 py-3 text-left">Equipo</th>
-                  <th className="px-4 py-3 text-left">Desde</th>
-                  <th className="px-4 py-3 text-left">Estado</th>
+                  <SortableTh
+                    label="Usuario"
+                    columnKey="employee"
+                    activeKey={activeList.sortKey}
+                    direction={activeList.sortDir}
+                    onSort={activeList.toggleSort}
+                  />
+                  <SortableTh
+                    label="Equipo"
+                    columnKey="asset"
+                    activeKey={activeList.sortKey}
+                    direction={activeList.sortDir}
+                    onSort={activeList.toggleSort}
+                  />
+                  <SortableTh
+                    label="Desde"
+                    columnKey="assignedAt"
+                    activeKey={activeList.sortKey}
+                    direction={activeList.sortDir}
+                    onSort={activeList.toggleSort}
+                  />
+                  <SortableTh
+                    label="Estado"
+                    columnKey="status"
+                    activeKey={activeList.sortKey}
+                    direction={activeList.sortDir}
+                    onSort={activeList.toggleSort}
+                  />
                   {role === "ADMIN" && (
                     <th className="px-4 py-3 text-left">Acción</th>
                   )}
@@ -309,6 +361,10 @@ export default function AsignacionesPage() {
           showingTo={historyList.showingTo}
           total={historyList.total}
           namePlaceholder="Usuario o equipo..."
+          sortOptions={historyList.sortOptions}
+          sortKey={historyList.sortKey}
+          sortDir={historyList.sortDir}
+          onSortChange={historyList.setSort}
         />
         {historyList.total === 0 ? (
           <EmptyState text="Sin historial." />
@@ -343,11 +399,41 @@ export default function AsignacionesPage() {
             <table className="min-w-full text-sm">
               <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
                 <tr>
-                  <th className="px-4 py-3 text-left">Usuario</th>
-                  <th className="px-4 py-3 text-left">Equipo</th>
-                  <th className="px-4 py-3 text-left">Serial</th>
-                  <th className="px-4 py-3 text-left">Periodo</th>
-                  <th className="px-4 py-3 text-left">Estado</th>
+                  <SortableTh
+                    label="Usuario"
+                    columnKey="employee"
+                    activeKey={historyList.sortKey}
+                    direction={historyList.sortDir}
+                    onSort={historyList.toggleSort}
+                  />
+                  <SortableTh
+                    label="Equipo"
+                    columnKey="asset"
+                    activeKey={historyList.sortKey}
+                    direction={historyList.sortDir}
+                    onSort={historyList.toggleSort}
+                  />
+                  <SortableTh
+                    label="Serial"
+                    columnKey="serial"
+                    activeKey={historyList.sortKey}
+                    direction={historyList.sortDir}
+                    onSort={historyList.toggleSort}
+                  />
+                  <SortableTh
+                    label="Periodo"
+                    columnKey="assignedAt"
+                    activeKey={historyList.sortKey}
+                    direction={historyList.sortDir}
+                    onSort={historyList.toggleSort}
+                  />
+                  <SortableTh
+                    label="Estado"
+                    columnKey="status"
+                    activeKey={historyList.sortKey}
+                    direction={historyList.sortDir}
+                    onSort={historyList.toggleSort}
+                  />
                 </tr>
               </thead>
               <tbody>

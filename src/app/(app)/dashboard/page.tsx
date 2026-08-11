@@ -27,6 +27,7 @@ import {
 } from "recharts";
 import { Badge, Card, EmptyState, PageHeader } from "@/components/ui";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
+import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
 import { formatDate } from "@/lib/utils";
 
@@ -87,8 +88,20 @@ export default function DashboardPage() {
     defaultView: "list",
     getName: (c) => `${c.details} ${c.action}`,
     getSerial: (c) => c.asset?.serialNumber || c.asset?.name || "",
-    sortFn: (a, b) =>
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    defaultSortKey: "createdAt",
+    defaultSortDir: "desc",
+    sortFields: {
+      createdAt: {
+        label: "Fecha",
+        getValue: (c) => new Date(c.createdAt).getTime(),
+      },
+      action: { label: "Acción", getValue: (c) => c.action },
+      details: { label: "Detalle", getValue: (c) => c.details },
+      serial: {
+        label: "Serial",
+        getValue: (c) => c.asset?.serialNumber || "",
+      },
+    },
   });
 
   if (!data) {
@@ -373,6 +386,10 @@ export default function DashboardPage() {
           total={changeList.total}
           namePlaceholder="Buscar en detalle o acción..."
           serialPlaceholder="Serial del equipo..."
+          sortOptions={changeList.sortOptions}
+          sortKey={changeList.sortKey}
+          sortDir={changeList.sortDir}
+          onSortChange={changeList.setSort}
         />
         {changeList.total === 0 ? (
           <EmptyState text="Sin cambios para mostrar." />
@@ -381,10 +398,34 @@ export default function DashboardPage() {
             <table className="min-w-full text-sm">
               <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
                 <tr>
-                  <th className="px-4 py-3 text-left">Fecha</th>
-                  <th className="px-4 py-3 text-left">Acción</th>
-                  <th className="px-4 py-3 text-left">Detalle</th>
-                  <th className="px-4 py-3 text-left">Serial</th>
+                  <SortableTh
+                    label="Fecha"
+                    columnKey="createdAt"
+                    activeKey={changeList.sortKey}
+                    direction={changeList.sortDir}
+                    onSort={changeList.toggleSort}
+                  />
+                  <SortableTh
+                    label="Acción"
+                    columnKey="action"
+                    activeKey={changeList.sortKey}
+                    direction={changeList.sortDir}
+                    onSort={changeList.toggleSort}
+                  />
+                  <SortableTh
+                    label="Detalle"
+                    columnKey="details"
+                    activeKey={changeList.sortKey}
+                    direction={changeList.sortDir}
+                    onSort={changeList.toggleSort}
+                  />
+                  <SortableTh
+                    label="Serial"
+                    columnKey="serial"
+                    activeKey={changeList.sortKey}
+                    direction={changeList.sortDir}
+                    onSort={changeList.toggleSort}
+                  />
                 </tr>
               </thead>
               <tbody>

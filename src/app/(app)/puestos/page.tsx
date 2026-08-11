@@ -11,6 +11,7 @@ import {
   Textarea,
 } from "@/components/ui";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
+import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
 
 type Position = {
@@ -81,7 +82,18 @@ export default function PuestosPage() {
     defaultView: "list",
     getName: (p) => `${p.name} ${p.description || ""}`,
     getSerial: (p) => p.employees.map((e) => e.name).join(" "),
-    sortFn: (a, b) => a.name.localeCompare(b.name, "es"),
+    defaultSortKey: "name",
+    sortFields: {
+      name: { label: "Puesto", getValue: (p) => p.name },
+      description: {
+        label: "Descripción",
+        getValue: (p) => p.description || "",
+      },
+      users: {
+        label: "Usuarios",
+        getValue: (p) => p.employees.length,
+      },
+    },
   });
 
   return (
@@ -136,6 +148,10 @@ export default function PuestosPage() {
         total={list.total}
         serialLabel="Usuario en el puesto"
         serialPlaceholder="Filtrar por nombre de usuario..."
+        sortOptions={list.sortOptions}
+        sortKey={list.sortKey}
+        sortDir={list.sortDir}
+        onSortChange={list.setSort}
       />
 
       {list.total === 0 ? (
@@ -182,9 +198,27 @@ export default function PuestosPage() {
           <table className="min-w-full text-sm">
             <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
               <tr>
-                <th className="px-4 py-3 text-left">Puesto</th>
-                <th className="px-4 py-3 text-left">Descripción</th>
-                <th className="px-4 py-3 text-left">Usuarios</th>
+                <SortableTh
+                  label="Puesto"
+                  columnKey="name"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="Descripción"
+                  columnKey="description"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="Usuarios"
+                  columnKey="users"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
                 {role === "ADMIN" && (
                   <th className="px-4 py-3 text-left">Acciones</th>
                 )}
