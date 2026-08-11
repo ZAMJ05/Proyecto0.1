@@ -194,7 +194,7 @@ export async function GET(request: Request) {
             e.email || "",
             e.department || "",
             e.position?.name || "",
-            e.active ? "Si" : "No",
+            e.active ? "Trabaja aqui" : "Ya no trabaja aqui",
             e.assignments.length,
             e.assignments.map((a) => a.asset.serialNumber).join(" | "),
           ])

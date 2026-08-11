@@ -16,7 +16,7 @@ import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
 import { formatDate } from "@/lib/utils";
 
-type Employee = { id: string; name: string };
+type Employee = { id: string; name: string; active?: boolean };
 type Asset = {
   id: string;
   name: string;
@@ -61,7 +61,7 @@ export default function AsignacionesPage() {
     ]);
     setAssignments(a.assignments || []);
     setHistory(h.assignments || []);
-    setEmployees(e.employees || []);
+    setEmployees((e.employees || []).filter((emp: Employee) => emp.active !== false));
     setAssets(
       (as.assets || []).filter(
         (x: Asset) => x.status === "Activo" || x.status === "Stock"

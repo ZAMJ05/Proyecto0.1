@@ -1,7 +1,7 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
-import { Pencil, Trash2, X } from "lucide-react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import { Pencil, Trash2, UserMinus, UserCheck, X } from "lucide-react";
 import {
   Badge,
   Button,
@@ -43,6 +43,8 @@ const emptyForm = {
   active: true,
 };
 
+type StatusFilter = "all" | "active" | "left";
+
 export default function EmpleadosPage() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [positions, setPositions] = useState<Position[]>([]);
@@ -51,6 +53,7 @@ export default function EmpleadosPage() {
   const [editing, setEditing] = useState<Employee | null>(null);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("active");
 
   async function load() {
     const [eRes, pRes, meRes] = await Promise.all([
@@ -107,12 +110,18 @@ export default function EmpleadosPage() {
           department: form.department,
           positionId: form.positionId || null,
           active: form.active,
+          releaseAssets: true,
         }),
       });
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "No se pudo guardar");
         return;
+      }
+      if (data.releasedCount > 0) {
+        alert(
+          `Usuario actualizado. Se liberaron ${data.releasedCount} equipo(s) a Stock.`
+        );
       }
       cancelEdit();
       await load();
@@ -121,18 +130,70 @@ export default function EmpleadosPage() {
     }
   }
 
-  async function removeEmployee(emp: Employee) {
+  async function markLeft(emp: Employee) {
     const assigned = emp.assignments.length;
-    const message =
+    const ok = confirm(
       assigned > 0
-        ? `${emp.name} tiene ${assigned} activo(s) asignado(s). Debes liberarlos en Asignaciones antes de eliminarlo.`
-        : `¿Eliminar a ${emp.name}? Esta acción no se puede deshacer.`;
+        ? `¿Marcar a ${emp.name} como “ya no trabaja aquí”?\nSe liberarán ${assigned} equipo(s) y pasarán a Stock.`
+        : `¿Marcar a ${emp.name} como “ya no trabaja aquí”?`
+    );
+    if (!ok) return;
 
-    if (assigned > 0) {
-      alert(message);
+    const res = await fetch(`/api/employees/${emp.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: emp.name,
+        email: emp.email,
+        department: emp.department,
+        positionId: emp.position?.id || null,
+        active: false,
+        releaseAssets: true,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.error || "No se pudo actualizar");
       return;
     }
-    if (!confirm(message)) return;
+    if (editing?.id === emp.id) cancelEdit();
+    await load();
+  }
+
+  async function markActive(emp: Employee) {
+    if (!confirm(`¿Reactivar a ${emp.name}? Volverá a aparecer para asignaciones.`)) {
+      return;
+    }
+    const res = await fetch(`/api/employees/${emp.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: emp.name,
+        email: emp.email,
+        department: emp.department,
+        positionId: emp.position?.id || null,
+        active: true,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.error || "No se pudo reactivar");
+      return;
+    }
+    await load();
+  }
+
+  async function removeEmployee(emp: Employee) {
+    const assigned = emp.assignments.length;
+    if (assigned > 0) {
+      alert(
+        `${emp.name} tiene ${assigned} activo(s) asignado(s). Márcalo como “ya no trabaja aquí” primero (libera equipos) o libéralos en Asignaciones.`
+      );
+      return;
+    }
+    if (!confirm(`¿Eliminar a ${emp.name}? Esta acción no se puede deshacer.`)) {
+      return;
+    }
 
     const res = await fetch(`/api/employees/${emp.id}`, { method: "DELETE" });
     const data = await res.json();
@@ -144,7 +205,22 @@ export default function EmpleadosPage() {
     await load();
   }
 
-  const list = useListControls(employees, {
+  const counts = useMemo(
+    () => ({
+      all: employees.length,
+      active: employees.filter((e) => e.active).length,
+      left: employees.filter((e) => !e.active).length,
+    }),
+    [employees]
+  );
+
+  const filteredEmployees = useMemo(() => {
+    if (statusFilter === "active") return employees.filter((e) => e.active);
+    if (statusFilter === "left") return employees.filter((e) => !e.active);
+    return employees;
+  }, [employees, statusFilter]);
+
+  const list = useListControls(filteredEmployees, {
     storageKey: "empleados-p25",
     defaultView: "list",
     getName: (e) => `${e.name} ${e.email || ""}`,
@@ -156,6 +232,10 @@ export default function EmpleadosPage() {
       position: {
         label: "Puesto",
         getValue: (e) => e.position?.name || "",
+      },
+      status: {
+        label: "Estado",
+        getValue: (e) => (e.active ? "Trabaja aquí" : "Ya no trabaja aquí"),
       },
       assets: {
         label: "Activos",
@@ -173,7 +253,7 @@ export default function EmpleadosPage() {
     <div>
       <PageHeader
         title="Usuarios y activos"
-        subtitle="Lista de usuarios (empleados) con los activos que tienen asignados."
+        subtitle="Usuarios del inventario. Puedes marcar quién ya no trabaja aquí; sus equipos se liberan a Stock."
       />
 
       {role === "ADMIN" && (
@@ -234,17 +314,23 @@ export default function EmpleadosPage() {
               </Select>
             </div>
             {editing && (
-              <div>
-                <Label>Estado</Label>
+              <div className="md:col-span-2">
+                <Label>Estado laboral</Label>
                 <Select
                   value={form.active ? "1" : "0"}
                   onChange={(e) =>
                     setForm({ ...form, active: e.target.value === "1" })
                   }
                 >
-                  <option value="1">Activo</option>
-                  <option value="0">Inactivo</option>
+                  <option value="1">Trabaja aquí</option>
+                  <option value="0">Ya no trabaja aquí</option>
                 </Select>
+                {!form.active && (
+                  <p className="mt-1 text-xs text-[var(--muted)]">
+                    Al guardar, se liberarán sus equipos asignados y pasarán a
+                    Stock.
+                  </p>
+                )}
               </div>
             )}
             {error && (
@@ -269,6 +355,29 @@ export default function EmpleadosPage() {
           </form>
         </Card>
       )}
+
+      <div className="mb-3 flex flex-wrap gap-2">
+        {(
+          [
+            ["active", `Trabajan aquí (${counts.active})`],
+            ["left", `Ya no trabajan aquí (${counts.left})`],
+            ["all", `Todos (${counts.all})`],
+          ] as const
+        ).map(([key, label]) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => setStatusFilter(key)}
+            className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition ${
+              statusFilter === key
+                ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--ink)]"
+                : "border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] hover:bg-[var(--surface-2)]"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
 
       <ListToolbar
         name={list.name}
@@ -310,7 +419,7 @@ export default function EmpleadosPage() {
                 </div>
                 <div className="flex flex-wrap items-center justify-end gap-2">
                   <Badge tone={emp.active ? "success" : "danger"}>
-                    {emp.active ? "Activo" : "Inactivo"}
+                    {emp.active ? "Trabaja aquí" : "Ya no trabaja aquí"}
                   </Badge>
                   {role === "ADMIN" && (
                     <>
@@ -323,6 +432,27 @@ export default function EmpleadosPage() {
                         <Pencil className="h-4 w-4" />
                         Editar
                       </Button>
+                      {emp.active ? (
+                        <Button
+                          variant="secondary"
+                          className="px-2 py-1"
+                          title="Ya no trabaja aquí"
+                          onClick={() => markLeft(emp)}
+                        >
+                          <UserMinus className="h-4 w-4" />
+                          Baja
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="secondary"
+                          className="px-2 py-1"
+                          title="Reactivar"
+                          onClick={() => markActive(emp)}
+                        >
+                          <UserCheck className="h-4 w-4" />
+                          Reactivar
+                        </Button>
+                      )}
                       <Button
                         variant="danger"
                         className="px-2 py-1"
@@ -370,6 +500,7 @@ export default function EmpleadosPage() {
             <colgroup>
               <col className="col-lg" />
               <col className="col-md" />
+              <col className="col-status" />
               <col className="col-num" />
               <col />
               {role === "ADMIN" && <col className="col-actions" />}
@@ -386,6 +517,13 @@ export default function EmpleadosPage() {
                 <SortableTh
                   label="Puesto"
                   columnKey="position"
+                  activeKey={list.sortKey}
+                  direction={list.sortDir}
+                  onSort={list.toggleSort}
+                />
+                <SortableTh
+                  label="Estado"
+                  columnKey="status"
                   activeKey={list.sortKey}
                   direction={list.sortDir}
                   onSort={list.toggleSort}
@@ -417,6 +555,11 @@ export default function EmpleadosPage() {
                     </p>
                   </td>
                   <td>{emp.position?.name || "Sin puesto"}</td>
+                  <td>
+                    <Badge tone={emp.active ? "success" : "danger"}>
+                      {emp.active ? "Trabaja aquí" : "Ya no trabaja aquí"}
+                    </Badge>
+                  </td>
                   <td className="text-center">{emp.assignments.length}</td>
                   <td className="text-xs">
                     {emp.assignments
@@ -434,6 +577,25 @@ export default function EmpleadosPage() {
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
+                        {emp.active ? (
+                          <Button
+                            variant="secondary"
+                            className="px-2 py-1"
+                            title="Ya no trabaja aquí"
+                            onClick={() => markLeft(emp)}
+                          >
+                            <UserMinus className="h-4 w-4" />
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="secondary"
+                            className="px-2 py-1"
+                            title="Reactivar"
+                            onClick={() => markActive(emp)}
+                          >
+                            <UserCheck className="h-4 w-4" />
+                          </Button>
+                        )}
                         <Button
                           variant="danger"
                           className="px-2 py-1"
