@@ -243,8 +243,9 @@ async function main() {
     }
 
     const purchaseDate = parseDate(a.purchaseDate) || new Date("2022-01-01");
-    const renewalDate = addYears(purchaseDate, 4);
     const category = normalizeCategory(a.category);
+    const renewalDate =
+      category === "Laptop" ? addYears(purchaseDate, 4) : null;
     const status = normalizeStatus(a.status);
     const brand = (a.brand || "N/D").trim();
     const model = (a.model || "N/D").trim();

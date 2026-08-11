@@ -49,7 +49,7 @@ model Asset {
   inventoryNumber String         @unique
   status          String         @default("Stock")
   purchaseDate    DateTime
-  renewalDate     DateTime
+  renewalDate     DateTime?
   anydesk         String?
   notes           String?
   createdAt       DateTime       @default(now())

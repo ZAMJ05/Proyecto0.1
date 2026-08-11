@@ -302,7 +302,8 @@ async function main() {
     const asset = await prisma.asset.create({
       data: {
         ...a,
-        renewalDate: addYears(a.purchaseDate, 4),
+        renewalDate:
+          a.category === "Laptop" ? addYears(a.purchaseDate, 4) : null,
       },
     });
     assets.push(asset);

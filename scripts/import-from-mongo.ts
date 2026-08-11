@@ -269,12 +269,14 @@ async function main() {
 
     const purchaseDate =
       asDate(pick(doc, FIELD_MAP.asset.purchaseDate)) || new Date();
-    const renewalDate =
-      asDate(pick(doc, FIELD_MAP.asset.renewalDate)) ||
-      addYears(purchaseDate, 4);
     const category = normalizeCategory(
       asString(pick(doc, FIELD_MAP.asset.category), "Otros")
     );
+    const renewalDate =
+      category === "Laptop"
+        ? asDate(pick(doc, FIELD_MAP.asset.renewalDate)) ||
+          addYears(purchaseDate, 4)
+        : null;
     const status = normalizeStatus(
       asString(pick(doc, FIELD_MAP.asset.status), "Stock")
     );

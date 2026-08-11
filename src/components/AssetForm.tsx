@@ -60,7 +60,8 @@ export function AssetForm({
   });
   const [error, setError] = useState("");
 
-  const showAnydesk = values.category === "Laptop" && values.status === "Activo";
+  const isLaptop = values.category === "Laptop";
+  const showAnydesk = isLaptop && values.status === "Activo";
   const showQuantity = mode === "create" && supportsQuantity(values.category);
   const statusOptions = useMemo(() => {
     if (values.category === "Laptop") return ASSET_STATUSES;
@@ -73,14 +74,23 @@ export function AssetForm({
   ) {
     setValues((prev) => {
       const next = { ...prev, [key]: value };
-      if (key === "purchaseDate" && value) {
+      if (key === "purchaseDate" && value && next.category === "Laptop") {
         next.renewalDate = toInputDate(addYears(new Date(String(value)), 4));
       }
-      if (key === "category" && value !== "Laptop" && next.status === "Reparacion") {
-        next.status = "Activo";
-      }
-      if (key === "category" && !supportsQuantity(String(value))) {
-        next.quantity = 1;
+      if (key === "category") {
+        if (value !== "Laptop" && next.status === "Reparacion") {
+          next.status = "Activo";
+        }
+        if (value === "Laptop") {
+          next.renewalDate =
+            next.renewalDate ||
+            toInputDate(addYears(new Date(next.purchaseDate || Date.now()), 4));
+        } else {
+          next.renewalDate = "";
+        }
+        if (!supportsQuantity(String(value))) {
+          next.quantity = 1;
+        }
       }
       return next;
     });
@@ -89,9 +99,15 @@ export function AssetForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    const qty = showQuantity ? Math.max(1, Math.min(100, Number(values.quantity) || 1)) : 1;
+    const qty = showQuantity
+      ? Math.max(1, Math.min(100, Number(values.quantity) || 1))
+      : 1;
     try {
-      await onSubmit({ ...values, quantity: qty });
+      await onSubmit({
+        ...values,
+        quantity: qty,
+        renewalDate: isLaptop ? values.renewalDate : "",
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al guardar");
     }
@@ -203,15 +219,26 @@ export function AssetForm({
             onChange={(e) => update("purchaseDate", e.target.value)}
           />
         </div>
-        <div>
-          <Label>Fecha de renovación (4 años)</Label>
-          <Input
-            type="date"
-            required
-            value={values.renewalDate}
-            onChange={(e) => update("renewalDate", e.target.value)}
-          />
-        </div>
+        {isLaptop ? (
+          <div>
+            <Label>Fecha de renovación (4 años)</Label>
+            <Input
+              type="date"
+              required
+              value={values.renewalDate}
+              onChange={(e) => update("renewalDate", e.target.value)}
+            />
+            <p className="mt-1 text-xs text-[var(--muted)]">
+              Solo aplica a laptops.
+            </p>
+          </div>
+        ) : (
+          <div className="flex items-end">
+            <p className="rounded-xl border border-dashed border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-xs text-[var(--muted)]">
+              Renovación: no aplica para esta categoría (solo laptops).
+            </p>
+          </div>
+        )}
         {showAnydesk && (
           <div className="sm:col-span-2">
             <Label>AnyDesk (laptops activas)</Label>

@@ -63,9 +63,15 @@ export async function PUT(request: Request, { params }: Params) {
     }
     if (!(category === "Laptop" && status === "Activo")) anydesk = null;
 
-    const renewalDate = body.renewalDate
-      ? new Date(body.renewalDate)
-      : addYears(purchaseDate, 4);
+    let renewalDate: Date | null = null;
+    if (category === "Laptop") {
+      renewalDate = body.renewalDate
+        ? new Date(body.renewalDate)
+        : addYears(purchaseDate, 4);
+      if (Number.isNaN(renewalDate.getTime())) {
+        return jsonError("Fecha de renovación inválida");
+      }
+    }
 
     const asset = await prisma.asset.update({
       where: { id },

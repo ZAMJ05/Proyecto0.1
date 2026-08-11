@@ -149,7 +149,7 @@ export async function GET(request: Request) {
             a.inventoryNumber,
             a.status,
             formatDate(a.purchaseDate),
-            formatDate(a.renewalDate),
+            a.category === "Laptop" ? formatDate(a.renewalDate) : "N/A",
             a.anydesk || "",
             a.assignments[0]?.employee.name || "",
             a.notes || "",
@@ -283,7 +283,8 @@ export async function GET(request: Request) {
           inventoryNumber: a.inventoryNumber,
           status: a.status,
           purchaseDate: formatDate(a.purchaseDate),
-          renewalDate: formatDate(a.renewalDate),
+          renewalDate:
+            a.category === "Laptop" ? formatDate(a.renewalDate) : "N/A",
           anydesk: a.anydesk || "",
           assignedTo: a.assignments[0]?.employee.name || "",
           notes: a.notes || "",

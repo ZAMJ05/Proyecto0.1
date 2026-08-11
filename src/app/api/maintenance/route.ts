@@ -45,6 +45,7 @@ export async function GET(request: Request) {
       where: {
         category: "Laptop",
         status: { in: [...LIFECYCLE_STATUSES] },
+        renewalDate: { not: null },
       },
       orderBy: { renewalDate: "asc" },
       include: {
@@ -56,8 +57,9 @@ export async function GET(request: Request) {
     });
 
     const lifecycleItems = renewals.map((asset) => {
+      const renewal = asset.renewalDate!;
       const days = Math.ceil(
-        (asset.renewalDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+        (renewal.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
       );
       let renewalStatus = "Vigente";
       if (days < 0) renewalStatus = "Vencido";
@@ -104,7 +106,7 @@ export async function POST(request: Request) {
       }
 
       const now = new Date();
-      if (asset.renewalDate >= now) {
+      if (!asset.renewalDate || asset.renewalDate >= now) {
         return jsonError(
           "Solo se pueden confirmar como inactivas las renovaciones vencidas",
           400

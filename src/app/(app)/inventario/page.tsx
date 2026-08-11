@@ -31,7 +31,7 @@ type Asset = {
   inventoryNumber: string;
   status: string;
   purchaseDate: string;
-  renewalDate: string;
+  renewalDate: string | null;
   anydesk: string | null;
   notes: string | null;
   assignments: Array<{
@@ -110,7 +110,10 @@ function InventarioContent() {
       },
       renewal: {
         label: "Renovación",
-        getValue: (a) => new Date(a.renewalDate).getTime(),
+        getValue: (a) =>
+          a.category === "Laptop" && a.renewalDate
+            ? new Date(a.renewalDate).getTime()
+            : 0,
       },
       anydesk: { label: "AnyDesk", getValue: (a) => a.anydesk || "" },
     },
@@ -408,7 +411,9 @@ function InventarioContent() {
                   <td className="px-4 py-3">
                     <p>{formatDate(asset.purchaseDate)}</p>
                     <p className="text-xs text-[var(--muted)]">
-                      {formatDate(asset.renewalDate)}
+                      {asset.category === "Laptop"
+                        ? formatDate(asset.renewalDate)
+                        : "Sin renovación"}
                     </p>
                   </td>
                   <td className="px-4 py-3">{asset.anydesk || "—"}</td>

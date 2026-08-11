@@ -82,7 +82,7 @@ export async function GET() {
       where: {
         category: "Laptop",
         status: { in: ["Activo", "Stock", "Reparacion"] },
-        renewalDate: { lte: in90 },
+        renewalDate: { lte: in90, not: null },
       },
     });
 

@@ -153,9 +153,15 @@ export async function POST(request: Request) {
       anydesk = null;
     }
 
-    const renewalDate = body.renewalDate
-      ? new Date(body.renewalDate)
-      : addYears(purchaseDate, 4);
+    let renewalDate: Date | null = null;
+    if (category === "Laptop") {
+      renewalDate = body.renewalDate
+        ? new Date(body.renewalDate)
+        : addYears(purchaseDate, 4);
+      if (Number.isNaN(renewalDate.getTime())) {
+        return jsonError("Fecha de renovación inválida");
+      }
+    }
 
     const rawQty = Number(body.quantity ?? 1);
     const quantity = supportsQuantity(category)
