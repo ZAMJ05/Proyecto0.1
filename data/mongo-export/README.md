@@ -69,7 +69,7 @@ Si tus campos se llaman distinto, edita `FIELD_MAP` en `scripts/import-from-mong
 Desde la raíz del proyecto:
 
 ```bash
-npm run db:setup
+npm run db:init
 npm run db:import
 npm run dev
 ```

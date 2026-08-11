@@ -34,11 +34,14 @@ yarn-error.log*
 .env*
 !.env.example
 
-# sqlite
+# sqlite / datos locales
 *.db
 *.db-journal
 /prisma/dev.db
 /prisma/dev.db-journal
+/data/*.db
+/data/*.db-journal
+!/data/mongo-export/
 
 # agent skill caches from tooling
 .agents/

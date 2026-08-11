@@ -24,23 +24,20 @@ Aplicación web para gestionar inventario de equipos IT: dashboard, ciclo de vid
 
 ```bash
 npm install
-npm run db:setup
+npm run db:init
 npm run dev
 ```
 
-`db:setup` crea `.env` desde `.env.example` si no existe, prepara SQLite y carga datos demo.
+- `db:init` prepara la BD **sin borrar** datos (crea admin solo si esta vacia).
+- Los datos se guardan en `data/assetdesk.db` (ruta absoluta en `.env`).
+- **No uses `db:setup`/`db:seed` en el dia a dia**: reinician la BD demo y borran cambios.
 
-Si ves el error `Environment variable not found: DATABASE_URL`, crea el `.env` así:
+Si ves `Environment variable not found: DATABASE_URL`:
 
 ```bash
-# Windows (CMD)
-copy .env.example .env
-
-# Windows (PowerShell) / macOS / Linux
-cp .env.example .env
+npm run env:init
+npm run db:init
 ```
-
-Luego vuelve a ejecutar `npm run db:setup` y `npm run dev`.
 
 Abre [http://localhost:3000](http://localhost:3000).
 
@@ -82,8 +79,9 @@ Las credenciales de demo **no se muestran en la app**. Solo se crean al ejecutar
 
 - `npm run dev` — servidor de desarrollo
 - `npm run build` / `npm start` — producción
-- `npm run db:setup` — crea esquema y carga datos demo
-- `npm run db:seed` — vuelve a sembrar datos
+- `npm run db:init` — crea/actualiza esquema **sin borrar** datos
+- `npm run db:setup` — SOLO demo: borra todo y carga datos de prueba
+- `npm run db:seed -- --force` — reinicia demo (destructivo)
 - `npm run db:import` — importa JSON exportados de MongoDB (`data/mongo-export/`)
 
 Para migrar desde MongoDB, ver `data/mongo-export/README.md`.
@@ -93,8 +91,12 @@ Para migrar desde MongoDB, ver `data/mongo-export/README.md`.
 Ver `scripts/windows/README.md`. Resumen:
 
 ```powershell
+npm run build
 powershell -ExecutionPolicy Bypass -File .\scripts\windows\install-autostart.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\windows\test-autostart.ps1
 ```
+
+Si falla, revisa `logs\assetdesk-startup.log`.
 
 ## Variables de entorno
 

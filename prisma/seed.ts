@@ -5,6 +5,22 @@ import { addMonths, addYears } from "../src/lib/constants";
 const prisma = new PrismaClient();
 
 async function main() {
+  // Seguridad: evita borrar inventario por accidente al reiniciar
+  const force =
+    process.argv.includes("--force") || process.env.CONFIRM_SEED === "YES";
+  if (!force) {
+    console.error(
+      "ABORTADO: db:seed BORRA todos los datos.\n" +
+        "Si realmente quieres reiniciar demo, ejecuta:\n" +
+        "  CONFIRM_SEED=YES npm run db:seed\n" +
+        "o:\n" +
+        "  npx tsx prisma/seed.ts --force\n" +
+        "Para iniciar sin borrar usa: npm run db:init"
+    );
+    process.exit(1);
+  }
+
+  console.log("CONFIRMADO: se borraran todos los datos...");
   await prisma.activityLog.deleteMany();
   await prisma.maintenance.deleteMany();
   await prisma.assignment.deleteMany();

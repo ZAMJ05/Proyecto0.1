@@ -1,40 +1,54 @@
 # Arranque automático de AssetDesk (Windows)
 
-## 1. Preparar una vez
+## Instalación (hazlo en este orden)
 
-En la carpeta del proyecto:
-
-```bat
-npm install
-npm run db:setup
-npm run build
-```
-
-## 2. Activar inicio automático
-
-Abre PowerShell en la carpeta del proyecto y ejecuta:
+Abre **PowerShell** en la carpeta del proyecto:
 
 ```powershell
+cd C:\Users\sistemas2\Music\Proyecto0.1
+git pull
+npm install
+npm run db:init
+npm run build
 powershell -ExecutionPolicy Bypass -File .\scripts\windows\install-autostart.ps1
 ```
 
-Eso crea la tarea de Windows **AssetDeskAutoStart**, que corre al iniciar sesión.
+Importante: **no ejecutes `npm run db:setup`** despues de cargar inventario real.
+Ese comando borra la base y deja solo datos demo. Los cambios viven en `data\assetdesk.db`.
 
-## 3. Probar sin reiniciar
+Eso registra:
+1. Tarea programada **AssetDeskAutoStart** (espera 45 s al iniciar sesión)
+2. Acceso directo en la carpeta **Inicio** de Windows
 
-```bat
-schtasks /Run /TN AssetDeskAutoStart
+## Probar sin reiniciar
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\windows\test-autostart.ps1
 ```
 
-Luego abre `http://localhost:3000` o `http://TU_IP:3000`.
+Luego abre: http://localhost:3000
 
-## 4. Ver log si falla
+## Si no funciona
 
-```
-logs\assetdesk-startup.log
-```
+1. Mira el log:
+   ```powershell
+   notepad .\logs\assetdesk-startup.log
+   ```
+2. Errores típicos:
+   - `No se encontro node.exe` → instala [Node.js LTS](https://nodejs.org) y vuelve a correr `install-autostart.ps1`
+   - `build fallo` → ejecuta a mano `npm run build` y revisa el error
+   - `Falta .env` → `copy .env.example .env`
+3. Confirma que existe el acceso de Inicio:
+   ```powershell
+   explorer shell:startup
+   ```
+   Debe verse `AssetDesk.lnk`
+4. Confirma la tarea:
+   ```powershell
+   Get-ScheduledTask -TaskName AssetDeskAutoStart | Format-List
+   ```
 
-## 5. Desactivar
+## Desactivar
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\windows\uninstall-autostart.ps1
@@ -42,7 +56,6 @@ powershell -ExecutionPolicy Bypass -File .\scripts\windows\uninstall-autostart.p
 
 ## Notas
 
-- La PC debe quedar encendida y con sesión iniciada (o sesión bloqueada, no apagada).
-- El script usa `npm run start:lan` (puerto 3000, accesible en la red).
-- Si moviste el proyecto de carpeta, vuelve a ejecutar `install-autostart.ps1`.
-- En el Firewall de Windows permite Node/puerto 3000 si otros equipos no alcanzan la app.
+- La PC debe tener **sesión iniciada** (puede estar bloqueada).
+- El servicio usa el puerto **3000** en toda la red (`0.0.0.0`).
+- Si moviste la carpeta del proyecto, reinstala el autostart.

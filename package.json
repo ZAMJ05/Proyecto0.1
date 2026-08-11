@@ -12,12 +12,13 @@
     "env:init": "node scripts/ensure-env.js",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
-    "db:setup": "node scripts/ensure-env.js && prisma db push && tsx prisma/seed.ts",
+    "db:init": "node scripts/ensure-env.js && prisma db push && tsx scripts/db-bootstrap.ts",
+    "db:setup": "node scripts/ensure-env.js && prisma db push && tsx prisma/seed.ts --force",
     "db:import": "node scripts/ensure-env.js && tsx scripts/import-from-mongo.ts",
     "postinstall": "prisma generate"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts --force"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
