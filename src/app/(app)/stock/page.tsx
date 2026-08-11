@@ -1,15 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Badge,
   Card,
   EmptyState,
+  Label,
   PageHeader,
+  Select,
   statusTone,
 } from "@/components/ui";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { useListControls } from "@/hooks/useListControls";
+import { CATEGORY_LABELS } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
 
 type Asset = {
@@ -27,6 +30,7 @@ type Asset = {
 
 export default function StockPage() {
   const [assets, setAssets] = useState<Asset[]>([]);
+  const [category, setCategory] = useState("");
 
   useEffect(() => {
     fetch("/api/assets?stockOnly=1")
@@ -34,12 +38,24 @@ export default function StockPage() {
       .then((d) => setAssets(d.assets || []));
   }, []);
 
-  const list = useListControls(assets, {
+  const categoriesInStock = useMemo(() => {
+    const set = new Set(assets.map((a) => a.category));
+    return [...set].sort((a, b) => a.localeCompare(b, "es"));
+  }, [assets]);
+
+  const filteredByCategory = useMemo(() => {
+    if (!category) return assets;
+    return assets.filter((a) => a.category === category);
+  }, [assets, category]);
+
+  const list = useListControls(filteredByCategory, {
     storageKey: "stock-p25",
     defaultView: "list",
     getName: (a) => a.name,
     getSerial: (a) => `${a.serialNumber} ${a.inventoryNumber}`,
-    sortFn: (a, b) => a.name.localeCompare(b.name, "es"),
+    sortFn: (a, b) =>
+      a.category.localeCompare(b.category, "es") ||
+      a.name.localeCompare(b.name, "es"),
   });
 
   return (
@@ -82,6 +98,25 @@ export default function StockPage() {
         </Card>
       </div>
 
+      <Card className="mb-4">
+        <Label>Filtrar por categoría</Label>
+        <Select
+          value={category}
+          onChange={(e) => {
+            setCategory(e.target.value);
+            list.setPage(1);
+          }}
+        >
+          <option value="">Todas las categorías</option>
+          {categoriesInStock.map((c) => (
+            <option key={c} value={c}>
+              {CATEGORY_LABELS[c] || c} (
+              {assets.filter((a) => a.category === c).length})
+            </option>
+          ))}
+        </Select>
+      </Card>
+
       <ListToolbar
         name={list.name}
         serial={list.serial}
@@ -115,7 +150,7 @@ export default function StockPage() {
               <dl className="space-y-1 text-sm">
                 <div className="flex justify-between gap-3">
                   <dt className="text-[var(--muted)]">Categoría</dt>
-                  <dd>{asset.category}</dd>
+                  <dd>{CATEGORY_LABELS[asset.category] || asset.category}</dd>
                 </div>
                 <div className="flex justify-between gap-3">
                   <dt className="text-[var(--muted)]">Serial</dt>
@@ -157,7 +192,9 @@ export default function StockPage() {
                       {asset.brand} {asset.model}
                     </p>
                   </td>
-                  <td className="px-4 py-3">{asset.category}</td>
+                  <td className="px-4 py-3">
+                    {CATEGORY_LABELS[asset.category] || asset.category}
+                  </td>
                   <td className="px-4 py-3">{asset.serialNumber}</td>
                   <td className="px-4 py-3">{asset.inventoryNumber}</td>
                   <td className="px-4 py-3">{formatDate(asset.purchaseDate)}</td>
