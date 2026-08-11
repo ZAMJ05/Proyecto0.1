@@ -79,8 +79,41 @@ export async function GET(request: Request) {
     const stockAssets = assets.filter((a) => a.status === "Stock");
     const activeAssignments = assignments.filter((a) => !a.unassignedAt);
 
+    const laptops = assets.filter((a) => a.category === "Laptop");
+    const laptopsSinBaja = laptops.filter((a) => a.status !== "Baja");
+    const laptopsActive = laptops.filter((a) => a.status === "Activo").length;
+    const laptopsInactive = laptops.filter((a) => a.status === "Inactivo").length;
+    const laptopsStock = laptops.filter((a) => a.status === "Stock").length;
+    const laptopsReparacion = laptops.filter(
+      (a) => a.status === "Reparacion"
+    ).length;
+    const laptopsSummary = {
+      total: laptopsSinBaja.length,
+      activas: laptopsActive,
+      inactivas: laptopsInactive,
+      stock: laptopsStock,
+      reparacion: laptopsReparacion,
+    };
+    const laptopsByStatus = [
+      { name: "Activas", value: laptopsActive },
+      { name: "Inactivas", value: laptopsInactive },
+      { name: "Stock", value: laptopsStock },
+      { name: "Reparación", value: laptopsReparacion },
+    ].filter((x) => x.value > 0);
+
     if (format === "csv") {
       const parts: string[] = [
+        tableToCsv(
+          "RESUMEN LAPTOPS (sin bajas)",
+          ["Concepto", "Cantidad"],
+          [
+            ["Total laptops", laptopsSummary.total],
+            ["Activas", laptopsSummary.activas],
+            ["Inactivas", laptopsSummary.inactivas],
+            ["En stock", laptopsSummary.stock],
+            ["En reparacion", laptopsSummary.reparacion],
+          ]
+        ),
         tableToCsv(
           "RESUMEN POR CATEGORIA",
           ["Categoria", "Cantidad"],
@@ -233,10 +266,12 @@ export async function GET(request: Request) {
         activeAssignments: activeAssignments.length,
         positions: positions.length,
         pendingMaintenances: maintenances.length,
+        laptops: laptopsSummary,
       },
       charts: {
         byCategory,
         byStatus,
+        laptopsByStatus,
       },
       tables: {
         assets: assets.map((a) => ({

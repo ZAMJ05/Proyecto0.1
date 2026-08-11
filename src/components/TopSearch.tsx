@@ -180,41 +180,62 @@ export function TopSearch() {
       doc.text("AssetDesk — Reporte de inventario IT", 14, 18);
       doc.setFontSize(10);
       doc.text(`Exportado: ${formatDate(data.exportedAt)}`, 14, 26);
+
+      const laptop = data.summary?.laptops || {
+        total: 0,
+        activas: 0,
+        inactivas: 0,
+        stock: 0,
+        reparacion: 0,
+      };
       doc.text(
-        `Totales: ${data.summary.totalAssets} equipos · ${data.summary.stock} stock · ${data.summary.employees} usuarios · ${data.summary.activeAssignments} asignaciones activas`,
+        `Totales: ${data.summary.totalAssets} equipos · ${data.summary.employees} usuarios · ${data.summary.activeAssignments} asignaciones activas`,
         14,
         32
       );
+      doc.setFont("helvetica", "bold");
+      doc.text(
+        `Laptops (sin bajas): ${laptop.total} total · ${laptop.activas} activas · ${laptop.inactivas} inactivas · ${laptop.stock} en stock`,
+        14,
+        38
+      );
+      doc.setFont("helvetica", "normal");
 
       const barImg = drawBarChart(
         "Equipos por categoría",
         data.charts.byCategory || []
       );
-      const pieImg = drawPieChart(
-        "Distribución por estado",
-        data.charts.byStatus || []
+      const laptopPie = drawPieChart(
+        "Laptops: activas / inactivas / stock",
+        data.charts.laptopsByStatus || []
       );
 
-      if (barImg) doc.addImage(barImg, "PNG", 14, 40, 140, 70);
-      if (pieImg) doc.addImage(pieImg, "PNG", 160, 40, 120, 70);
+      if (barImg) doc.addImage(barImg, "PNG", 14, 44, 140, 65);
+      if (laptopPie) doc.addImage(laptopPie, "PNG", 160, 44, 120, 65);
 
       doc.setFontSize(12);
-      doc.text("Resumen por categoría", 14, 120);
+      doc.text("Resumen de laptops", 14, 118);
       autoTable(doc, {
-        startY: 124,
-        head: [["Categoría", "Cantidad"]],
-        body: (data.charts.byCategory || []).map((r: ChartRow) => [
-          r.name,
-          r.value,
-        ]),
+        startY: 122,
+        head: [["Concepto", "Cantidad"]],
+        body: [
+          ["Total laptops (sin bajas)", laptop.total],
+          ["Activas", laptop.activas],
+          ["Inactivas", laptop.inactivas],
+          ["En stock", laptop.stock],
+          ...(laptop.reparacion
+            ? [["En reparación", laptop.reparacion]]
+            : []),
+        ],
         styles: { fontSize: 8 },
         margin: { left: 14 },
         tableWidth: 80,
+        headStyles: { fillColor: [15, 118, 110] },
       });
 
-      doc.text("Resumen por estado", 110, 120);
+      doc.text("Resumen por estado (todos)", 110, 118);
       autoTable(doc, {
-        startY: 124,
+        startY: 122,
         head: [["Estado", "Cantidad"]],
         body: (data.charts.byStatus || []).map((r: ChartRow) => [
           r.name,
@@ -223,6 +244,7 @@ export function TopSearch() {
         styles: { fontSize: 8 },
         margin: { left: 110 },
         tableWidth: 70,
+        headStyles: { fillColor: [15, 118, 110] },
       });
 
       const sections: Array<{
