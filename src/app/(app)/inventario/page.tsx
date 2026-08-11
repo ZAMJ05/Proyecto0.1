@@ -15,6 +15,7 @@ import {
   statusTone,
 } from "@/components/ui";
 import { AssetForm, AssetFormValues } from "@/components/AssetForm";
+import { CopyableValue } from "@/components/CopyableValue";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
@@ -418,9 +419,16 @@ function InventarioContent() {
                     </p>
                   </td>
                   <td className="px-4 py-3">
-                    {asset.category === "Laptop"
-                      ? asset.anydesk || "—"
-                      : "No aplica"}
+                    {asset.category === "Laptop" ? (
+                      <CopyableValue
+                        value={asset.anydesk}
+                        label="Copiar AnyDesk"
+                      />
+                    ) : (
+                      <span className="text-xs text-[var(--muted)]">
+                        No aplica
+                      </span>
+                    )}
                   </td>
                   {role === "ADMIN" && (
                     <td className="px-4 py-3">
@@ -476,6 +484,17 @@ function InventarioContent() {
                   <dt className="text-[var(--muted)]">Asignado</dt>
                   <dd>{asset.assignments[0]?.employee.name || "Sin asignar"}</dd>
                 </div>
+                {asset.category === "Laptop" && (
+                  <div className="flex items-center justify-between gap-3">
+                    <dt className="text-[var(--muted)]">AnyDesk</dt>
+                    <dd>
+                      <CopyableValue
+                        value={asset.anydesk}
+                        label="Copiar AnyDesk"
+                      />
+                    </dd>
+                  </div>
+                )}
               </dl>
               {role === "ADMIN" && (
                 <div className="mt-3 flex gap-2">

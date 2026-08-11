@@ -247,13 +247,17 @@ export function AssetForm({
           showAnydesk ? (
             <div className="sm:col-span-2">
               <Label>AnyDesk</Label>
-              <Input
-                value={values.anydesk}
-                onChange={(e) => update("anydesk", e.target.value)}
-                placeholder="ID de AnyDesk"
-              />
+              <div className="flex gap-2">
+                <Input
+                  value={values.anydesk}
+                  onChange={(e) => update("anydesk", e.target.value)}
+                  placeholder="ID de AnyDesk"
+                  className="font-mono"
+                />
+              </div>
               <p className="mt-1 text-xs text-[var(--muted)]">
-                Solo aplica a laptops en estado Activo.
+                Solo aplica a laptops en estado Activo. En el listado puedes
+                copiarlo con un clic.
               </p>
             </div>
           ) : (
