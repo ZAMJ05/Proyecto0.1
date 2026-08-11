@@ -93,7 +93,8 @@ function InventarioContent() {
   const list = useListControls(assets, {
     storageKey: "inventario-p25",
     defaultView: "list",
-    getName: (a) => a.name,
+    getName: (a) =>
+      `${a.name} ${a.assignments[0]?.employee.name || ""} ${a.assignments[0]?.employee.email || ""}`,
     getSerial: (a) => `${a.serialNumber} ${a.inventoryNumber}`,
     defaultSortKey: "name",
     sortFields: {
@@ -285,6 +286,8 @@ function InventarioContent() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
+        namePlaceholder="Nombre del equipo o usuario asignado..."
+        serialPlaceholder="Serial o no. inventario..."
         sortOptions={list.sortOptions}
         sortKey={list.sortKey}
         sortDir={list.sortDir}
