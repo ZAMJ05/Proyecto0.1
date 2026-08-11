@@ -185,7 +185,7 @@ export async function GET(request: Request) {
             "Email",
             "Departamento",
             "Puesto",
-            "Activo",
+            "EstadoLaboral",
             "EquiposAsignados",
             "Seriales",
           ],
