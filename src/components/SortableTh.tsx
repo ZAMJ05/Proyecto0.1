@@ -27,7 +27,6 @@ export function SortableTh({
   return (
     <th
       className={cn(
-        "px-4 py-3 text-xs font-semibold uppercase tracking-wide",
         align === "left" && "text-left",
         align === "right" && "text-right",
         align === "center" && "text-center",
@@ -38,7 +37,7 @@ export function SortableTh({
         type="button"
         onClick={() => onSort(columnKey)}
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-lg px-1 py-0.5 transition hover:text-[var(--ink)]",
+          "inline-flex max-w-full items-center gap-1.5 rounded-md transition hover:text-[var(--ink)]",
           active ? "text-[var(--ink)]" : "text-[var(--muted)]"
         )}
         title={
@@ -49,7 +48,7 @@ export function SortableTh({
             : `Ordenar por ${label}`
         }
       >
-        <span>{label}</span>
+        <span className="truncate">{label}</span>
         <Icon className="h-3.5 w-3.5 shrink-0 opacity-80" />
       </button>
     </th>

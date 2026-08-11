@@ -45,6 +45,13 @@ export async function PUT(request: Request, { params }: Params) {
       include: { position: true },
     });
 
+    await prisma.activityLog.create({
+      data: {
+        action: "Usuario inventario",
+        details: `Se actualizó el usuario ${employee.name}`,
+      },
+    });
+
     return jsonOk({ employee });
   } catch (error) {
     return handleApiError(error);

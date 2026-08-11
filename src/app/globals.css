@@ -107,10 +107,95 @@ body {
 }
 
 .table-shell {
-  overflow-x: auto;
+  overflow: auto;
+  max-height: min(70vh, 720px);
   border: 1px solid var(--border);
   background: var(--surface);
   border-radius: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.table-shell table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.table-shell thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  padding: 0.7rem 0.85rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table-shell thead th:last-child {
+  border-right: none;
+}
+
+.table-shell tbody td {
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  vertical-align: middle;
+  color: var(--ink);
+  font-size: 0.875rem;
+  word-break: break-word;
+}
+
+.table-shell tbody td:last-child {
+  border-right: none;
+}
+
+.table-shell tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table-shell tbody tr:nth-child(even) td {
+  background: color-mix(in srgb, var(--surface-2) 55%, transparent);
+}
+
+.table-shell tbody tr:hover td {
+  background: var(--accent-soft);
+}
+
+.table-shell .col-xs {
+  width: 5.5rem;
+}
+.table-shell .col-sm {
+  width: 8rem;
+}
+.table-shell .col-md {
+  width: 11rem;
+}
+.table-shell .col-lg {
+  width: 16rem;
+}
+.table-shell .col-actions {
+  width: 7.5rem;
+  white-space: nowrap;
+}
+.table-shell .col-status {
+  width: 8.5rem;
+}
+.table-shell .col-date {
+  width: 9rem;
+  white-space: nowrap;
+}
+.table-shell .col-num {
+  width: 6rem;
+  text-align: center;
 }
 
 @keyframes rise-in {

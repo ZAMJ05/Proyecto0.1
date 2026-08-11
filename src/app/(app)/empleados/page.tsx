@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { Trash2 } from "lucide-react";
+import { Pencil, Trash2, X } from "lucide-react";
 import {
   Badge,
   Button,
@@ -35,15 +35,22 @@ type Employee = {
   }>;
 };
 
+const emptyForm = {
+  name: "",
+  email: "",
+  department: "",
+  positionId: "",
+  active: true,
+};
+
 export default function EmpleadosPage() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [positions, setPositions] = useState<Position[]>([]);
   const [role, setRole] = useState<"ADMIN" | "USER">("USER");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [department, setDepartment] = useState("");
-  const [positionId, setPositionId] = useState("");
+  const [form, setForm] = useState(emptyForm);
+  const [editing, setEditing] = useState<Employee | null>(null);
   const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
 
   async function load() {
     const [eRes, pRes, meRes] = await Promise.all([
@@ -65,29 +72,53 @@ export default function EmpleadosPage() {
     load();
   }, []);
 
-  async function onCreate(e: FormEvent) {
+  function startEdit(emp: Employee) {
+    setEditing(emp);
+    setForm({
+      name: emp.name,
+      email: emp.email || "",
+      department: emp.department || "",
+      positionId: emp.position?.id || "",
+      active: emp.active,
+    });
+    setError("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function cancelEdit() {
+    setEditing(null);
+    setForm(emptyForm);
+    setError("");
+  }
+
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError("");
-    const res = await fetch("/api/employees", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        email,
-        department,
-        positionId: positionId || null,
-      }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      setError(data.error || "No se pudo crear");
-      return;
+    setSaving(true);
+    try {
+      const url = editing ? `/api/employees/${editing.id}` : "/api/employees";
+      const method = editing ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          department: form.department,
+          positionId: form.positionId || null,
+          active: form.active,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "No se pudo guardar");
+        return;
+      }
+      cancelEdit();
+      await load();
+    } finally {
+      setSaving(false);
     }
-    setName("");
-    setEmail("");
-    setDepartment("");
-    setPositionId("");
-    await load();
   }
 
   async function removeEmployee(emp: Employee) {
@@ -109,6 +140,7 @@ export default function EmpleadosPage() {
       alert(data.error || "No se pudo eliminar");
       return;
     }
+    if (editing?.id === emp.id) cancelEdit();
     await load();
   }
 
@@ -146,38 +178,52 @@ export default function EmpleadosPage() {
 
       {role === "ADMIN" && (
         <Card className="mb-6 animate-rise">
-          <h2 className="mb-4 font-[family-name:var(--font-display)] text-xl">
-            Alta de usuario de inventario
-          </h2>
-          <form onSubmit={onCreate} className="grid gap-4 md:grid-cols-2">
+          <div className="mb-4 flex items-center justify-between gap-2">
+            <h2 className="font-[family-name:var(--font-display)] text-xl">
+              {editing
+                ? `Editar usuario: ${editing.name}`
+                : "Alta de usuario de inventario"}
+            </h2>
+            {editing && (
+              <Button type="button" variant="ghost" onClick={cancelEdit}>
+                <X className="h-4 w-4" />
+                Cancelar
+              </Button>
+            )}
+          </div>
+          <form onSubmit={onSubmit} className="grid gap-4 md:grid-cols-2">
             <div>
               <Label>Nombre</Label>
               <Input
                 required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
             </div>
             <div>
               <Label>Email</Label>
               <Input
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
             </div>
             <div>
               <Label>Departamento</Label>
               <Input
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
+                value={form.department}
+                onChange={(e) =>
+                  setForm({ ...form, department: e.target.value })
+                }
               />
             </div>
             <div>
               <Label>Puesto</Label>
               <Select
-                value={positionId}
-                onChange={(e) => setPositionId(e.target.value)}
+                value={form.positionId}
+                onChange={(e) =>
+                  setForm({ ...form, positionId: e.target.value })
+                }
               >
                 <option value="">Sin puesto</option>
                 {positions.map((p) => (
@@ -187,9 +233,38 @@ export default function EmpleadosPage() {
                 ))}
               </Select>
             </div>
-            {error && <p className="text-sm text-[var(--danger)]">{error}</p>}
-            <div className="md:col-span-2">
-              <Button type="submit">Crear usuario</Button>
+            {editing && (
+              <div>
+                <Label>Estado</Label>
+                <Select
+                  value={form.active ? "1" : "0"}
+                  onChange={(e) =>
+                    setForm({ ...form, active: e.target.value === "1" })
+                  }
+                >
+                  <option value="1">Activo</option>
+                  <option value="0">Inactivo</option>
+                </Select>
+              </div>
+            )}
+            {error && (
+              <p className="text-sm text-[var(--danger)] md:col-span-2">
+                {error}
+              </p>
+            )}
+            <div className="md:col-span-2 flex flex-wrap gap-2">
+              <Button type="submit" disabled={saving}>
+                {saving
+                  ? "Guardando..."
+                  : editing
+                    ? "Guardar cambios"
+                    : "Crear usuario"}
+              </Button>
+              {editing && (
+                <Button type="button" variant="secondary" onClick={cancelEdit}>
+                  Cancelar
+                </Button>
+              )}
             </div>
           </form>
         </Card>
@@ -233,20 +308,30 @@ export default function EmpleadosPage() {
                     {emp.position?.name || "Sin puesto"}
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center justify-end gap-2">
                   <Badge tone={emp.active ? "success" : "danger"}>
                     {emp.active ? "Activo" : "Inactivo"}
                   </Badge>
                   {role === "ADMIN" && (
-                    <Button
-                      variant="danger"
-                      className="px-2 py-1"
-                      title="Eliminar usuario"
-                      onClick={() => removeEmployee(emp)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      Eliminar
-                    </Button>
+                    <>
+                      <Button
+                        variant="secondary"
+                        className="px-2 py-1"
+                        title="Editar usuario"
+                        onClick={() => startEdit(emp)}
+                      >
+                        <Pencil className="h-4 w-4" />
+                        Editar
+                      </Button>
+                      <Button
+                        variant="danger"
+                        className="px-2 py-1"
+                        title="Eliminar usuario"
+                        onClick={() => removeEmployee(emp)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </>
                   )}
                 </div>
               </div>
@@ -281,8 +366,15 @@ export default function EmpleadosPage() {
         </div>
       ) : (
         <div className="table-shell">
-          <table className="min-w-full text-sm">
-            <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
+          <table>
+            <colgroup>
+              <col className="col-lg" />
+              <col className="col-md" />
+              <col className="col-num" />
+              <col />
+              {role === "ADMIN" && <col className="col-actions" />}
+            </colgroup>
+            <thead>
               <tr>
                 <SortableTh
                   label="Usuario"
@@ -312,38 +404,45 @@ export default function EmpleadosPage() {
                   direction={list.sortDir}
                   onSort={list.toggleSort}
                 />
-                {role === "ADMIN" && (
-                  <th className="px-4 py-3 text-left">Acciones</th>
-                )}
+                {role === "ADMIN" && <th>Acciones</th>}
               </tr>
             </thead>
             <tbody>
               {list.pageItems.map((emp) => (
-                <tr key={emp.id} className="border-t border-[var(--border)]">
-                  <td className="px-4 py-3">
+                <tr key={emp.id}>
+                  <td>
                     <p className="font-medium">{emp.name}</p>
                     <p className="text-xs text-[var(--muted)]">
                       {emp.email || "Sin email"}
                     </p>
                   </td>
-                  <td className="px-4 py-3">
-                    {emp.position?.name || "Sin puesto"}
-                  </td>
-                  <td className="px-4 py-3">{emp.assignments.length}</td>
-                  <td className="px-4 py-3 text-xs">
+                  <td>{emp.position?.name || "Sin puesto"}</td>
+                  <td className="text-center">{emp.assignments.length}</td>
+                  <td className="text-xs">
                     {emp.assignments
                       .map((a) => a.asset.serialNumber)
                       .join(", ") || "—"}
                   </td>
                   {role === "ADMIN" && (
-                    <td className="px-4 py-3">
-                      <Button
-                        variant="danger"
-                        className="px-2 py-1"
-                        onClick={() => removeEmployee(emp)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                    <td>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="secondary"
+                          className="px-2 py-1"
+                          title="Editar"
+                          onClick={() => startEdit(emp)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="danger"
+                          className="px-2 py-1"
+                          title="Eliminar"
+                          onClick={() => removeEmployee(emp)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </td>
                   )}
                 </tr>
