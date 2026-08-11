@@ -247,12 +247,13 @@ function InventarioContent() {
             />
           </div>
           <div>
-            <Label>AnyDesk</Label>
+            <Label>AnyDesk (solo laptops)</Label>
             <Input
               value={filters.anydesk}
               onChange={(e) =>
                 setFilters((f) => ({ ...f, anydesk: e.target.value }))
               }
+              placeholder="Buscar ID AnyDesk..."
             />
           </div>
           <div>
@@ -416,7 +417,11 @@ function InventarioContent() {
                         : "Sin renovación"}
                     </p>
                   </td>
-                  <td className="px-4 py-3">{asset.anydesk || "—"}</td>
+                  <td className="px-4 py-3">
+                    {asset.category === "Laptop"
+                      ? asset.anydesk || "—"
+                      : "No aplica"}
+                  </td>
                   {role === "ADMIN" && (
                     <td className="px-4 py-3">
                       <div className="flex gap-2">

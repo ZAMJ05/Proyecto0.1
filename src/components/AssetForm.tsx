@@ -87,10 +87,14 @@ export function AssetForm({
             toInputDate(addYears(new Date(next.purchaseDate || Date.now()), 4));
         } else {
           next.renewalDate = "";
+          next.anydesk = "";
         }
         if (!supportsQuantity(String(value))) {
           next.quantity = 1;
         }
+      }
+      if (key === "status" && !(next.category === "Laptop" && value === "Activo")) {
+        next.anydesk = "";
       }
       return next;
     });
@@ -239,16 +243,27 @@ export function AssetForm({
             </p>
           </div>
         )}
-        {showAnydesk && (
-          <div className="sm:col-span-2">
-            <Label>AnyDesk (laptops activas)</Label>
-            <Input
-              value={values.anydesk}
-              onChange={(e) => update("anydesk", e.target.value)}
-              placeholder="ID de AnyDesk"
-            />
-          </div>
-        )}
+        {isLaptop ? (
+          showAnydesk ? (
+            <div className="sm:col-span-2">
+              <Label>AnyDesk</Label>
+              <Input
+                value={values.anydesk}
+                onChange={(e) => update("anydesk", e.target.value)}
+                placeholder="ID de AnyDesk"
+              />
+              <p className="mt-1 text-xs text-[var(--muted)]">
+                Solo aplica a laptops en estado Activo.
+              </p>
+            </div>
+          ) : (
+            <div className="sm:col-span-2">
+              <p className="rounded-xl border border-dashed border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-xs text-[var(--muted)]">
+                AnyDesk: disponible cuando la laptop esté en estado Activo.
+              </p>
+            </div>
+          )
+        ) : null}
         <div className="sm:col-span-2">
           <Label>Notas</Label>
           <Textarea
