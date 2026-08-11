@@ -12,6 +12,7 @@ import {
   UserCog,
   MonitorSmartphone,
   ClipboardList,
+  PanelLeftClose,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SessionUser } from "@/lib/auth";
@@ -27,26 +28,43 @@ const links = [
   { href: "/puestos", label: "Puestos", icon: Briefcase },
 ];
 
-export function Sidebar({ user }: { user: SessionUser }) {
+export function Sidebar({
+  user,
+  onHide,
+}: {
+  user: SessionUser;
+  onHide?: () => void;
+}) {
   const pathname = usePathname();
 
   return (
-    <aside className="flex w-64 shrink-0 flex-col border-r border-[var(--border)] bg-[var(--sidebar)] text-[var(--sidebar-text)]">
-      <div className="border-b border-white/10 px-4 py-5">
+    <div className="flex h-full w-full flex-col border-r border-[var(--border)] bg-[var(--sidebar)] text-[var(--sidebar-text)]">
+      <div className="border-b border-white/10 px-4 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent)]">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--accent)]">
             <MonitorSmartphone className="h-5 w-5 text-white" />
           </div>
-          <div>
+          <div className="min-w-0 flex-1">
             <p className="font-[family-name:var(--font-display)] text-lg leading-none tracking-tight">
               AssetDesk
             </p>
             <p className="mt-1 text-xs text-white/55">Inventario IT</p>
           </div>
+          {onHide && (
+            <button
+              type="button"
+              onClick={onHide}
+              className="rounded-lg p-1.5 text-white/70 transition hover:bg-white/10 hover:text-white"
+              title="Ocultar menú"
+              aria-label="Ocultar menú"
+            >
+              <PanelLeftClose className="h-4 w-4" />
+            </button>
+          )}
         </div>
       </div>
 
-      <nav className="flex-1 space-y-0.5 px-2 py-3">
+      <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 py-3">
         {links.map((link) => {
           const active = pathname.startsWith(link.href);
           const Icon = link.icon;
@@ -92,6 +110,6 @@ export function Sidebar({ user }: { user: SessionUser }) {
         </div>
         <LogoutButton variant="sidebar" />
       </div>
-    </aside>
+    </div>
   );
 }
