@@ -3,6 +3,9 @@ import { requireAdmin, requireSession } from "@/lib/auth";
 import { handleApiError, jsonError, jsonOk } from "@/lib/api";
 import { addMonths } from "@/lib/constants";
 
+/** Laptops que siguen en seguimiento de ciclo de vida (no inactivas ni baja) */
+const LIFECYCLE_STATUSES = ["Activo", "Stock", "Reparacion"] as const;
+
 export async function GET(request: Request) {
   try {
     await requireSession();
@@ -22,7 +25,7 @@ export async function GET(request: Request) {
             }),
         asset: {
           category: "Laptop",
-          status: { not: "Baja" },
+          status: { in: [...LIFECYCLE_STATUSES] },
         },
       },
       orderBy: { scheduledDate: "asc" },
@@ -41,7 +44,7 @@ export async function GET(request: Request) {
     const renewals = await prisma.asset.findMany({
       where: {
         category: "Laptop",
-        status: { in: ["Activo", "Stock", "Reparacion", "Inactivo"] },
+        status: { in: [...LIFECYCLE_STATUSES] },
       },
       orderBy: { renewalDate: "asc" },
       include: {
@@ -88,9 +91,75 @@ export async function POST(request: Request) {
   try {
     await requireAdmin();
     const body = await request.json();
-    const id = String(body.id || "");
     const action = String(body.action || "complete");
 
+    if (action === "confirmInactive") {
+      const assetId = String(body.assetId || "");
+      if (!assetId) return jsonError("Falta el equipo");
+
+      const asset = await prisma.asset.findUnique({ where: { id: assetId } });
+      if (!asset) return jsonError("Equipo no encontrado", 404);
+      if (asset.category !== "Laptop") {
+        return jsonError("Solo aplica a laptops", 400);
+      }
+
+      const now = new Date();
+      if (asset.renewalDate >= now) {
+        return jsonError(
+          "Solo se pueden confirmar como inactivas las renovaciones vencidas",
+          400
+        );
+      }
+
+      const updated = await prisma.asset.update({
+        where: { id: assetId },
+        data: {
+          status: "Inactivo",
+          anydesk: null,
+        },
+      });
+
+      // Liberar asignaciones abiertas
+      const open = await prisma.assignment.findMany({
+        where: { assetId, unassignedAt: null },
+      });
+      for (const a of open) {
+        await prisma.assignment.update({
+          where: { id: a.id },
+          data: {
+            unassignedAt: now,
+            notes: a.notes
+              ? `${a.notes} · Liberado al confirmar renovación vencida`
+              : "Liberado al confirmar renovación vencida como inactiva",
+          },
+        });
+      }
+
+      // Cerrar mantenimientos pendientes (ya no aplican a inactivas)
+      await prisma.maintenance.updateMany({
+        where: {
+          assetId,
+          completedDate: null,
+        },
+        data: {
+          completedDate: now,
+          status: "Completado",
+          notes: "Cerrado: laptop confirmada como inactiva (renovación vencida)",
+        },
+      });
+
+      await prisma.activityLog.create({
+        data: {
+          assetId,
+          action: "Renovación",
+          details: `Renovación vencida de ${asset.name} confirmada como inactiva · ya no aparece en ciclo de vida`,
+        },
+      });
+
+      return jsonOk({ asset: updated });
+    }
+
+    const id = String(body.id || "");
     const maintenance = await prisma.maintenance.findUnique({
       where: { id },
       include: { asset: true },
@@ -98,6 +167,12 @@ export async function POST(request: Request) {
     if (!maintenance) return jsonError("Mantenimiento no encontrado", 404);
     if (maintenance.asset.category !== "Laptop") {
       return jsonError("El mantenimiento solo aplica a laptops", 400);
+    }
+    if (maintenance.asset.status === "Inactivo" || maintenance.asset.status === "Baja") {
+      return jsonError(
+        "Las laptops inactivas o de baja no requieren mantenimiento",
+        400
+      );
     }
 
     if (action === "complete") {

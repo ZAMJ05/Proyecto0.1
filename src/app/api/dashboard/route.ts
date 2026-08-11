@@ -81,7 +81,7 @@ export async function GET() {
     const renewalsDue = await prisma.asset.count({
       where: {
         category: "Laptop",
-        status: { in: ["Activo", "Stock", "Reparacion", "Inactivo"] },
+        status: { in: ["Activo", "Stock", "Reparacion"] },
         renewalDate: { lte: in90 },
       },
     });
@@ -93,7 +93,7 @@ export async function GET() {
         completedDate: null,
         asset: {
           category: "Laptop",
-          status: { not: "Baja" },
+          status: { in: ["Activo", "Stock", "Reparacion"] },
         },
       },
     });

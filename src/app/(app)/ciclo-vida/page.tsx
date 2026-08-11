@@ -80,6 +80,29 @@ export default function CicloVidaPage() {
     await load();
   }
 
+  async function confirmInactive(item: Renewal) {
+    if (item.renewalStatus !== "Vencido") return;
+    const ok = confirm(
+      `¿Confirmar que "${item.name}" (${item.serialNumber}) queda inactiva?\nDejará de aparecer en renovaciones y mantenimiento.`
+    );
+    if (!ok) return;
+
+    const res = await fetch("/api/maintenance", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "confirmInactive",
+        assetId: item.id,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.error || "No se pudo confirmar");
+      return;
+    }
+    await load();
+  }
+
   function renewalTone(status: string) {
     if (status === "Vencido") return "danger" as const;
     if (status === "Por renovar") return "warn" as const;
@@ -136,7 +159,7 @@ export default function CicloVidaPage() {
     <div>
       <PageHeader
         title="Ciclo de vida"
-        subtitle="Solo laptops: renovación a 4 años desde la compra y mantenimiento preventivo cada 6 meses. Las bajas no se incluyen."
+        subtitle="Solo laptops activas/stock/reparación: renovación a 4 años y mantenimiento cada 6 meses. Las inactivas no se incluyen. En vencidos puedes confirmarlas como inactivas."
       />
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2">
@@ -216,6 +239,15 @@ export default function CicloVidaPage() {
                       {item.assignments[0]?.employee.name || "—"}
                     </p>
                   </div>
+                  {role === "ADMIN" && item.renewalStatus === "Vencido" && (
+                    <Button
+                      className="mt-3"
+                      variant="secondary"
+                      onClick={() => confirmInactive(item)}
+                    >
+                      Confirmar como inactiva
+                    </Button>
+                  )}
                 </Card>
               ))}
             </div>
@@ -252,6 +284,9 @@ export default function CicloVidaPage() {
                       direction={renewalList.sortDir}
                       onSort={renewalList.toggleSort}
                     />
+                    {role === "ADMIN" && (
+                      <th className="px-4 py-3 text-left">Acción</th>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -265,6 +300,21 @@ export default function CicloVidaPage() {
                           {item.renewalStatus}
                         </Badge>
                       </td>
+                      {role === "ADMIN" && (
+                        <td className="px-4 py-3">
+                          {item.renewalStatus === "Vencido" ? (
+                            <Button
+                              className="px-2 py-1"
+                              variant="secondary"
+                              onClick={() => confirmInactive(item)}
+                            >
+                              Confirmar inactiva
+                            </Button>
+                          ) : (
+                            <span className="text-xs text-[var(--muted)]">—</span>
+                          )}
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
