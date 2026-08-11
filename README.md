@@ -82,7 +82,9 @@ Las credenciales de demo **no se muestran en la app**. Solo se crean al ejecutar
 - `npm run db:init` — crea/actualiza esquema **sin borrar** datos
 - `npm run db:setup` — SOLO demo: borra todo y carga datos de prueba
 - `npm run db:seed -- --force` — reinicia demo (destructivo)
-- `npm run db:import` — importa JSON exportados de MongoDB (`data/mongo-export/`)
+- `npm run db:import` — importa JSON genéricos de MongoDB
+- `npm run db:import:ti` — importa el export inventario-ti (`assets/people/history/log`)
+- `postinstall`: prisma generate
 
 Para migrar desde MongoDB, ver `data/mongo-export/README.md`.
 

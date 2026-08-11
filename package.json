@@ -15,6 +15,7 @@
     "db:init": "node scripts/ensure-env.js && prisma db push && tsx scripts/db-bootstrap.ts",
     "db:setup": "node scripts/ensure-env.js && prisma db push && tsx prisma/seed.ts --force",
     "db:import": "node scripts/ensure-env.js && tsx scripts/import-from-mongo.ts",
+    "db:import:ti": "node scripts/ensure-env.js && tsx scripts/import-inventario-ti.ts",
     "postinstall": "prisma generate"
   },
   "prisma": {

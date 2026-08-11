@@ -1,84 +1,37 @@
-# Importar MongoDB → SQLite (Prisma)
+# Importar inventario-ti (tus JSON de Mongo)
 
-## Pasos
+Archivos esperados en esta carpeta:
 
-### 1. Exporta desde MongoDB
+- `assets.json` ← colección assets
+- `people.json` ← colección people
+- `history.json` ← colección history
+- `log.json` ← colección log
 
-Con **MongoDB Compass**:
-1. Abre cada colección
-2. Export Collection → JSON
-3. Guarda los archivos en esta carpeta (`data/mongo-export/`)
+## En Windows
 
-Con **mongoexport** (CLI):
-
-```bash
-mongoexport --uri="mongodb://localhost:27017/TU_DB" --collection=assets --out=assets.json --jsonArray
-mongoexport --uri="mongodb://localhost:27017/TU_DB" --collection=employees --out=employees.json --jsonArray
-mongoexport --uri="mongodb://localhost:27017/TU_DB" --collection=positions --out=positions.json --jsonArray
-mongoexport --uri="mongodb://localhost:27017/TU_DB" --collection=assignments --out=assignments.json --jsonArray
-mongoexport --uri="mongodb://localhost:27017/TU_DB" --collection=maintenances --out=maintenances.json --jsonArray
-mongoexport --uri="mongodb://localhost:27017/TU_DB" --collection=users --out=users.json --jsonArray
-```
-
-### 2. Nombres de archivo esperados
-
-| Archivo | Modelo Prisma |
-|---------|---------------|
-| `positions.json` | Position (puestos) |
-| `employees.json` | Employee (usuarios de equipo) |
-| `assets.json` | Asset (inventario) |
-| `assignments.json` | Assignment |
-| `maintenances.json` | Maintenance |
-| `users.json` | User (login app) |
-
-No hace falta que existan todos. El import omite los que falten.
-
-### 3. Campos que entiende el script
-
-El importador acepta nombres en español o inglés, por ejemplo:
-
-**assets.json**
-- `name` / `nombre`
-- `category` / `categoria`
-- `brand` / `marca`
-- `model` / `modelo`
-- `serialNumber` / `serial` / `numeroSerial`
-- `inventoryNumber` / `inventario` / `NoInventario`
-- `status` / `estado`
-- `purchaseDate` / `fechaCompra`
-- `renewalDate` / `fechaRenovacion` (si no viene, se calcula +4 años)
-- `anydesk`, `notes` / `notas`
-
-**employees.json**
-- `name` / `nombre`
-- `email` / `correo`
-- `department` / `departamento`
-- `position` / `puesto`
-- `active` / `activo`
-
-**assignments.json**
-- `assetId` o `serial` del equipo
-- `employeeId`, `email` o `nombre` del usuario
-- `assignedAt` / `fechaAsignacion`
-- `unassignedAt` / `fechaLiberacion`
-
-Si tus campos se llaman distinto, edita `FIELD_MAP` en `scripts/import-from-mongo.ts`.
-
-### 4. Ejecutar importación
-
-Desde la raíz del proyecto:
-
-```bash
+```powershell
+cd C:\Users\sistemas2\Music\Proyecto0.1
+git pull
+powershell -ExecutionPolicy Bypass -File .\scripts\windows\stop-assetdesk.ps1
+npm run env:init
 npm run db:init
-npm run db:import
-npm run dev
+npm run db:import:ti
+npm run build
+npm run start:lan
 ```
 
-`db:import` lee los JSON de esta carpeta y los inserta/actualiza en SQLite.
+## Qué hace el importador
 
-### 5. Notas importantes
+| Origen Mongo | Destino AssetDesk |
+|---|---|
+| `people` | Empleados + Puestos |
+| `assets` | Inventario (equipos) |
+| `assets.assignedTo` | Asignaciones activas |
+| `assets.lastMaintenance` | Mantenimientos |
+| `history` | Cambios / ActivityLog |
+| `log` | Cambios / ActivityLog |
 
-- SQLite **no es un clon 1:1** de MongoDB: hay que mapear documentos → tablas.
-- Los `_id` de Mongo se remapean a `cuid()` de Prisma; las relaciones se reconstruyen por serial/email/nombre.
-- Categorías/estados se normalizan a los valores de la app (`Laptop`, `Activo`, `Stock`, etc.).
-- Si no importas `users.json`, se mantiene/crea el admin demo.
+Estados: `active`→Activo, `stored`/`stock`→Stock, `retired`→Baja  
+Serial vacío o `N/A` → se genera `SIN-SERIAL-{tag}`
+
+**No uses `db:setup` / `db:seed`** después: borran datos.
