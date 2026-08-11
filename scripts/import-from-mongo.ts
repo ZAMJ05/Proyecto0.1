@@ -15,6 +15,7 @@
  *   maintenances.json
  *   users.json
  */
+import "dotenv/config";
 import fs from "fs";
 import path from "path";
 import bcrypt from "bcryptjs";
@@ -23,6 +24,8 @@ import { addYears } from "../src/lib/constants";
 
 const prisma = new PrismaClient();
 const DATA_DIR = path.join(process.cwd(), "data", "mongo-export");
+
+console.log("Importando hacia:", process.env.DATABASE_URL || "(DATABASE_URL no definida)");
 
 /** Mapeo: campo destino Prisma <- posibles nombres en Mongo */
 const FIELD_MAP = {
