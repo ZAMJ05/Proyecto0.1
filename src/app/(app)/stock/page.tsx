@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Trash2 } from "lucide-react";
 import {
   Badge,
+  Button,
   Card,
   EmptyState,
   Label,
@@ -32,12 +34,38 @@ type Asset = {
 export default function StockPage() {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [category, setCategory] = useState("");
+  const [role, setRole] = useState<"ADMIN" | "USER">("USER");
+
+  async function load() {
+    const [stockRes, meRes] = await Promise.all([
+      fetch("/api/assets?stockOnly=1"),
+      fetch("/api/auth/me"),
+    ]);
+    const [stock, me] = await Promise.all([stockRes.json(), meRes.json()]);
+    setAssets(stock.assets || []);
+    setRole(me.user?.role || "USER");
+  }
 
   useEffect(() => {
-    fetch("/api/assets?stockOnly=1")
-      .then((r) => r.json())
-      .then((d) => setAssets(d.assets || []));
+    load();
   }, []);
+
+  async function removeAsset(asset: Asset) {
+    if (
+      !confirm(
+        `¿Eliminar "${asset.name}" (${asset.serialNumber}) del inventario?\nEsta acción no se puede deshacer.`
+      )
+    ) {
+      return;
+    }
+    const res = await fetch(`/api/assets/${asset.id}`, { method: "DELETE" });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.error || "No se pudo eliminar");
+      return;
+    }
+    await load();
+  }
 
   const categoriesInStock = useMemo(() => {
     const set = new Set(assets.map((a) => a.category));
@@ -184,6 +212,18 @@ export default function StockPage() {
               {asset.notes && (
                 <p className="mt-3 text-xs text-[var(--muted)]">{asset.notes}</p>
               )}
+              {role === "ADMIN" && (
+                <div className="mt-3">
+                  <Button
+                    variant="danger"
+                    className="px-2 py-1"
+                    onClick={() => removeAsset(asset)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Eliminar
+                  </Button>
+                </div>
+              )}
             </Card>
           ))}
         </div>
@@ -227,6 +267,7 @@ export default function StockPage() {
                   direction={list.sortDir}
                   onSort={list.toggleSort}
                 />
+                {role === "ADMIN" && <th className="px-4 py-3 text-left">Acciones</th>}
               </tr>
             </thead>
             <tbody>
@@ -244,6 +285,18 @@ export default function StockPage() {
                   <td className="px-4 py-3">{asset.serialNumber}</td>
                   <td className="px-4 py-3">{asset.inventoryNumber}</td>
                   <td className="px-4 py-3">{formatDate(asset.purchaseDate)}</td>
+                  {role === "ADMIN" && (
+                    <td className="px-4 py-3">
+                      <Button
+                        variant="danger"
+                        className="px-2 py-1"
+                        title="Eliminar del inventario"
+                        onClick={() => removeAsset(asset)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
