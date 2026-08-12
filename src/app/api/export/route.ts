@@ -46,7 +46,11 @@ export async function GET(request: Request) {
         }),
         prisma.position.findMany({
           orderBy: { name: "asc" },
-          include: { _count: { select: { employees: true } } },
+          include: {
+            parent: { select: { name: true } },
+            children: { select: { name: true }, orderBy: { name: "asc" } },
+            _count: { select: { employees: true } },
+          },
         }),
         prisma.assignment.findMany({
           orderBy: { assignedAt: "desc" },
@@ -201,9 +205,11 @@ export async function GET(request: Request) {
         ),
         tableToCsv(
           "PUESTOS",
-          ["Puesto", "Descripcion", "Usuarios"],
+          ["Puesto", "ReportaA", "Designados", "Descripcion", "Usuarios"],
           positions.map((p) => [
             p.name,
+            p.parent?.name || "",
+            p.children.map((c) => c.name).join("; "),
             p.description || "",
             p._count.employees,
           ])
@@ -310,6 +316,8 @@ export async function GET(request: Request) {
         })),
         positions: positions.map((p) => ({
           name: p.name,
+          reportsTo: p.parent?.name || "",
+          designates: p.children.map((c) => c.name).join("; "),
           description: p.description || "",
           employees: p._count.employees,
         })),

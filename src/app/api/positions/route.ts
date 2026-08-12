@@ -8,7 +8,12 @@ export async function GET() {
     const positions = await prisma.position.findMany({
       orderBy: { name: "asc" },
       include: {
-        _count: { select: { employees: true } },
+        parent: { select: { id: true, name: true } },
+        children: {
+          select: { id: true, name: true },
+          orderBy: { name: "asc" },
+        },
+        _count: { select: { employees: true, children: true } },
         employees: {
           select: {
             id: true,
@@ -35,8 +40,25 @@ export async function POST(request: Request) {
       : null;
     if (!name) return jsonError("El nombre del puesto es obligatorio");
 
+    let parentId: string | null = null;
+    if (body.parentId) {
+      const parent = await prisma.position.findUnique({
+        where: { id: String(body.parentId) },
+      });
+      if (!parent) return jsonError("Puesto superior no encontrado", 404);
+      parentId = parent.id;
+    }
+
     const position = await prisma.position.create({
-      data: { name, description },
+      data: { name, description, parentId },
+      include: {
+        parent: { select: { id: true, name: true } },
+        children: { select: { id: true, name: true } },
+        _count: { select: { employees: true, children: true } },
+        employees: {
+          select: { id: true, name: true, email: true, active: true },
+        },
+      },
     });
     return jsonOk({ position }, 201);
   } catch (error) {
