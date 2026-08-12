@@ -1,6 +1,14 @@
 "use client";
 
-import { LayoutGrid, List, ChevronLeft, ChevronRight, ArrowDownAZ, ArrowUpZA } from "lucide-react";
+import {
+  LayoutGrid,
+  List,
+  ChevronLeft,
+  ChevronRight,
+  ArrowDownAZ,
+  ArrowUpZA,
+  Search,
+} from "lucide-react";
 import { Button, Input, Select } from "./ui";
 import type { ListViewMode, SortDir } from "@/hooks/useListControls";
 import { LIST_PAGE_SIZE } from "@/hooks/useListControls";
@@ -32,6 +40,7 @@ export function Pager({
   showingTo,
   total,
   pageSize = LIST_PAGE_SIZE,
+  compact = false,
 }: {
   page: number;
   totalPages: number;
@@ -40,22 +49,34 @@ export function Pager({
   showingTo: number;
   total: number;
   pageSize?: number;
+  compact?: boolean;
 }) {
   const pages = pageNumbers(page, totalPages);
 
   return (
-    <div className="flex flex-col gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-xs text-[var(--muted)]">
-        {showingFrom}-{showingTo} de {total} · pág. {page}/{totalPages} ·{" "}
-        {pageSize}/página
-      </p>
+    <div
+      className={cn(
+        "flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between",
+        !compact &&
+          "rounded-[1.1rem] border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 shadow-[var(--shadow)]"
+      )}
+    >
+      {!compact && (
+        <p className="text-xs text-[var(--muted)]">
+          <span className="font-medium text-[var(--ink)]">
+            {showingFrom}–{showingTo}
+          </span>{" "}
+          de {total} · {pageSize}/página
+        </p>
+      )}
       <div className="flex flex-wrap items-center gap-1">
         <Button
           type="button"
           variant="secondary"
-          className="px-2 py-1"
+          className="px-2 py-1.5"
           disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
+          aria-label="Página anterior"
         >
           <ChevronLeft className="h-4 w-4" />
           <span className="hidden sm:inline">Anterior</span>
@@ -71,11 +92,12 @@ export function Pager({
               <button
                 type="button"
                 onClick={() => onPageChange(p)}
+                aria-current={p === page ? "page" : undefined}
                 className={cn(
-                  "min-w-8 rounded-lg px-2 py-1 text-xs font-semibold transition",
+                  "min-w-8 rounded-lg px-2 py-1.5 text-xs font-semibold transition",
                   p === page
-                    ? "bg-[var(--accent)] text-white"
-                    : "bg-[var(--surface-2)] text-[var(--muted)] hover:bg-[var(--border)]"
+                    ? "bg-[var(--accent)] text-white shadow-sm"
+                    : "bg-[var(--surface-2)] text-[var(--muted)] hover:bg-[var(--border)] hover:text-[var(--ink)]"
                 )}
               >
                 {p}
@@ -86,9 +108,10 @@ export function Pager({
         <Button
           type="button"
           variant="secondary"
-          className="px-2 py-1"
+          className="px-2 py-1.5"
           disabled={page >= totalPages}
           onClick={() => onPageChange(page + 1)}
+          aria-label="Página siguiente"
         >
           <span className="hidden sm:inline">Siguiente</span>
           <ChevronRight className="h-4 w-4" />
@@ -142,114 +165,142 @@ export function ListToolbar({
   onSortChange?: (key: string, dir: SortDir) => void;
 }) {
   return (
-    <div className="mb-3 space-y-2">
-      <div className="flex flex-col gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3 sm:flex-row sm:items-center">
-        <div
-          className={cn(
-            "grid flex-1 gap-2",
-            showSerial ? "md:grid-cols-2" : "md:grid-cols-1"
-          )}
-        >
-          <Input
-            value={name}
-            onChange={(e) => onNameChange(e.target.value)}
-            placeholder={namePlaceholder}
-            aria-label="Buscar por nombre"
-          />
-          {showSerial && (
-            <Input
-              value={serial}
-              onChange={(e) => onSerialChange(e.target.value)}
-              placeholder={serialPlaceholder}
-              aria-label="Buscar por serial"
+    <div className="mb-3">
+      <div className="list-toolbar">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+          <div
+            className={cn(
+              "grid flex-1 gap-2",
+              showSerial ? "md:grid-cols-2" : "md:grid-cols-1"
+            )}
+          >
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
+              <Input
+                value={name}
+                onChange={(e) => onNameChange(e.target.value)}
+                placeholder={namePlaceholder}
+                aria-label="Buscar por nombre"
+                className="pl-10"
+              />
+            </div>
+            {showSerial && (
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
+                <Input
+                  value={serial}
+                  onChange={(e) => onSerialChange(e.target.value)}
+                  placeholder={serialPlaceholder}
+                  aria-label="Buscar por serial"
+                  className="pl-10"
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {sortOptions && sortOptions.length > 0 && onSortChange && (
+              <div className="flex items-center gap-1.5 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-1">
+                <Select
+                  value={sortKey || sortOptions[0].key}
+                  onChange={(e) =>
+                    onSortChange(e.target.value, sortDir || "asc")
+                  }
+                  className="min-w-[8.5rem] border-0 bg-transparent py-1.5 text-xs shadow-none focus:ring-0"
+                  aria-label="Ordenar por"
+                  title="Ordenar por"
+                >
+                  {sortOptions.map((opt) => (
+                    <option key={opt.key} value={opt.key}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </Select>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="px-2 py-1.5"
+                  title={
+                    sortDir === "desc"
+                      ? "Mayor → menor / Z → A"
+                      : "Menor → mayor / A → Z"
+                  }
+                  onClick={() =>
+                    onSortChange(
+                      sortKey || sortOptions[0].key,
+                      sortDir === "asc" ? "desc" : "asc"
+                    )
+                  }
+                >
+                  {sortDir === "desc" ? (
+                    <ArrowUpZA className="h-3.5 w-3.5" />
+                  ) : (
+                    <ArrowDownAZ className="h-3.5 w-3.5" />
+                  )}
+                </Button>
+              </div>
+            )}
+
+            <div className="flex shrink-0 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-1">
+              <button
+                type="button"
+                onClick={() => onViewChange("list")}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition",
+                  view === "list"
+                    ? "bg-[var(--surface)] text-[var(--ink)] shadow-sm"
+                    : "text-[var(--muted)] hover:text-[var(--ink)]"
+                )}
+                title="Vista en lista"
+              >
+                <List className="h-3.5 w-3.5" />
+                Lista
+              </button>
+              <button
+                type="button"
+                onClick={() => onViewChange("grid")}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition",
+                  view === "grid"
+                    ? "bg-[var(--surface)] text-[var(--ink)] shadow-sm"
+                    : "text-[var(--muted)] hover:text-[var(--ink)]"
+                )}
+                title="Vista en tarjetas"
+              >
+                <LayoutGrid className="h-3.5 w-3.5" />
+                Tarjetas
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="list-toolbar-meta">
+          <p className="text-xs text-[var(--muted)]">
+            {total === 0 ? (
+              "Sin resultados"
+            ) : (
+              <>
+                Mostrando{" "}
+                <span className="font-semibold text-[var(--ink)]">
+                  {showingFrom}–{showingTo}
+                </span>{" "}
+                de {total}
+              </>
+            )}
+          </p>
+          {totalPages > 1 && (
+            <Pager
+              compact
+              page={page}
+              totalPages={totalPages}
+              onPageChange={onPageChange}
+              showingFrom={showingFrom}
+              showingTo={showingTo}
+              total={total}
             />
           )}
         </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          {sortOptions && sortOptions.length > 0 && onSortChange && (
-            <div className="flex items-center gap-1.5">
-              <Select
-                value={sortKey || sortOptions[0].key}
-                onChange={(e) =>
-                  onSortChange(e.target.value, sortDir || "asc")
-                }
-                className="min-w-[9rem] py-1.5 text-xs"
-                aria-label="Ordenar por"
-                title="Ordenar por"
-              >
-                {sortOptions.map((opt) => (
-                  <option key={opt.key} value={opt.key}>
-                    {opt.label}
-                  </option>
-                ))}
-              </Select>
-              <Button
-                type="button"
-                variant="secondary"
-                className="px-2 py-1.5"
-                title={
-                  sortDir === "desc"
-                    ? "Mayor → menor / Z → A (clic para invertir)"
-                    : "Menor → mayor / A → Z (clic para invertir)"
-                }
-                onClick={() =>
-                  onSortChange(
-                    sortKey || sortOptions[0].key,
-                    sortDir === "asc" ? "desc" : "asc"
-                  )
-                }
-              >
-                {sortDir === "desc" ? (
-                  <ArrowUpZA className="h-3.5 w-3.5" />
-                ) : (
-                  <ArrowDownAZ className="h-3.5 w-3.5" />
-                )}
-              </Button>
-            </div>
-          )}
-
-          <div className="flex shrink-0 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-1">
-            <button
-              type="button"
-              onClick={() => onViewChange("list")}
-              className={cn(
-                "inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium transition",
-                view === "list"
-                  ? "bg-[var(--accent)] text-white"
-                  : "text-[var(--muted)] hover:bg-[var(--surface)]"
-              )}
-              title="Vista en lista"
-            >
-              <List className="h-3.5 w-3.5" />
-              Lista
-            </button>
-            <button
-              type="button"
-              onClick={() => onViewChange("grid")}
-              className={cn(
-                "inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium transition",
-                view === "grid"
-                  ? "bg-[var(--accent)] text-white"
-                  : "text-[var(--muted)] hover:bg-[var(--surface)]"
-              )}
-              title="Vista en recuadros"
-            >
-              <LayoutGrid className="h-3.5 w-3.5" />
-              Tarjetas
-            </button>
-          </div>
-        </div>
       </div>
-
-      <Pager
-        page={page}
-        totalPages={totalPages}
-        onPageChange={onPageChange}
-        showingFrom={showingFrom}
-        showingTo={showingTo}
-        total={total}
-      />
     </div>
   );
 }
@@ -263,7 +314,7 @@ export function ListFooter(props: {
   showingTo: number;
   total: number;
 }) {
-  if (props.total === 0) return null;
+  if (props.total === 0 || props.totalPages <= 1) return null;
   return (
     <div className="mt-3">
       <Pager {...props} />

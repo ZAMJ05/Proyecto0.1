@@ -37,8 +37,10 @@ export function SortableTh({
         type="button"
         onClick={() => onSort(columnKey)}
         className={cn(
-          "inline-flex max-w-full items-center gap-1.5 rounded-md transition hover:text-[var(--ink)]",
-          active ? "text-[var(--ink)]" : "text-[var(--muted)]"
+          "inline-flex max-w-full items-center gap-1.5 rounded-lg px-1.5 py-1 transition",
+          active
+            ? "bg-[var(--accent-soft)] text-[var(--accent-strong)]"
+            : "text-[var(--muted)] hover:bg-[var(--surface)] hover:text-[var(--ink)]"
         )}
         title={
           active
@@ -49,7 +51,12 @@ export function SortableTh({
         }
       >
         <span className="truncate">{label}</span>
-        <Icon className="h-3.5 w-3.5 shrink-0 opacity-80" />
+        <Icon
+          className={cn(
+            "h-3.5 w-3.5 shrink-0",
+            active ? "opacity-100" : "opacity-55"
+          )}
+        />
       </button>
     </th>
   );

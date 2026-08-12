@@ -375,27 +375,27 @@ export function TopSearch() {
           className="pl-10"
         />
         {open && results && (
-          <div className="absolute z-30 mt-2 max-h-96 w-full overflow-auto rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3 shadow-xl">
+          <div className="absolute z-30 mt-2 max-h-96 w-full overflow-auto rounded-[1.1rem] border border-[var(--border)] bg-[var(--surface)] p-2 shadow-[var(--shadow-lg)] animate-rise">
             {pending && (
-              <p className="px-2 py-1 text-xs text-[var(--muted)]">Buscando...</p>
+              <p className="px-3 py-2 text-xs text-[var(--muted)]">Buscando...</p>
             )}
-            <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
+            <p className="mb-1 px-3 pt-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--muted)]">
               Equipos
             </p>
             {results.assets.length === 0 && (
-              <p className="px-2 pb-2 text-sm text-[var(--muted)]">Sin equipos</p>
+              <p className="px-3 pb-2 text-sm text-[var(--muted)]">Sin equipos</p>
             )}
             {results.assets.map((a) => (
               <a
                 key={a.id}
                 href="/inventario"
-                className="block rounded-xl px-2 py-2 hover:bg-[var(--surface-2)]"
+                className="block rounded-xl px-3 py-2.5 transition hover:bg-[var(--surface-2)]"
                 onClick={() => setOpen(false)}
               >
                 <div className="flex items-center justify-between gap-2">
                   <div>
-                    <p className="text-sm font-medium">{a.name}</p>
-                    <p className="text-xs text-[var(--muted)]">{a.serialNumber}</p>
+                    <p className="text-sm font-medium text-[var(--ink)]">{a.name}</p>
+                    <p className="text-xs tabular-nums text-[var(--muted)]">{a.serialNumber}</p>
                   </div>
                   <Badge>{a.status}</Badge>
                 </div>
@@ -406,20 +406,20 @@ export function TopSearch() {
                 )}
               </a>
             ))}
-            <p className="mb-2 mt-3 px-2 text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
+            <p className="mb-1 mt-2 px-3 pt-2 text-[11px] font-semibold uppercase tracking-wide text-[var(--muted)]">
               Usuarios
             </p>
             {results.employees.length === 0 && (
-              <p className="px-2 text-sm text-[var(--muted)]">Sin usuarios</p>
+              <p className="px-3 text-sm text-[var(--muted)]">Sin usuarios</p>
             )}
             {results.employees.map((e) => (
               <a
                 key={e.id}
                 href="/empleados"
-                className="block rounded-xl px-2 py-2 hover:bg-[var(--surface-2)]"
+                className="block rounded-xl px-3 py-2.5 transition hover:bg-[var(--surface-2)]"
                 onClick={() => setOpen(false)}
               >
-                <p className="text-sm font-medium">{e.name}</p>
+                <p className="text-sm font-medium text-[var(--ink)]">{e.name}</p>
                 <p className="text-xs text-[var(--muted)]">
                   {e.email || "Sin email"} · {e.assignments.length} activo(s)
                 </p>
@@ -434,18 +434,20 @@ export function TopSearch() {
           onClick={exportCsv}
           disabled={!!exporting}
           title="CSV con todas las tablas"
+          className="whitespace-nowrap"
         >
           <Download className="h-4 w-4" />
-          {exporting === "csv" ? "CSV..." : "CSV tablas"}
+          {exporting === "csv" ? "CSV..." : "CSV"}
         </Button>
         <Button
           variant="secondary"
           onClick={exportPdf}
           disabled={!!exporting}
           title="PDF con gráficas y tablas"
+          className="whitespace-nowrap"
         >
           <FileText className="h-4 w-4" />
-          {exporting === "pdf" ? "PDF..." : "PDF + gráficas"}
+          {exporting === "pdf" ? "PDF..." : "PDF"}
         </Button>
       </div>
     </div>

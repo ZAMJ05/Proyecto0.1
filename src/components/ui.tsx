@@ -1,7 +1,13 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
+import {
+  ReactNode,
+  ButtonHTMLAttributes,
+  InputHTMLAttributes,
+  SelectHTMLAttributes,
+  TextareaHTMLAttributes,
+} from "react";
 
 export function Card({
   children,
@@ -19,8 +25,9 @@ export function Card({
       id={id}
       onClick={onClick}
       className={cn(
-        "rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[var(--shadow)] sm:p-5",
-        onClick && "cursor-pointer transition hover:-translate-y-0.5 hover:border-[var(--accent)]",
+        "rounded-[1.1rem] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[var(--shadow)] sm:p-5",
+        onClick &&
+          "cursor-pointer transition duration-200 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:shadow-[var(--shadow-lg)]",
         className
       )}
     >
@@ -38,16 +45,16 @@ export function Button({
 }) {
   const variants = {
     primary:
-      "bg-[var(--accent)] text-white hover:bg-[var(--accent-strong)] shadow-sm",
+      "bg-[var(--accent)] text-white hover:bg-[var(--accent-strong)] shadow-sm active:scale-[0.98]",
     secondary:
-      "bg-[var(--surface)] text-[var(--ink)] border border-[var(--border)] hover:bg-[var(--surface-2)]",
-    danger: "bg-[var(--danger)] text-white hover:opacity-90",
-    ghost: "bg-transparent text-[var(--muted)] hover:bg-[var(--surface-2)]",
+      "bg-[var(--surface)] text-[var(--ink)] border border-[var(--border)] hover:bg-[var(--surface-2)] hover:border-[var(--accent)] active:scale-[0.98]",
+    danger: "bg-[var(--danger)] text-white hover:opacity-90 active:scale-[0.98]",
+    ghost: "bg-transparent text-[var(--muted)] hover:bg-[var(--surface-2)] hover:text-[var(--ink)]",
   };
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition disabled:opacity-50",
+        "inline-flex items-center justify-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium transition duration-150 disabled:pointer-events-none disabled:opacity-50",
         variants[variant],
         className
       )}
@@ -56,19 +63,14 @@ export function Button({
   );
 }
 
+const fieldClass =
+  "w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--muted)] hover:border-[var(--accent)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--ring)]";
+
 export function Input({
   className,
   ...props
 }: InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <input
-      className={cn(
-        "w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]",
-        className
-      )}
-      {...props}
-    />
-  );
+  return <input className={cn(fieldClass, className)} {...props} />;
 }
 
 export function Select({
@@ -77,13 +79,7 @@ export function Select({
   ...props
 }: SelectHTMLAttributes<HTMLSelectElement>) {
   return (
-    <select
-      className={cn(
-        "w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]",
-        className
-      )}
-      {...props}
-    >
+    <select className={cn(fieldClass, "pr-8", className)} {...props}>
       {children}
     </select>
   );
@@ -93,20 +89,12 @@ export function Textarea({
   className,
   ...props
 }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return (
-    <textarea
-      className={cn(
-        "w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]",
-        className
-      )}
-      {...props}
-    />
-  );
+  return <textarea className={cn(fieldClass, "min-h-[4.5rem] resize-y", className)} {...props} />;
 }
 
 export function Label({ children }: { children: ReactNode }) {
   return (
-    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
+    <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--muted)]">
       {children}
     </label>
   );
@@ -129,7 +117,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex rounded-lg px-2 py-0.5 text-xs font-semibold",
+        "inline-flex items-center rounded-lg px-2 py-0.5 text-[11px] font-semibold tracking-wide",
         tones[tone]
       )}
     >
@@ -154,7 +142,9 @@ export function PageHeader({
           {title}
         </h1>
         {subtitle && (
-          <p className="mt-1 max-w-2xl text-sm text-[var(--muted)]">{subtitle}</p>
+          <p className="mt-1 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
+            {subtitle}
+          </p>
         )}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
@@ -164,8 +154,8 @@ export function PageHeader({
 
 export function EmptyState({ text }: { text: string }) {
   return (
-    <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface-2)] px-6 py-10 text-center text-sm text-[var(--muted)]">
-      {text}
+    <div className="rounded-[1.1rem] border border-dashed border-[var(--border)] bg-[var(--surface-2)] px-6 py-12 text-center">
+      <p className="text-sm text-[var(--muted)]">{text}</p>
     </div>
   );
 }

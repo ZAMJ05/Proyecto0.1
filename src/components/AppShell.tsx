@@ -59,13 +59,13 @@ export function AppShell({
           ready && open ? "md:ml-64" : "md:ml-0"
         )}
       >
-        <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--header)] px-4 py-3 backdrop-blur md:px-6">
-          <div className="mb-2 flex items-center justify-between gap-3">
+        <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--header)] px-4 py-3 shadow-[0_1px_0_rgba(15,36,52,0.03)] backdrop-blur-xl md:px-6">
+          <div className="mb-2.5 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <Button
                 type="button"
                 variant="secondary"
-                className="hidden px-2.5 md:inline-flex"
+                className="hidden h-9 w-9 px-0 md:inline-flex"
                 onClick={toggle}
                 title={open ? "Ocultar menú" : "Mostrar menú"}
                 aria-label={open ? "Ocultar menú" : "Mostrar menú"}
@@ -104,7 +104,7 @@ export function AppShell({
             </div>
           </div>
           <TopSearch />
-          <nav className="mt-2 flex gap-2 overflow-x-auto pb-1 md:hidden">
+          <nav className="mt-2.5 flex gap-1.5 overflow-x-auto pb-1 md:hidden">
             {[
               ["/dashboard", "Dashboard"],
               ["/inventario", "Inventario"],
@@ -118,14 +118,16 @@ export function AppShell({
               <a
                 key={href}
                 href={href}
-                className="whitespace-nowrap rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-xs text-[var(--muted)]"
+                className="whitespace-nowrap rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-xs font-medium text-[var(--muted)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
               >
                 {label}
               </a>
             ))}
           </nav>
         </header>
-        <main className="flex-1 px-4 py-5 md:px-6">{children}</main>
+        <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 py-5 md:px-6 md:py-6">
+          {children}
+        </main>
       </div>
     </div>
   );
