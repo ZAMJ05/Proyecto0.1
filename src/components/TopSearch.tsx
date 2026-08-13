@@ -3,9 +3,11 @@
 import { useEffect, useState, useTransition } from "react";
 import { Search, Download, FileText } from "lucide-react";
 import { Button, Input, Badge } from "./ui";
-import { formatDate } from "@/lib/utils";
-import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
+import {
+  buildExportPdf,
+  csvFilename,
+  type ExportPayload,
+} from "@/lib/export-pdf";
 
 type Result = {
   assets: Array<{
@@ -22,112 +24,6 @@ type Result = {
     assignments: Array<{ asset: { name: string; serialNumber: string } }>;
   }>;
 };
-
-type ChartRow = { name: string; value: number };
-
-function drawBarChart(title: string, rows: ChartRow[]) {
-  const width = 900;
-  const height = 420;
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return "";
-
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, width, height);
-  ctx.fillStyle = "#102433";
-  ctx.font = "bold 22px sans-serif";
-  ctx.fillText(title, 24, 36);
-
-  const max = Math.max(...rows.map((r) => r.value), 1);
-  const left = 70;
-  const bottom = height - 70;
-  const top = 70;
-  const chartW = width - left - 30;
-  const chartH = bottom - top;
-  const barW = Math.min(56, chartW / Math.max(rows.length, 1) - 12);
-
-  ctx.strokeStyle = "#d5e0e8";
-  ctx.beginPath();
-  ctx.moveTo(left, top);
-  ctx.lineTo(left, bottom);
-  ctx.lineTo(left + chartW, bottom);
-  ctx.stroke();
-
-  rows.forEach((row, i) => {
-    const x =
-      left +
-      (i + 0.5) * (chartW / Math.max(rows.length, 1)) -
-      barW / 2;
-    const h = (row.value / max) * (chartH - 10);
-    const y = bottom - h;
-    ctx.fillStyle = i % 2 === 0 ? "#0f766e" : "#2563eb";
-    ctx.fillRect(x, y, barW, h);
-    ctx.fillStyle = "#102433";
-    ctx.font = "12px sans-serif";
-    ctx.fillText(String(row.value), x + barW / 2 - 6, y - 8);
-    ctx.save();
-    ctx.translate(x + barW / 2, bottom + 14);
-    ctx.rotate(-Math.PI / 4);
-    ctx.fillText(row.name.slice(0, 14), 0, 0);
-    ctx.restore();
-  });
-
-  return canvas.toDataURL("image/png");
-}
-
-function drawPieChart(title: string, rows: ChartRow[]) {
-  const width = 700;
-  const height = 420;
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return "";
-
-  const colors = [
-    "#0f766e",
-    "#2563eb",
-    "#d97706",
-    "#be123c",
-    "#7c3aed",
-    "#0ea5e9",
-    "#65a30d",
-    "#9333ea",
-  ];
-  const total = rows.reduce((s, r) => s + r.value, 0) || 1;
-  const cx = 220;
-  const cy = 230;
-  const radius = 120;
-  let angle = -Math.PI / 2;
-
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, width, height);
-  ctx.fillStyle = "#102433";
-  ctx.font = "bold 22px sans-serif";
-  ctx.fillText(title, 24, 36);
-
-  rows.forEach((row, i) => {
-    const slice = (row.value / total) * Math.PI * 2;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.arc(cx, cy, radius, angle, angle + slice);
-    ctx.closePath();
-    ctx.fillStyle = colors[i % colors.length];
-    ctx.fill();
-    angle += slice;
-
-    const ly = 90 + i * 28;
-    ctx.fillRect(400, ly - 12, 16, 16);
-    ctx.fillStyle = "#102433";
-    ctx.font = "14px sans-serif";
-    ctx.fillText(`${row.name}: ${row.value}`, 424, ly);
-    ctx.fillStyle = colors[i % colors.length];
-  });
-
-  return canvas.toDataURL("image/png");
-}
 
 export function TopSearch() {
   const [q, setQ] = useState("");
@@ -156,13 +52,16 @@ export function TopSearch() {
     setExporting("csv");
     try {
       const res = await fetch("/api/export?format=csv");
+      if (!res.ok) throw new Error("No se pudo exportar CSV");
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "assetdesk-inventario-completo.csv";
+      a.download = csvFilename();
       a.click();
       URL.revokeObjectURL(url);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Error al exportar CSV");
     } finally {
       setExporting(null);
     }
@@ -172,192 +71,11 @@ export function TopSearch() {
     setExporting("pdf");
     try {
       const res = await fetch("/api/export?format=json");
-      const data = await res.json();
-      const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
-      const pageW = doc.internal.pageSize.getWidth();
-
-      doc.setFontSize(18);
-      doc.text("AssetDesk — Reporte de inventario IT", 14, 18);
-      doc.setFontSize(10);
-      doc.text(`Exportado: ${formatDate(data.exportedAt)}`, 14, 26);
-
-      const laptop = data.summary?.laptops || {
-        total: 0,
-        activas: 0,
-        inactivas: 0,
-        stock: 0,
-        reparacion: 0,
-      };
-      doc.text(
-        `Totales: ${data.summary.totalAssets} equipos · ${data.summary.employees} usuarios · ${data.summary.activeAssignments} asignaciones activas`,
-        14,
-        32
-      );
-      doc.setFont("helvetica", "bold");
-      doc.text(
-        `Laptops (sin bajas): ${laptop.total} total · ${laptop.activas} activas · ${laptop.inactivas} inactivas · ${laptop.stock} en stock`,
-        14,
-        38
-      );
-      doc.setFont("helvetica", "normal");
-
-      const barImg = drawBarChart(
-        "Equipos por categoría",
-        data.charts.byCategory || []
-      );
-      const laptopPie = drawPieChart(
-        "Laptops: activas / inactivas / stock",
-        data.charts.laptopsByStatus || []
-      );
-
-      if (barImg) doc.addImage(barImg, "PNG", 14, 44, 140, 65);
-      if (laptopPie) doc.addImage(laptopPie, "PNG", 160, 44, 120, 65);
-
-      doc.setFontSize(12);
-      doc.text("Resumen de laptops", 14, 118);
-      autoTable(doc, {
-        startY: 122,
-        head: [["Concepto", "Cantidad"]],
-        body: [
-          ["Total laptops (sin bajas)", laptop.total],
-          ["Activas", laptop.activas],
-          ["Inactivas", laptop.inactivas],
-          ["En stock", laptop.stock],
-          ...(laptop.reparacion
-            ? [["En reparación", laptop.reparacion]]
-            : []),
-        ],
-        styles: { fontSize: 8 },
-        margin: { left: 14 },
-        tableWidth: 80,
-        headStyles: { fillColor: [15, 118, 110] },
-      });
-
-      doc.text("Resumen por estado (todos)", 110, 118);
-      autoTable(doc, {
-        startY: 122,
-        head: [["Estado", "Cantidad"]],
-        body: (data.charts.byStatus || []).map((r: ChartRow) => [
-          r.name,
-          r.value,
-        ]),
-        styles: { fontSize: 8 },
-        margin: { left: 110 },
-        tableWidth: 70,
-        headStyles: { fillColor: [15, 118, 110] },
-      });
-
-      const sections: Array<{
-        title: string;
-        head: string[];
-        body: (string | number)[][];
-      }> = [
-        {
-          title: "Inventario completo",
-          head: [
-            "Nombre",
-            "Categoría",
-            "Marca",
-            "Serial",
-            "Estado",
-            "Asignado",
-            "Renovación",
-          ],
-          body: (data.tables.assets || []).map(
-            (a: {
-              name: string;
-              category: string;
-              brand: string;
-              serialNumber: string;
-              status: string;
-              assignedTo: string;
-              renewalDate: string;
-            }) => [
-              a.name,
-              a.category,
-              a.brand,
-              a.serialNumber,
-              a.status,
-              a.assignedTo || "—",
-              a.renewalDate,
-            ]
-          ),
-        },
-        {
-          title: "Stock / Reserva",
-          head: ["Nombre", "Categoría", "Serial", "Inventario", "Compra"],
-          body: (data.tables.stock || []).map(
-            (a: {
-              name: string;
-              category: string;
-              serialNumber: string;
-              inventoryNumber: string;
-              purchaseDate: string;
-            }) => [
-              a.name,
-              a.category,
-              a.serialNumber,
-              a.inventoryNumber,
-              a.purchaseDate,
-            ]
-          ),
-        },
-        {
-          title: "Usuarios y activos",
-          head: ["Nombre", "Email", "Puesto", "Activos", "Seriales"],
-          body: (data.tables.employees || []).map(
-            (e: {
-              name: string;
-              email: string;
-              position: string;
-              assignedCount: number;
-              serials: string;
-            }) => [
-              e.name,
-              e.email || "—",
-              e.position || "—",
-              e.assignedCount,
-              e.serials || "—",
-            ]
-          ),
-        },
-        {
-          title: "Asignaciones",
-          head: ["Usuario", "Equipo", "Serial", "Desde", "Estado"],
-          body: (data.tables.assignments || []).map(
-            (a: {
-              employee: string;
-              asset: string;
-              serialNumber: string;
-              assignedAt: string;
-              status: string;
-            }) => [
-              a.employee,
-              a.asset,
-              a.serialNumber,
-              a.assignedAt,
-              a.status,
-            ]
-          ),
-        },
-      ];
-
-      for (const section of sections) {
-        doc.addPage();
-        doc.setFontSize(14);
-        doc.text(section.title, 14, 18);
-        autoTable(doc, {
-          startY: 24,
-          head: [section.head],
-          body: section.body,
-          styles: { fontSize: 7 },
-          headStyles: { fillColor: [15, 118, 110] },
-          margin: { left: 10, right: 10 },
-          tableWidth: pageW - 20,
-        });
-      }
-
-      doc.save("assetdesk-reporte.pdf");
+      if (!res.ok) throw new Error("No se pudo generar el reporte");
+      const data = (await res.json()) as ExportPayload;
+      buildExportPdf(data);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Error al exportar PDF");
     } finally {
       setExporting(null);
     }
@@ -433,7 +151,7 @@ export function TopSearch() {
           variant="secondary"
           onClick={exportCsv}
           disabled={!!exporting}
-          title="CSV con todas las tablas"
+          title="CSV actualizado con todas las tablas"
           className="whitespace-nowrap"
         >
           <Download className="h-4 w-4" />
@@ -443,7 +161,7 @@ export function TopSearch() {
           variant="secondary"
           onClick={exportPdf}
           disabled={!!exporting}
-          title="PDF con gráficas y tablas"
+          title="PDF profesional con portada, gráficas y tablas"
           className="whitespace-nowrap"
         >
           <FileText className="h-4 w-4" />

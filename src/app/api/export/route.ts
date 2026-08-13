@@ -17,11 +17,19 @@ function tableToCsv(title: string, headers: string[], rows: unknown[][]) {
   return lines.join("\n");
 }
 
+function fileStamp(d = new Date()) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}${m}${day}`;
+}
+
 export async function GET(request: Request) {
   try {
-    await requireSession();
+    const session = await requireSession();
     const { searchParams } = new URL(request.url);
     const format = searchParams.get("format") || "csv";
+    const exportedAt = new Date();
 
     const [assets, employees, positions, assignments, maintenances] =
       await Promise.all([
@@ -47,7 +55,7 @@ export async function GET(request: Request) {
         prisma.position.findMany({
           orderBy: { name: "asc" },
           include: {
-            parent: { select: { name: true } },
+            parent: { select: { id: true, name: true, parentId: true } },
             children: { select: { name: true }, orderBy: { name: "asc" } },
             _count: { select: { employees: true } },
           },
@@ -67,6 +75,26 @@ export async function GET(request: Request) {
         }),
       ]);
 
+    const positionById = new Map(
+      positions.map((p) => [
+        p.id,
+        { id: p.id, name: p.name, parentId: p.parent?.id ?? null },
+      ])
+    );
+
+    function hierarchyPath(positionId: string | null | undefined): string {
+      if (!positionId) return "";
+      const parts: string[] = [];
+      let cur = positionById.get(positionId);
+      const guard = new Set<string>();
+      while (cur && !guard.has(cur.id)) {
+        parts.unshift(cur.name);
+        guard.add(cur.id);
+        cur = cur.parentId ? positionById.get(cur.parentId) : undefined;
+      }
+      return parts.join(" › ");
+    }
+
     const byCategoryMap = new Map<string, number>();
     const byStatusMap = new Map<string, number>();
     for (const a of assets) {
@@ -81,7 +109,9 @@ export async function GET(request: Request) {
       .sort((a, b) => b.value - a.value);
 
     const stockAssets = assets.filter((a) => a.status === "Stock");
+    const assetsTracked = assets.filter((a) => a.status !== "Baja");
     const activeAssignments = assignments.filter((a) => !a.unassignedAt);
+    const employeesActive = employees.filter((e) => e.active).length;
 
     const laptops = assets.filter((a) => a.category === "Laptop");
     const laptopsSinBaja = laptops.filter((a) => a.status !== "Baja");
@@ -105,8 +135,114 @@ export async function GET(request: Request) {
       { name: "Reparación", value: laptopsReparacion },
     ].filter((x) => x.value > 0);
 
+    const in90 = new Date(exportedAt);
+    in90.setDate(in90.getDate() + 90);
+    const renewalAssets = laptopsSinBaja.filter(
+      (a) =>
+        a.renewalDate &&
+        a.renewalDate <= in90 &&
+        ["Activo", "Stock", "Reparacion"].includes(a.status)
+    );
+    const renewalsDue = renewalAssets.length;
+
+    const positionsRows = positions.map((p) => ({
+      name: p.name,
+      hierarchy: hierarchyPath(p.id),
+      reportsTo: p.parent?.name || "",
+      designates: p.children.map((c) => c.name).join("; "),
+      description: p.description || "",
+      employees: p._count.employees,
+    }));
+
+    const assetsRows = assets.map((a) => ({
+      name: a.name,
+      category: a.category,
+      brand: a.brand,
+      model: a.model,
+      serialNumber: a.serialNumber,
+      inventoryNumber: a.inventoryNumber,
+      status: a.status,
+      purchaseDate: formatDate(a.purchaseDate),
+      renewalDate:
+        a.category === "Laptop" ? formatDate(a.renewalDate) : "N/A",
+      anydesk: a.category === "Laptop" ? a.anydesk || "" : "N/A",
+      assignedTo: a.assignments[0]?.employee.name || "",
+      notes: a.notes || "",
+    }));
+
+    const stockRows = stockAssets.map((a) => ({
+      name: a.name,
+      category: a.category,
+      brand: a.brand,
+      model: a.model,
+      serialNumber: a.serialNumber,
+      inventoryNumber: a.inventoryNumber,
+      purchaseDate: formatDate(a.purchaseDate),
+      notes: a.notes || "",
+    }));
+
+    const employeeRows = employees.map((e) => ({
+      name: e.name,
+      email: e.email || "",
+      department: e.department || "",
+      position: e.position?.name || "",
+      status: e.active ? "Trabaja aquí" : "Ya no trabaja aquí",
+      assignedCount: e.assignments.length,
+      serials: e.assignments.map((a) => a.asset.serialNumber).join(", "),
+    }));
+
+    const assignmentRows = assignments.map((a) => ({
+      employee: a.employee.name,
+      position: a.employee.position?.name || "",
+      asset: a.asset.name,
+      category: a.asset.category,
+      serialNumber: a.asset.serialNumber,
+      assignedAt: formatDate(a.assignedAt),
+      unassignedAt: a.unassignedAt ? formatDate(a.unassignedAt) : "",
+      status: a.unassignedAt ? "Histórica" : "Activa",
+      notes: a.notes || "",
+    }));
+
+    const maintenanceRows = maintenances.map((m) => ({
+      asset: m.asset.name,
+      category: m.asset.category,
+      serialNumber: m.asset.serialNumber,
+      scheduledDate: formatDate(m.scheduledDate),
+      status: m.status,
+      notes: m.notes || "",
+    }));
+
+    const renewalRows = renewalAssets
+      .slice()
+      .sort(
+        (a, b) =>
+          (a.renewalDate?.getTime() || 0) - (b.renewalDate?.getTime() || 0)
+      )
+      .map((a) => ({
+        name: a.name,
+        serialNumber: a.serialNumber,
+        assignedTo: a.assignments[0]?.employee.name || "",
+        renewalDate: formatDate(a.renewalDate),
+        status: a.status,
+      }));
+
     if (format === "csv") {
       const parts: string[] = [
+        tableToCsv(
+          "RESUMEN GENERAL",
+          ["Concepto", "Cantidad"],
+          [
+            ["Equipos totales", assets.length],
+            ["Equipos sin baja", assetsTracked.length],
+            ["Stock / reserva", stockAssets.length],
+            ["Usuarios", employees.length],
+            ["Usuarios activos", employeesActive],
+            ["Asignaciones activas", activeAssignments.length],
+            ["Puestos", positions.length],
+            ["Renovaciones laptops (90 dias)", renewalsDue],
+            ["Mantenimientos pendientes", maintenances.length],
+          ]
+        ),
         tableToCsv(
           "RESUMEN LAPTOPS (sin bajas)",
           ["Concepto", "Cantidad"],
@@ -144,7 +280,7 @@ export async function GET(request: Request) {
             "AsignadoA",
             "Notas",
           ],
-          assets.map((a) => [
+          assetsRows.map((a) => [
             a.name,
             a.category,
             a.brand,
@@ -152,11 +288,11 @@ export async function GET(request: Request) {
             a.serialNumber,
             a.inventoryNumber,
             a.status,
-            formatDate(a.purchaseDate),
-            a.category === "Laptop" ? formatDate(a.renewalDate) : "N/A",
-            a.category === "Laptop" ? a.anydesk || "" : "N/A",
-            a.assignments[0]?.employee.name || "",
-            a.notes || "",
+            a.purchaseDate,
+            a.renewalDate,
+            a.anydesk,
+            a.assignedTo,
+            a.notes,
           ])
         ),
         tableToCsv(
@@ -171,15 +307,15 @@ export async function GET(request: Request) {
             "FechaCompra",
             "Notas",
           ],
-          stockAssets.map((a) => [
+          stockRows.map((a) => [
             a.name,
             a.category,
             a.brand,
             a.model,
             a.serialNumber,
             a.inventoryNumber,
-            formatDate(a.purchaseDate),
-            a.notes || "",
+            a.purchaseDate,
+            a.notes,
           ])
         ),
         tableToCsv(
@@ -193,25 +329,33 @@ export async function GET(request: Request) {
             "EquiposAsignados",
             "Seriales",
           ],
-          employees.map((e) => [
+          employeeRows.map((e) => [
             e.name,
-            e.email || "",
-            e.department || "",
-            e.position?.name || "",
-            e.active ? "Trabaja aqui" : "Ya no trabaja aqui",
-            e.assignments.length,
-            e.assignments.map((a) => a.asset.serialNumber).join(" | "),
+            e.email,
+            e.department,
+            e.position,
+            e.status,
+            e.assignedCount,
+            e.serials,
           ])
         ),
         tableToCsv(
-          "PUESTOS",
-          ["Puesto", "ReportaA", "Designados", "Descripcion", "Usuarios"],
-          positions.map((p) => [
+          "PUESTOS / ORGANIGRAMA",
+          [
+            "Puesto",
+            "Jerarquia",
+            "ReportaA",
+            "Designados",
+            "Descripcion",
+            "Usuarios",
+          ],
+          positionsRows.map((p) => [
             p.name,
-            p.parent?.name || "",
-            p.children.map((c) => c.name).join("; "),
-            p.description || "",
-            p._count.employees,
+            p.hierarchy,
+            p.reportsTo,
+            p.designates,
+            p.description,
+            p.employees,
           ])
         ),
         tableToCsv(
@@ -227,28 +371,39 @@ export async function GET(request: Request) {
             "Estado",
             "Notas",
           ],
-          assignments.map((a) => [
-            a.employee.name,
-            a.employee.position?.name || "",
-            a.asset.name,
-            a.asset.category,
-            a.asset.serialNumber,
-            formatDate(a.assignedAt),
-            a.unassignedAt ? formatDate(a.unassignedAt) : "",
-            a.unassignedAt ? "Historica" : "Activa",
-            a.notes || "",
+          assignmentRows.map((a) => [
+            a.employee,
+            a.position,
+            a.asset,
+            a.category,
+            a.serialNumber,
+            a.assignedAt,
+            a.unassignedAt,
+            a.status,
+            a.notes,
+          ])
+        ),
+        tableToCsv(
+          "RENOVACIONES LAPTOPS (90 DIAS)",
+          ["Equipo", "Serial", "AsignadoA", "FechaRenovacion", "Estado"],
+          renewalRows.map((r) => [
+            r.name,
+            r.serialNumber,
+            r.assignedTo,
+            r.renewalDate,
+            r.status,
           ])
         ),
         tableToCsv(
           "MANTENIMIENTOS PENDIENTES",
           ["Equipo", "Categoria", "Serial", "Programado", "Estado", "Notas"],
-          maintenances.map((m) => [
-            m.asset.name,
-            m.asset.category,
-            m.asset.serialNumber,
-            formatDate(m.scheduledDate),
+          maintenanceRows.map((m) => [
+            m.asset,
+            m.category,
+            m.serialNumber,
+            m.scheduledDate,
             m.status,
-            m.notes || "",
+            m.notes,
           ])
         ),
       ];
@@ -257,21 +412,24 @@ export async function GET(request: Request) {
       return new Response(csv, {
         headers: {
           "Content-Type": "text/csv; charset=utf-8",
-          "Content-Disposition":
-            'attachment; filename="assetdesk-inventario-completo.csv"',
+          "Content-Disposition": `attachment; filename="assetdesk-inventario-${fileStamp(exportedAt)}.csv"`,
         },
       });
     }
 
     return Response.json({
-      exportedAt: new Date().toISOString(),
+      exportedAt: exportedAt.toISOString(),
+      exportedBy: session.name || session.email || "",
       summary: {
         totalAssets: assets.length,
+        assetsTracked: assetsTracked.length,
         stock: stockAssets.length,
         employees: employees.length,
+        employeesActive,
         activeAssignments: activeAssignments.length,
         positions: positions.length,
         pendingMaintenances: maintenances.length,
+        renewalsDue,
         laptops: laptopsSummary,
       },
       charts: {
@@ -280,66 +438,13 @@ export async function GET(request: Request) {
         laptopsByStatus,
       },
       tables: {
-        assets: assets.map((a) => ({
-          name: a.name,
-          category: a.category,
-          brand: a.brand,
-          model: a.model,
-          serialNumber: a.serialNumber,
-          inventoryNumber: a.inventoryNumber,
-          status: a.status,
-          purchaseDate: formatDate(a.purchaseDate),
-          renewalDate:
-            a.category === "Laptop" ? formatDate(a.renewalDate) : "N/A",
-          anydesk: a.category === "Laptop" ? a.anydesk || "" : "N/A",
-          assignedTo: a.assignments[0]?.employee.name || "",
-          notes: a.notes || "",
-        })),
-        stock: stockAssets.map((a) => ({
-          name: a.name,
-          category: a.category,
-          brand: a.brand,
-          model: a.model,
-          serialNumber: a.serialNumber,
-          inventoryNumber: a.inventoryNumber,
-          purchaseDate: formatDate(a.purchaseDate),
-          notes: a.notes || "",
-        })),
-        employees: employees.map((e) => ({
-          name: e.name,
-          email: e.email || "",
-          department: e.department || "",
-          position: e.position?.name || "",
-          active: e.active,
-          assignedCount: e.assignments.length,
-          serials: e.assignments.map((a) => a.asset.serialNumber).join(", "),
-        })),
-        positions: positions.map((p) => ({
-          name: p.name,
-          reportsTo: p.parent?.name || "",
-          designates: p.children.map((c) => c.name).join("; "),
-          description: p.description || "",
-          employees: p._count.employees,
-        })),
-        assignments: assignments.map((a) => ({
-          employee: a.employee.name,
-          position: a.employee.position?.name || "",
-          asset: a.asset.name,
-          category: a.asset.category,
-          serialNumber: a.asset.serialNumber,
-          assignedAt: formatDate(a.assignedAt),
-          unassignedAt: a.unassignedAt ? formatDate(a.unassignedAt) : "",
-          status: a.unassignedAt ? "Historica" : "Activa",
-          notes: a.notes || "",
-        })),
-        maintenances: maintenances.map((m) => ({
-          asset: m.asset.name,
-          category: m.asset.category,
-          serialNumber: m.asset.serialNumber,
-          scheduledDate: formatDate(m.scheduledDate),
-          status: m.status,
-          notes: m.notes || "",
-        })),
+        assets: assetsRows,
+        stock: stockRows,
+        employees: employeeRows,
+        positions: positionsRows,
+        assignments: assignmentRows,
+        maintenances: maintenanceRows,
+        renewals: renewalRows,
       },
     });
   } catch (error) {
