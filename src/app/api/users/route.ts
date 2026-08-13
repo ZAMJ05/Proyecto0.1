@@ -38,7 +38,12 @@ export async function POST(request: Request) {
     }
 
     const exists = await prisma.user.findUnique({ where: { email } });
-    if (exists) return jsonError("Ya existe un usuario con ese email");
+    if (exists) {
+      return jsonError(
+        `Usuario duplicado: el acceso "${email}" ya existe (${exists.name}). Usa otro email o edita ese usuario.`,
+        409
+      );
+    }
 
     const user = await prisma.user.create({
       data: {

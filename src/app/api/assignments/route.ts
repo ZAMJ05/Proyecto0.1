@@ -50,15 +50,29 @@ export async function POST(request: Request) {
     const employee = await prisma.employee.findUnique({
       where: { id: employeeId },
     });
-    if (!employee || !employee.active) {
-      return jsonError("Usuario/empleado no válido");
+    if (!employee) return jsonError("Usuario no encontrado", 404);
+    if (!employee.active) {
+      return jsonError(
+        `No se puede asignar a ${employee.name}: está marcado como “ya no trabaja aquí”.`
+      );
     }
 
+    // Evitar doble asignación del mismo activo
     const open = await prisma.assignment.findFirst({
       where: { assetId, unassignedAt: null },
+      include: { employee: true },
     });
     if (open) {
-      return jsonError("El equipo ya tiene una asignación activa");
+      if (open.employeeId === employeeId) {
+        return jsonError(
+          `Doble asignación: "${asset.name}" (${asset.serialNumber}) ya está asignado a ${employee.name}.`,
+          409
+        );
+      }
+      return jsonError(
+        `Doble asignación: "${asset.name}" (${asset.serialNumber}) ya está asignado a ${open.employee.name}. Libéralo antes de reasignarlo.`,
+        409
+      );
     }
 
     if (asset.status === "Stock") {

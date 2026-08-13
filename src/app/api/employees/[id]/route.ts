@@ -37,6 +37,40 @@ export async function PUT(request: Request, { params }: Params) {
     const name = String(body.name ?? existing.name).trim();
     if (!name) return jsonError("El nombre es obligatorio");
 
+    const nextEmail =
+      body.email !== undefined
+        ? body.email
+          ? String(body.email).trim().toLowerCase()
+          : null
+        : existing.email;
+
+    // Duplicados por email o nombre (excepto el propio registro)
+    if (nextEmail) {
+      const emailTaken = await prisma.employee.findFirst({
+        where: { email: nextEmail, id: { not: id } },
+        select: { name: true },
+      });
+      if (emailTaken) {
+        return jsonError(
+          `Usuario duplicado: el email "${nextEmail}" ya pertenece a ${emailTaken.name}.`,
+          409
+        );
+      }
+    }
+    const others = await prisma.employee.findMany({
+      where: { id: { not: id } },
+      select: { name: true, active: true },
+    });
+    const nameTaken = others.find(
+      (e) => e.name.trim().toLowerCase() === name.toLowerCase()
+    );
+    if (nameTaken) {
+      return jsonError(
+        `Usuario duplicado: ya existe otro registro con el nombre "${nameTaken.name}".`,
+        409
+      );
+    }
+
     const nextActive =
       typeof body.active === "boolean" ? body.active : body.active !== false;
     const releaseAssets = body.releaseAssets !== false;
@@ -46,12 +80,7 @@ export async function PUT(request: Request, { params }: Params) {
       where: { id },
       data: {
         name,
-        email:
-          body.email !== undefined
-            ? body.email
-              ? String(body.email).trim().toLowerCase()
-              : null
-            : existing.email,
+        email: nextEmail,
         department:
           body.department !== undefined
             ? body.department

@@ -27,7 +27,12 @@ export async function PUT(request: Request, { params }: Params) {
 
     if (email !== existing.email) {
       const taken = await prisma.user.findUnique({ where: { email } });
-      if (taken) return jsonError("Ya existe un usuario con ese email");
+      if (taken) {
+        return jsonError(
+          `Usuario duplicado: el email "${email}" ya pertenece a ${taken.name}.`,
+          409
+        );
+      }
     }
 
     if (existing.role === "ADMIN" && role === "USER") {
