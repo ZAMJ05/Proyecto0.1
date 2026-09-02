@@ -259,7 +259,7 @@ export default function DashboardPage() {
         label: "Activo",
         value: data.cards.active,
         color: "var(--badge-success-fg)",
-        href: "/inventario?status=Activo",
+        href: "/activos",
       },
       {
         key: "stock",
@@ -321,7 +321,7 @@ export default function DashboardPage() {
       key: "unassigned",
       label: "Activos sin asignar",
       value: data.cards.activeUnassigned,
-      href: "/inventario?unassigned=1",
+      href: "/activos?unassigned=1",
       icon: PackageOpen,
       tone: "info" as const,
       hint: "En estado Activo sin usuario",
@@ -456,7 +456,7 @@ export default function DashboardPage() {
                 label: "Activos",
                 value: data.cards.active,
                 icon: MonitorCheck,
-                href: "/inventario?status=Activo",
+                href: "/activos",
               },
               {
                 label: "Stock",

@@ -11,6 +11,7 @@ import {
   Briefcase,
   UserCog,
   MonitorSmartphone,
+  MonitorCheck,
   ClipboardList,
   PanelLeftClose,
 } from "lucide-react";
@@ -20,6 +21,7 @@ import { LogoutButton } from "./LogoutButton";
 
 const links = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/activos", label: "Equipos activos", icon: MonitorCheck },
   { href: "/inventario", label: "Inventario", icon: Package },
   { href: "/stock", label: "Stock / Reserva", icon: Warehouse },
   { href: "/ciclo-vida", label: "Ciclo de vida", icon: RefreshCw },

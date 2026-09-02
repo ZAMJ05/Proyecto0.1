@@ -107,6 +107,7 @@ export function AppShell({
           <nav className="mt-2.5 flex gap-1.5 overflow-x-auto pb-1 md:hidden">
             {[
               ["/dashboard", "Dashboard"],
+              ["/activos", "Activos"],
               ["/inventario", "Inventario"],
               ["/stock", "Stock"],
               ["/ciclo-vida", "Ciclo"],
