@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2, UserPlus } from "lucide-react";
 import {
   Badge,
   Button,
@@ -15,6 +15,12 @@ import {
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
+import {
+  QuickAssignBar,
+  QuickAssignModal,
+  assignAssetToEmployee,
+  useActiveEmployees,
+} from "@/components/QuickAssign";
 import { CATEGORY_LABELS } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
 
@@ -35,6 +41,11 @@ export default function StockPage() {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [category, setCategory] = useState("");
   const [role, setRole] = useState<"ADMIN" | "USER">("USER");
+  const [quickUserId, setQuickUserId] = useState("");
+  const [assigningId, setAssigningId] = useState<string | null>(null);
+  const [modalAsset, setModalAsset] = useState<Asset | null>(null);
+  const [flash, setFlash] = useState("");
+  const { employees, loading: loadingEmployees } = useActiveEmployees();
 
   async function load() {
     const [stockRes, meRes] = await Promise.all([
@@ -49,6 +60,8 @@ export default function StockPage() {
   useEffect(() => {
     load();
   }, []);
+
+  const selectedUser = employees.find((e) => e.id === quickUserId);
 
   async function removeAsset(asset: Asset) {
     if (
@@ -65,6 +78,29 @@ export default function StockPage() {
       return;
     }
     await load();
+  }
+
+  async function quickAssign(asset: Asset) {
+    if (!quickUserId) {
+      setModalAsset(asset);
+      return;
+    }
+    setAssigningId(asset.id);
+    setFlash("");
+    try {
+      await assignAssetToEmployee({
+        assetId: asset.id,
+        employeeId: quickUserId,
+        notes: `Asignado desde Stock a ${selectedUser?.name || "usuario"}`,
+      });
+      setFlash(`✓ ${asset.name} → ${selectedUser?.name}`);
+      window.setTimeout(() => setFlash(""), 2500);
+      await load();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "No se pudo asignar");
+    } finally {
+      setAssigningId(null);
+    }
   }
 
   const categoriesInStock = useMemo(() => {
@@ -102,7 +138,7 @@ export default function StockPage() {
     <div>
       <PageHeader
         title="Stock / Reserva"
-        subtitle="Equipos nuevos o en reserva listos para asignación."
+        subtitle="Asigna equipos en reserva a un usuario activo en un clic."
       />
 
       <div className="mb-4 grid gap-4 sm:grid-cols-3">
@@ -137,6 +173,29 @@ export default function StockPage() {
           </p>
         </Card>
       </div>
+
+      {role === "ADMIN" && (
+        <div className="mb-4 animate-rise">
+          {loadingEmployees ? (
+            <Card>
+              <p className="text-sm text-[var(--muted)]">
+                Cargando usuarios activos...
+              </p>
+            </Card>
+          ) : (
+            <QuickAssignBar
+              employees={employees}
+              employeeId={quickUserId}
+              onEmployeeChange={setQuickUserId}
+            />
+          )}
+          {flash && (
+            <p className="mt-2 rounded-xl bg-[var(--badge-success-bg)] px-3 py-2 text-sm text-[var(--badge-success-fg)]">
+              {flash}
+            </p>
+          )}
+        </div>
+      )}
 
       <Card className="mb-4">
         <Label>Filtrar por categoría</Label>
@@ -213,14 +272,30 @@ export default function StockPage() {
                 <p className="mt-3 text-xs text-[var(--muted)]">{asset.notes}</p>
               )}
               {role === "ADMIN" && (
-                <div className="mt-3">
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Button
+                    className="px-2 py-1"
+                    disabled={assigningId === asset.id}
+                    onClick={() => quickAssign(asset)}
+                    title={
+                      selectedUser
+                        ? `Asignar a ${selectedUser.name}`
+                        : "Elegir usuario y asignar"
+                    }
+                  >
+                    <UserPlus className="h-4 w-4" />
+                    {assigningId === asset.id
+                      ? "..."
+                      : selectedUser
+                        ? `Asignar a ${selectedUser.name.split(" ")[0]}`
+                        : "Asignar"}
+                  </Button>
                   <Button
                     variant="danger"
                     className="px-2 py-1"
                     onClick={() => removeAsset(asset)}
                   >
                     <Trash2 className="h-4 w-4" />
-                    Eliminar
                   </Button>
                 </div>
               )}
@@ -267,7 +342,9 @@ export default function StockPage() {
                   direction={list.sortDir}
                   onSort={list.toggleSort}
                 />
-                {role === "ADMIN" && <th className="px-4 py-3 text-left">Acciones</th>}
+                {role === "ADMIN" && (
+                  <th className="px-4 py-3 text-left">Acciones</th>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -287,14 +364,33 @@ export default function StockPage() {
                   <td className="px-4 py-3">{formatDate(asset.purchaseDate)}</td>
                   {role === "ADMIN" && (
                     <td className="px-4 py-3">
-                      <Button
-                        variant="danger"
-                        className="px-2 py-1"
-                        title="Eliminar del inventario"
-                        onClick={() => removeAsset(asset)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <div className="row-actions">
+                        <Button
+                          className="px-2 py-1"
+                          disabled={assigningId === asset.id}
+                          onClick={() => quickAssign(asset)}
+                          title={
+                            selectedUser
+                              ? `Asignar a ${selectedUser.name}`
+                              : "Elegir usuario y asignar"
+                          }
+                        >
+                          <UserPlus className="h-4 w-4" />
+                          {assigningId === asset.id
+                            ? "..."
+                            : selectedUser
+                              ? "Asignar"
+                              : "Asignar"}
+                        </Button>
+                        <Button
+                          variant="danger"
+                          className="px-2 py-1"
+                          title="Eliminar del inventario"
+                          onClick={() => removeAsset(asset)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </td>
                   )}
                 </tr>
@@ -311,6 +407,22 @@ export default function StockPage() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
+      />
+
+      <QuickAssignModal
+        open={!!modalAsset}
+        asset={modalAsset}
+        employees={employees}
+        onClose={() => setModalAsset(null)}
+        onAssigned={async () => {
+          setFlash(
+            modalAsset
+              ? `✓ ${modalAsset.name} asignado`
+              : "✓ Equipo asignado"
+          );
+          window.setTimeout(() => setFlash(""), 2500);
+          await load();
+        }}
       />
     </div>
   );
