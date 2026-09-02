@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import { ChevronDown, ChevronRight, Package } from "lucide-react";
 import {
   Badge,
   Button,
@@ -12,7 +13,6 @@ import {
   Textarea,
 } from "@/components/ui";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
-import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
 import { formatDate } from "@/lib/utils";
 
@@ -32,6 +32,157 @@ type Assignment = {
   asset: Asset;
   employee: { id: string; name: string; position?: { name: string } | null };
 };
+
+type UserGroup = {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  position: string;
+  assignments: Assignment[];
+  count: number;
+  latestAssignedAt: number;
+};
+
+function groupByUser(items: Assignment[]): UserGroup[] {
+  const map = new Map<string, UserGroup>();
+  for (const a of items) {
+    const key = a.employee.id;
+    const existing = map.get(key);
+    if (existing) {
+      existing.assignments.push(a);
+      existing.count += 1;
+      existing.latestAssignedAt = Math.max(
+        existing.latestAssignedAt,
+        new Date(a.assignedAt).getTime()
+      );
+    } else {
+      map.set(key, {
+        id: key,
+        employeeId: a.employee.id,
+        employeeName: a.employee.name,
+        position: a.employee.position?.name || "Sin puesto",
+        assignments: [a],
+        count: 1,
+        latestAssignedAt: new Date(a.assignedAt).getTime(),
+      });
+    }
+  }
+  for (const g of map.values()) {
+    g.assignments.sort(
+      (a, b) =>
+        new Date(b.assignedAt).getTime() - new Date(a.assignedAt).getTime()
+    );
+  }
+  return [...map.values()].sort((a, b) =>
+    a.employeeName.localeCompare(b.employeeName, "es", { sensitivity: "base" })
+  );
+}
+
+function UserAssignmentGroup({
+  group,
+  role,
+  onUnassign,
+  defaultOpen,
+  showHistoryDates,
+}: {
+  group: UserGroup;
+  role: "ADMIN" | "USER";
+  onUnassign?: (id: string) => void;
+  defaultOpen?: boolean;
+  showHistoryDates?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen ?? group.count > 1);
+
+  return (
+    <Card className="!p-0 overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition hover:bg-[var(--surface-2)]"
+      >
+        <span className="text-[var(--muted)]">
+          {open ? (
+            <ChevronDown className="h-4 w-4" />
+          ) : (
+            <ChevronRight className="h-4 w-4" />
+          )}
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="font-semibold text-[var(--ink)]">
+              {group.employeeName}
+            </p>
+            <Badge tone={group.count > 1 ? "info" : "neutral"}>
+              {group.count} equipo{group.count === 1 ? "" : "s"}
+            </Badge>
+          </div>
+          <p className="text-xs text-[var(--muted)]">{group.position}</p>
+        </div>
+        {!open && (
+          <p className="hidden max-w-[40%] truncate text-xs text-[var(--muted)] sm:block">
+            {group.assignments.map((a) => a.asset.name).join(" · ")}
+          </p>
+        )}
+      </button>
+
+      {open && (
+        <div className="border-t border-[var(--border)] bg-[var(--surface-2)]/50">
+          <ul className="divide-y divide-[var(--border)]">
+            {group.assignments.map((a) => (
+              <li
+                key={a.id}
+                className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="flex min-w-0 items-start gap-3">
+                  <Package className="mt-0.5 h-4 w-4 shrink-0 text-[var(--accent)]" />
+                  <div className="min-w-0">
+                    <p className="font-medium text-[var(--ink)]">
+                      {a.asset.name}
+                    </p>
+                    <p className="text-xs text-[var(--muted)]">
+                      {a.asset.category} · {a.asset.serialNumber}
+                    </p>
+                    <p className="mt-0.5 text-xs text-[var(--muted)]">
+                      {showHistoryDates ? (
+                        <>
+                          {formatDate(a.assignedAt)}
+                          {a.unassignedAt
+                            ? ` → ${formatDate(a.unassignedAt)}`
+                            : " (vigente)"}
+                        </>
+                      ) : (
+                        <>Desde {formatDate(a.assignedAt)}</>
+                      )}
+                    </p>
+                    {a.notes && (
+                      <p className="mt-1 text-xs text-[var(--muted)]">
+                        {a.notes}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 sm:shrink-0">
+                  <Badge tone={a.unassignedAt ? "neutral" : "success"}>
+                    {a.unassignedAt ? "Histórica" : "Activa"}
+                  </Badge>
+                  {role === "ADMIN" && onUnassign && !a.unassignedAt && (
+                    <Button
+                      variant="secondary"
+                      className="px-2.5 py-1.5"
+                      onClick={() => onUnassign(a.id)}
+                    >
+                      Liberar
+                    </Button>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </Card>
+  );
+}
 
 export default function AsignacionesPage() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
@@ -61,7 +212,9 @@ export default function AsignacionesPage() {
     ]);
     setAssignments(a.assignments || []);
     setHistory(h.assignments || []);
-    setEmployees((e.employees || []).filter((emp: Employee) => emp.active !== false));
+    setEmployees(
+      (e.employees || []).filter((emp: Employee) => emp.active !== false)
+    );
     setAssets(
       (as.assets || []).filter(
         (x: Asset) => x.status === "Activo" || x.status === "Stock"
@@ -108,53 +261,60 @@ export default function AsignacionesPage() {
     await load();
   }
 
-  const activeList = useListControls(assignments, {
-    storageKey: "asignaciones-activas-p25",
+  const activeGroups = useMemo(
+    () => groupByUser(assignments),
+    [assignments]
+  );
+  const historyGroups = useMemo(() => groupByUser(history), [history]);
+
+  const activeList = useListControls(activeGroups, {
+    storageKey: "asignaciones-grupos-p25",
     defaultView: "list",
-    getName: (a) => `${a.employee.name} ${a.asset.name}`,
-    getSerial: (a) => a.asset.serialNumber,
+    pageSize: 15,
+    getName: (g) =>
+      `${g.employeeName} ${g.position} ${g.assignments
+        .map((a) => a.asset.name)
+        .join(" ")}`,
+    getSerial: (g) =>
+      g.assignments.map((a) => a.asset.serialNumber).join(" "),
     defaultSortKey: "employee",
     sortFields: {
-      employee: { label: "Usuario", getValue: (a) => a.employee.name },
-      asset: { label: "Equipo", getValue: (a) => a.asset.name },
-      assignedAt: {
-        label: "Desde",
-        getValue: (a) => new Date(a.assignedAt).getTime(),
+      employee: { label: "Usuario", getValue: (g) => g.employeeName },
+      count: { label: "Equipos", getValue: (g) => g.count },
+      recent: {
+        label: "Más reciente",
+        getValue: (g) => g.latestAssignedAt,
       },
-      status: { label: "Estado", getValue: () => "Activa" },
     },
   });
 
-  const historyList = useListControls(history, {
-    storageKey: "asignaciones-historial-p25",
+  const historyList = useListControls(historyGroups, {
+    storageKey: "asignaciones-hist-grupos-p25",
     defaultView: "list",
-    getName: (a) => `${a.employee.name} ${a.asset.name}`,
-    getSerial: (a) => a.asset.serialNumber,
-    defaultSortKey: "assignedAt",
+    pageSize: 15,
+    getName: (g) =>
+      `${g.employeeName} ${g.assignments.map((a) => a.asset.name).join(" ")}`,
+    getSerial: (g) =>
+      g.assignments.map((a) => a.asset.serialNumber).join(" "),
+    defaultSortKey: "recent",
     defaultSortDir: "desc",
     sortFields: {
-      employee: { label: "Usuario", getValue: (a) => a.employee.name },
-      asset: { label: "Equipo", getValue: (a) => a.asset.name },
-      serial: {
-        label: "Serial",
-        getValue: (a) => a.asset.serialNumber,
-      },
-      assignedAt: {
-        label: "Periodo",
-        getValue: (a) => new Date(a.assignedAt).getTime(),
-      },
-      status: {
-        label: "Estado",
-        getValue: (a) => (a.unassignedAt ? "Histórica" : "Activa"),
+      employee: { label: "Usuario", getValue: (g) => g.employeeName },
+      count: { label: "Equipos", getValue: (g) => g.count },
+      recent: {
+        label: "Más reciente",
+        getValue: (g) => g.latestAssignedAt,
       },
     },
   });
+
+  const multiCount = activeGroups.filter((g) => g.count > 1).length;
 
   return (
     <div>
       <PageHeader
         title="Asignaciones"
-        subtitle="Asigna equipos y complementos a usuarios, y consulta el historial."
+        subtitle="Agrupadas por usuario para ver de un vistazo todos sus equipos."
       />
 
       {role === "ADMIN" && (
@@ -210,9 +370,22 @@ export default function AsignacionesPage() {
       )}
 
       <section className="mb-8">
-        <h2 className="mb-3 font-[family-name:var(--font-display)] text-2xl">
-          Asignaciones activas
-        </h2>
+        <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <h2 className="font-[family-name:var(--font-display)] text-2xl">
+              Asignaciones activas
+            </h2>
+            <p className="text-xs text-[var(--muted)]">
+              {activeGroups.length} usuario
+              {activeGroups.length === 1 ? "" : "s"} · {assignments.length}{" "}
+              equipo{assignments.length === 1 ? "" : "s"}
+              {multiCount > 0
+                ? ` · ${multiCount} con varios equipos`
+                : ""}
+            </p>
+          </div>
+        </div>
+
         <ListToolbar
           name={activeList.name}
           serial={activeList.serial}
@@ -226,113 +399,30 @@ export default function AsignacionesPage() {
           showingFrom={activeList.showingFrom}
           showingTo={activeList.showingTo}
           total={activeList.total}
-          namePlaceholder="Usuario o equipo..."
+          namePlaceholder="Buscar usuario o equipo..."
+          serialPlaceholder="Serial..."
           sortOptions={activeList.sortOptions}
           sortKey={activeList.sortKey}
           sortDir={activeList.sortDir}
           onSortChange={activeList.setSort}
         />
+
         {activeList.total === 0 ? (
           <EmptyState text="No hay asignaciones activas." />
-        ) : activeList.view === "list" ? (
-          <div className="table-shell">
-            <table className="min-w-full text-sm">
-              <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
-                <tr>
-                  <SortableTh
-                    label="Usuario"
-                    columnKey="employee"
-                    activeKey={activeList.sortKey}
-                    direction={activeList.sortDir}
-                    onSort={activeList.toggleSort}
-                  />
-                  <SortableTh
-                    label="Equipo"
-                    columnKey="asset"
-                    activeKey={activeList.sortKey}
-                    direction={activeList.sortDir}
-                    onSort={activeList.toggleSort}
-                  />
-                  <SortableTh
-                    label="Desde"
-                    columnKey="assignedAt"
-                    activeKey={activeList.sortKey}
-                    direction={activeList.sortDir}
-                    onSort={activeList.toggleSort}
-                  />
-                  <SortableTh
-                    label="Estado"
-                    columnKey="status"
-                    activeKey={activeList.sortKey}
-                    direction={activeList.sortDir}
-                    onSort={activeList.toggleSort}
-                  />
-                  {role === "ADMIN" && (
-                    <th className="px-4 py-3 text-left">Acción</th>
-                  )}
-                </tr>
-              </thead>
-              <tbody>
-                {activeList.pageItems.map((a) => (
-                  <tr key={a.id} className="border-t border-[var(--border)]">
-                    <td className="px-4 py-3">
-                      <p className="font-medium">{a.employee.name}</p>
-                      <p className="text-xs text-[var(--muted)]">
-                        {a.employee.position?.name || "Sin puesto"}
-                      </p>
-                    </td>
-                    <td className="px-4 py-3">
-                      <p>{a.asset.name}</p>
-                      <p className="text-xs text-[var(--muted)]">
-                        {a.asset.category} · {a.asset.serialNumber}
-                      </p>
-                    </td>
-                    <td className="px-4 py-3">{formatDate(a.assignedAt)}</td>
-                    <td className="px-4 py-3">
-                      <Badge tone="success">Activa</Badge>
-                    </td>
-                    {role === "ADMIN" && (
-                      <td className="px-4 py-3">
-                        <Button
-                          variant="secondary"
-                          onClick={() => unassign(a.id)}
-                        >
-                          Liberar
-                        </Button>
-                      </td>
-                    )}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         ) : (
-          <div className="grid gap-3 md:grid-cols-2">
-            {activeList.pageItems.map((a) => (
-              <Card key={a.id}>
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <p className="font-medium">{a.employee.name}</p>
-                    <p className="text-sm">{a.asset.name}</p>
-                    <p className="text-xs text-[var(--muted)]">
-                      {a.asset.serialNumber} · {formatDate(a.assignedAt)}
-                    </p>
-                  </div>
-                  <Badge tone="success">Activa</Badge>
-                </div>
-                {role === "ADMIN" && (
-                  <Button
-                    className="mt-3"
-                    variant="secondary"
-                    onClick={() => unassign(a.id)}
-                  >
-                    Liberar
-                  </Button>
-                )}
-              </Card>
+          <div className="space-y-3">
+            {activeList.pageItems.map((group) => (
+              <UserAssignmentGroup
+                key={group.id}
+                group={group}
+                role={role}
+                onUnassign={unassign}
+                defaultOpen={group.count > 1 || activeList.view === "grid"}
+              />
             ))}
           </div>
         )}
+
         <ListFooter
           page={activeList.page}
           totalPages={activeList.totalPages}
@@ -344,9 +434,14 @@ export default function AsignacionesPage() {
       </section>
 
       <section>
-        <h2 className="mb-3 font-[family-name:var(--font-display)] text-2xl">
-          Historial de asignaciones
-        </h2>
+        <div className="mb-3">
+          <h2 className="font-[family-name:var(--font-display)] text-2xl">
+            Historial por usuario
+          </h2>
+          <p className="text-xs text-[var(--muted)]">
+            Incluye asignaciones activas e históricas, agrupadas por persona
+          </p>
+        </div>
         <ListToolbar
           name={historyList.name}
           serial={historyList.serial}
@@ -360,7 +455,8 @@ export default function AsignacionesPage() {
           showingFrom={historyList.showingFrom}
           showingTo={historyList.showingTo}
           total={historyList.total}
-          namePlaceholder="Usuario o equipo..."
+          namePlaceholder="Buscar usuario o equipo..."
+          serialPlaceholder="Serial..."
           sortOptions={historyList.sortOptions}
           sortKey={historyList.sortKey}
           sortDir={historyList.sortDir}
@@ -368,96 +464,18 @@ export default function AsignacionesPage() {
         />
         {historyList.total === 0 ? (
           <EmptyState text="Sin historial." />
-        ) : historyList.view === "grid" ? (
+        ) : (
           <div className="space-y-3">
-            {historyList.pageItems.map((a) => (
-              <Card key={a.id}>
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div>
-                    <p className="font-medium">
-                      {a.employee.name} → {a.asset.name}
-                    </p>
-                    <p className="text-xs text-[var(--muted)]">
-                      {a.asset.serialNumber} · {formatDate(a.assignedAt)}
-                      {a.unassignedAt
-                        ? ` → ${formatDate(a.unassignedAt)}`
-                        : " (vigente)"}
-                    </p>
-                  </div>
-                  <Badge tone={a.unassignedAt ? "neutral" : "success"}>
-                    {a.unassignedAt ? "Histórica" : "Activa"}
-                  </Badge>
-                </div>
-                {a.notes && (
-                  <p className="mt-2 text-xs text-[var(--muted)]">{a.notes}</p>
-                )}
-              </Card>
+            {historyList.pageItems.map((group) => (
+              <UserAssignmentGroup
+                key={group.id}
+                group={group}
+                role={role}
+                defaultOpen={false}
+                showHistoryDates
+              />
             ))}
           </div>
-        ) : (
-          <div className="table-shell">
-            <table className="min-w-full text-sm">
-              <thead className="bg-[var(--surface-2)] text-xs uppercase text-[var(--muted)]">
-                <tr>
-                  <SortableTh
-                    label="Usuario"
-                    columnKey="employee"
-                    activeKey={historyList.sortKey}
-                    direction={historyList.sortDir}
-                    onSort={historyList.toggleSort}
-                  />
-                  <SortableTh
-                    label="Equipo"
-                    columnKey="asset"
-                    activeKey={historyList.sortKey}
-                    direction={historyList.sortDir}
-                    onSort={historyList.toggleSort}
-                  />
-                  <SortableTh
-                    label="Serial"
-                    columnKey="serial"
-                    activeKey={historyList.sortKey}
-                    direction={historyList.sortDir}
-                    onSort={historyList.toggleSort}
-                  />
-                  <SortableTh
-                    label="Periodo"
-                    columnKey="assignedAt"
-                    activeKey={historyList.sortKey}
-                    direction={historyList.sortDir}
-                    onSort={historyList.toggleSort}
-                  />
-                  <SortableTh
-                    label="Estado"
-                    columnKey="status"
-                    activeKey={historyList.sortKey}
-                    direction={historyList.sortDir}
-                    onSort={historyList.toggleSort}
-                  />
-                </tr>
-              </thead>
-              <tbody>
-                {historyList.pageItems.map((a) => (
-                  <tr key={a.id} className="border-t border-[var(--border)]">
-                    <td className="px-4 py-3">{a.employee.name}</td>
-                    <td className="px-4 py-3">{a.asset.name}</td>
-                    <td className="px-4 py-3">{a.asset.serialNumber}</td>
-                    <td className="px-4 py-3">
-                      {formatDate(a.assignedAt)}
-                      {a.unassignedAt
-                        ? ` → ${formatDate(a.unassignedAt)}`
-                        : ""}
-                    </td>
-                    <td className="px-4 py-3">
-                      <Badge tone={a.unassignedAt ? "neutral" : "success"}>
-                        {a.unassignedAt ? "Histórica" : "Activa"}
-                      </Badge>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
         )}
         <ListFooter
           page={historyList.page}
