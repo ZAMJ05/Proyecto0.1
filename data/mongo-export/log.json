@@ -1,0 +1,800 @@
+[{
+  "_id": {
+    "$oid": "6a231ef013dc918e62e9c036"
+  },
+  "text": "Editado: Laptop HP ProBook 440 14\" G11",
+  "type": "edit",
+  "time": "2026-06-05T19:09:36.364Z"
+},
+{
+  "_id": {
+    "$oid": "6a231efd13dc918e62e9c037"
+  },
+  "text": "Editado: Laptop HP Notebook 250 G9",
+  "type": "edit",
+  "time": "2026-06-05T19:09:49.348Z"
+},
+{
+  "_id": {
+    "$oid": "6a231f4e13dc918e62e9c039"
+  },
+  "text": "Editado: Laptop HP ProBook 440 14\" G11",
+  "type": "edit",
+  "time": "2026-06-05T19:11:10.041Z"
+},
+{
+  "_id": {
+    "$oid": "6a231f6e13dc918e62e9c03c"
+  },
+  "text": "Editado: Laptop HP NoteBook 240R 14\" G10",
+  "type": "edit",
+  "time": "2026-06-05T19:11:41.948Z"
+},
+{
+  "_id": {
+    "$oid": "6a231f8213dc918e62e9c03e"
+  },
+  "text": "Editado: Laptop HP NoteBook 240R 14\" G10",
+  "type": "edit",
+  "time": "2026-06-05T19:12:02.603Z"
+},
+{
+  "_id": {
+    "$oid": "6a231fc613dc918e62e9c040"
+  },
+  "text": "Editado: Laptop HP ProBook 250 G9",
+  "type": "edit",
+  "time": "2026-06-05T19:13:10.357Z"
+},
+{
+  "_id": {
+    "$oid": "6a23202513dc918e62e9c041"
+  },
+  "text": "Editado: Laptop HP ProBook 440 G9",
+  "type": "edit",
+  "time": "2026-06-05T19:14:45.024Z"
+},
+{
+  "_id": {
+    "$oid": "6a23205f13dc918e62e9c044"
+  },
+  "text": "Editado: Laptop HP ProBook 440 14\" G11",
+  "type": "edit",
+  "time": "2026-06-05T19:15:43.771Z"
+},
+{
+  "_id": {
+    "$oid": "6a23209513dc918e62e9c045"
+  },
+  "text": "Editado: Laptop HP ProBook 440 G9",
+  "type": "edit",
+  "time": "2026-06-05T19:16:37.301Z"
+},
+{
+  "_id": {
+    "$oid": "6a2320a513dc918e62e9c048"
+  },
+  "text": "Editado: NoteBook 240R 14\" G10",
+  "type": "edit",
+  "time": "2026-06-05T19:16:53.607Z"
+},
+{
+  "_id": {
+    "$oid": "6a2320d913dc918e62e9c049"
+  },
+  "text": "Editado: Laptop HP ProBook 440 G9",
+  "type": "edit",
+  "time": "2026-06-05T19:17:45.051Z"
+},
+{
+  "_id": {
+    "$oid": "6a2320f213dc918e62e9c04c"
+  },
+  "text": "Editado: Laptop HP ProBook 440 G9",
+  "type": "edit",
+  "time": "2026-06-05T19:18:10.272Z"
+},
+{
+  "_id": {
+    "$oid": "6a23214213dc918e62e9c04e"
+  },
+  "text": "Editado: Laptop HP ProBook 440 G9",
+  "type": "edit",
+  "time": "2026-06-05T19:19:30.510Z"
+},
+{
+  "_id": {
+    "$oid": "6a23215113dc918e62e9c050"
+  },
+  "text": "Editado: Laptop HP ProBook 440 G9",
+  "type": "edit",
+  "time": "2026-06-05T19:19:45.118Z"
+},
+{
+  "_id": {
+    "$oid": "6a23215f13dc918e62e9c051"
+  },
+  "text": "Editado: Laptop HP NoteBook 240R 14\" G10",
+  "type": "edit",
+  "time": "2026-06-05T19:19:59.688Z"
+},
+{
+  "_id": {
+    "$oid": "6a23216b13dc918e62e9c053"
+  },
+  "text": "Editado: Laptop HP ProBook 440 G9",
+  "type": "edit",
+  "time": "2026-06-05T19:20:11.187Z"
+},
+{
+  "_id": {
+    "$oid": "6a23217e13dc918e62e9c056"
+  },
+  "text": "Editado: Laptop HP Notebook 250 G9",
+  "type": "edit",
+  "time": "2026-06-05T19:20:30.702Z"
+},
+{
+  "_id": {
+    "$oid": "6a2321b013dc918e62e9c058"
+  },
+  "text": "Editado: Laptop HP ProBook 440 G9",
+  "type": "edit",
+  "time": "2026-06-05T19:21:20.889Z"
+},
+{
+  "_id": {
+    "$oid": "6a2321c613dc918e62e9c05a"
+  },
+  "text": "Editado: Laptop HP Notebook 240 G8",
+  "type": "edit",
+  "time": "2026-06-05T19:21:42.337Z"
+},
+{
+  "_id": {
+    "$oid": "6a2321fc13dc918e62e9c05c"
+  },
+  "text": "Editado: Laptop Dell Vostro 3400",
+  "type": "edit",
+  "time": "2026-06-05T19:22:36.778Z"
+},
+{
+  "_id": {
+    "$oid": "6a23220c13dc918e62e9c05e"
+  },
+  "text": "Editado: Laptop HP NoteBook 240R 14\" G10",
+  "type": "edit",
+  "time": "2026-06-05T19:22:52.087Z"
+},
+{
+  "_id": {
+    "$oid": "6a23222413dc918e62e9c060"
+  },
+  "text": "Editado: Laptop DELL Vostro 3530",
+  "type": "edit",
+  "time": "2026-06-05T19:23:16.716Z"
+},
+{
+  "_id": {
+    "$oid": "6a23224513dc918e62e9c062"
+  },
+  "text": "Editado: Laptop HP ProBook 440 14\" G11",
+  "type": "edit",
+  "time": "2026-06-05T19:23:49.612Z"
+},
+{
+  "_id": {
+    "$oid": "6a23228313dc918e62e9c064"
+  },
+  "text": "Editado: Laptop DELL Vostro 3400",
+  "type": "edit",
+  "time": "2026-06-05T19:24:50.955Z"
+},
+{
+  "_id": {
+    "$oid": "6a2322b513dc918e62e9c066"
+  },
+  "text": "Editado: Laptop HP NoteBook 240R 14\" G10",
+  "type": "edit",
+  "time": "2026-06-05T19:25:41.116Z"
+},
+{
+  "_id": {
+    "$oid": "6a2322d213dc918e62e9c068"
+  },
+  "text": "Editado: Laptop HP NoteBook 240R 14\" G10",
+  "type": "edit",
+  "time": "2026-06-05T19:26:10.561Z"
+},
+{
+  "_id": {
+    "$oid": "6a2322e313dc918e62e9c06a"
+  },
+  "text": "Editado: Laptop HP NoteBook 240R 14\" G10",
+  "type": "edit",
+  "time": "2026-06-05T19:26:27.287Z"
+},
+{
+  "_id": {
+    "$oid": "6a23230a13dc918e62e9c06c"
+  },
+  "text": "Editado: Laptop HP NoteBook 240R 14\" G10",
+  "type": "edit",
+  "time": "2026-06-05T19:27:06.785Z"
+},
+{
+  "_id": {
+    "$oid": "6a23235613dc918e62e9c06e"
+  },
+  "text": "Editado: Laptop HP ProBook 440 14\" G11",
+  "type": "edit",
+  "time": "2026-06-05T19:28:22.367Z"
+},
+{
+  "_id": {
+    "$oid": "6a23237813dc918e62e9c06f"
+  },
+  "text": "Editado: Laptop HP ProBook 440 14\" G11",
+  "type": "edit",
+  "time": "2026-06-05T19:28:56.247Z"
+},
+{
+  "_id": {
+    "$oid": "6a23249513dc918e62e9c072"
+  },
+  "text": "Editado: Laptop HP ProBook 250 G9",
+  "type": "edit",
+  "time": "2026-06-05T19:33:41.452Z"
+},
+{
+  "_id": {
+    "$oid": "6a26e20213dc918e62e9c073"
+  },
+  "text": "Editado: Laptop HP Notebook 240 G8",
+  "type": "edit",
+  "time": "2026-06-08T15:38:42.918Z"
+},
+{
+  "_id": {
+    "$oid": "6a26f16213dc918e62e9c075"
+  },
+  "text": "Editado: Laptop DELL Vostro 3530",
+  "type": "edit",
+  "time": "2026-06-08T16:44:18.035Z"
+},
+{
+  "_id": {
+    "$oid": "6a26f1d613dc918e62e9c078"
+  },
+  "text": "Editado: Laptop HP Notebook 240 G8",
+  "type": "edit",
+  "time": "2026-06-08T16:46:14.102Z"
+},
+{
+  "_id": {
+    "$oid": "6a26f1ea13dc918e62e9c07a"
+  },
+  "text": "Editado: Laptop DELL Vostro 3530",
+  "type": "edit",
+  "time": "2026-06-08T16:46:34.171Z"
+},
+{
+  "_id": {
+    "$oid": "6a26f35b13dc918e62e9c07c"
+  },
+  "text": "Editado: Laptop HP ProBook 440 G9",
+  "type": "edit",
+  "time": "2026-06-08T16:52:43.638Z"
+},
+{
+  "_id": {
+    "$oid": "6a26f38413dc918e62e9c07d"
+  },
+  "text": "Editado: Laptop HP Notebook 240 G8",
+  "type": "edit",
+  "time": "2026-06-08T16:53:24.149Z"
+},
+{
+  "_id": {
+    "$oid": "6a2990a5114279bc6b16ae75"
+  },
+  "text": "Editado: Laptop HP ProBook 440 G8",
+  "type": "edit",
+  "time": "2026-06-10T16:28:21.408Z"
+},
+{
+  "_id": {
+    "$oid": "6a307f68032b1b53b2ef6086"
+  },
+  "text": "Mantenimiento registrado: Laptop DELL Vostro 3530",
+  "type": "success",
+  "time": "2026-06-15T22:40:40.340Z"
+},
+{
+  "_id": {
+    "$oid": "6a307f6b032b1b53b2ef6089"
+  },
+  "text": "Mantenimiento registrado: Laptop HP Notebook 240 G8",
+  "type": "success",
+  "time": "2026-06-15T22:40:43.430Z"
+},
+{
+  "_id": {
+    "$oid": "6a307f7a032b1b53b2ef608b"
+  },
+  "text": "Mantenimiento registrado: NoteBook 240R 14\" G10",
+  "type": "success",
+  "time": "2026-06-15T22:40:58.188Z"
+},
+{
+  "_id": {
+    "$oid": "6a307f80032b1b53b2ef608d"
+  },
+  "text": "Mantenimiento registrado: Laptop DELL Vostro 3400",
+  "type": "success",
+  "time": "2026-06-15T22:41:04.556Z"
+},
+{
+  "_id": {
+    "$oid": "6a307fa9032b1b53b2ef608f"
+  },
+  "text": "Mantenimiento registrado: Laptop DELL Vostro 3530",
+  "type": "success",
+  "time": "2026-06-15T22:41:45.454Z"
+},
+{
+  "_id": {
+    "$oid": "6a307fad032b1b53b2ef6091"
+  },
+  "text": "Mantenimiento registrado: Laptop HP Notebook 250 G9",
+  "type": "success",
+  "time": "2026-06-15T22:41:49.368Z"
+},
+{
+  "_id": {
+    "$oid": "6a307fb0032b1b53b2ef6092"
+  },
+  "text": "Mantenimiento registrado: Laptop HP Notebook 240 G8",
+  "type": "success",
+  "time": "2026-06-15T22:41:52.122Z"
+},
+{
+  "_id": {
+    "$oid": "6a307fb1032b1b53b2ef6095"
+  },
+  "text": "Mantenimiento registrado: Laptop HP ProBook 440 G9",
+  "type": "success",
+  "time": "2026-06-15T22:41:53.728Z"
+},
+{
+  "_id": {
+    "$oid": "6a307fb5032b1b53b2ef6097"
+  },
+  "text": "Mantenimiento registrado: Laptop HP ProBook 440 G9",
+  "type": "success",
+  "time": "2026-06-15T22:41:57.214Z"
+},
+{
+  "_id": {
+    "$oid": "6a3acdc24e284a0dec50bd87"
+  },
+  "text": "Mantenimiento registrado: Laptop DELL Vostro 3400",
+  "type": "success",
+  "time": "2026-06-23T18:17:38.796Z"
+},
+{
+  "_id": {
+    "$oid": "6a3acdcd4e284a0dec50bd89"
+  },
+  "text": "Editado: Laptop HP ProBook 440 14\" G11",
+  "type": "edit",
+  "time": "2026-06-23T18:17:49.458Z"
+},
+{
+  "_id": {
+    "$oid": "6a3acdd34e284a0dec50bd8b"
+  },
+  "text": "Mantenimiento registrado: Laptop HP ProBook 440 G9",
+  "type": "success",
+  "time": "2026-06-23T18:17:55.779Z"
+},
+{
+  "_id": {
+    "$oid": "6a3acdfd4e284a0dec50bd8d"
+  },
+  "text": "Mantenimiento registrado: Laptop HP ProBook 250 G9",
+  "type": "success",
+  "time": "2026-06-23T18:18:36.954Z"
+},
+{
+  "_id": {
+    "$oid": "6a3ace394e284a0dec50bd8f"
+  },
+  "text": "Mantenimiento registrado: Laptop Dell Vostro 3400",
+  "type": "success",
+  "time": "2026-06-23T18:19:37.262Z"
+},
+{
+  "_id": {
+    "$oid": "6a458e52ffd83c08abae3507"
+  },
+  "text": "Editado: Laptop HP ProBook 440 G9",
+  "type": "edit",
+  "time": "2026-07-01T22:01:54.501Z"
+},
+{
+  "_id": {
+    "$oid": "6a458ed2ffd83c08abae3509"
+  },
+  "text": "Editado: Laptop HP ProBook 440 G9",
+  "type": "edit",
+  "time": "2026-07-01T22:04:02.184Z"
+},
+{
+  "_id": {
+    "$oid": "6a565cbd7c90b6a94d4d86b1"
+  },
+  "text": "Editado: Laptop DELL Vostro 3400",
+  "type": "edit",
+  "time": "2026-07-14T15:58:53.496Z"
+},
+{
+  "_id": {
+    "$oid": "6a565d2a7c90b6a94d4d86b3"
+  },
+  "text": "Editado: Laptop HP Notebook 250 G9",
+  "type": "edit",
+  "time": "2026-07-14T16:00:42.534Z"
+},
+{
+  "_id": {
+    "$oid": "6a5661f97c90b6a94d4d86b5"
+  },
+  "text": "Editado: Laptop Dell Vostro 3400",
+  "type": "edit",
+  "time": "2026-07-14T16:21:13.697Z"
+},
+{
+  "_id": {
+    "$oid": "6a721c794d751c31e6db9d96"
+  },
+  "text": "Editado: Laptop HP Notebook 250 G8",
+  "type": "edit",
+  "time": "2026-08-04T17:08:09.100Z"
+},
+{
+  "_id": {
+    "$oid": "6a7228a94d751c31e6db9d9a"
+  },
+  "text": "Editado: Laptop HP Notebook 250 G8",
+  "type": "edit",
+  "time": "2026-08-04T18:00:09.020Z"
+},
+{
+  "_id": {
+    "$oid": "6a73610be1413db1556c586d"
+  },
+  "text": "Editado: Laptop HP Notebook 250 G8",
+  "type": "edit",
+  "time": "2026-08-05T16:12:58.204Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a13ed2f5d184c39edf5bc"
+  },
+  "text": "Exportacion Excel (todos)",
+  "type": "info",
+  "time": "2026-08-10T18:09:49.764Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4891a31789b30e899765"
+  },
+  "text": "Nuevo activo: INSPIRED PAD TN450",
+  "type": "success",
+  "time": "2026-08-10T21:54:25.437Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a48cba31789b30e899768"
+  },
+  "text": "Nuevo activo: INSPIRED PAD",
+  "type": "success",
+  "time": "2026-08-10T21:55:23.828Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4910a31789b30e89976b"
+  },
+  "text": "Nuevo activo: INSPIRED PAD",
+  "type": "success",
+  "time": "2026-08-10T21:56:32.147Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4962a31789b30e899770"
+  },
+  "text": "Nuevo activo: INSPIRED PAD",
+  "type": "success",
+  "time": "2026-08-10T21:57:54.829Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4a3aa31789b30e899772"
+  },
+  "text": "Nuevo activo: Mouse",
+  "type": "success",
+  "time": "2026-08-10T22:01:30.564Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4a62a31789b30e899775"
+  },
+  "text": "Nuevo activo: Mouse",
+  "type": "success",
+  "time": "2026-08-10T22:02:10.075Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4a8fa31789b30e899778"
+  },
+  "text": "Nuevo activo: Mouse",
+  "type": "success",
+  "time": "2026-08-10T22:02:55.298Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4acca31789b30e89977c"
+  },
+  "text": "Nuevo activo: Mouse",
+  "type": "success",
+  "time": "2026-08-10T22:03:56.787Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4af5a31789b30e89977f"
+  },
+  "text": "Nuevo activo: Mouse",
+  "type": "success",
+  "time": "2026-08-10T22:04:37.774Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4b1ea31789b30e899781"
+  },
+  "text": "Nuevo activo: Mouse",
+  "type": "success",
+  "time": "2026-08-10T22:05:18.522Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4b51a31789b30e899784"
+  },
+  "text": "Nuevo activo: Mouse",
+  "type": "success",
+  "time": "2026-08-10T22:06:09.633Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4b7ea31789b30e899788"
+  },
+  "text": "Nuevo activo: Mouse",
+  "type": "success",
+  "time": "2026-08-10T22:06:54.820Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4c09a31789b30e89978b"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:09:13.218Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4c2ca31789b30e89978e"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:09:48.929Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4df5a31789b30e899790"
+  },
+  "text": "Editado: Cable Ethernet",
+  "type": "edit",
+  "time": "2026-08-10T22:17:24.949Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4e4aa31789b30e899793"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:18:50.401Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4f9da31789b30e899795"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:24:29.357Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4faca31789b30e899798"
+  },
+  "text": "Editado: Cable Ethernet",
+  "type": "edit",
+  "time": "2026-08-10T22:24:44.740Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a4fbea31789b30e89979a"
+  },
+  "text": "Editado: Cable Ethernet",
+  "type": "edit",
+  "time": "2026-08-10T22:25:02.628Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a501ea31789b30e89979c"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:26:38.240Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a5038a31789b30e89979e"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:27:04.391Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a505ba31789b30e8997a2"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:27:39.537Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a5077a31789b30e8997a5"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:28:07.658Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a509ba31789b30e8997a9"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:28:43.154Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a50b8a31789b30e8997ac"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:29:12.767Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a50e6a31789b30e8997ae"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:29:58.509Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a5104a31789b30e8997b0"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:30:28.229Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a511ea31789b30e8997b5"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:30:54.427Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a513ea31789b30e8997b7"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:31:26.874Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a5152a31789b30e8997ba"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:31:46.888Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a5174a31789b30e8997bd"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:32:20.629Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a5180a31789b30e8997c0"
+  },
+  "text": "Editado: Cable Ethernet",
+  "type": "edit",
+  "time": "2026-08-10T22:32:32.371Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a51a9a31789b30e8997c2"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:33:13.141Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a51cca31789b30e8997c5"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:33:48.275Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a5314a31789b30e8997c9"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:39:16.131Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a5336a31789b30e8997cb"
+  },
+  "text": "Editado: Cable Ethernet",
+  "type": "edit",
+  "time": "2026-08-10T22:39:50.856Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a53f8a31789b30e8997ce"
+  },
+  "text": "Nuevo activo: Cable Ethernet",
+  "type": "success",
+  "time": "2026-08-10T22:43:04.940Z"
+},
+{
+  "_id": {
+    "$oid": "6a7a5860a31789b30e8997cf"
+  },
+  "text": "Editado: Laptop HP Notebook 250 G8",
+  "type": "edit",
+  "time": "2026-08-10T23:01:52.680Z"
+},
+{
+  "_id": {
+    "$oid": "6a7b645236a67ceed9865aab"
+  },
+  "text": "Exportacion Excel (todos)",
+  "type": "info",
+  "time": "2026-08-11T18:05:05.978Z"
+}]

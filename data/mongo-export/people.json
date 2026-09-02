@@ -1,0 +1,459 @@
+[{
+  "_id": {
+    "$oid": "69dd4716a19d63ae3586e819"
+  },
+  "id": "mnxln19yxtf",
+  "name": "GEOVANNY JIMENEZ",
+  "department": "IT",
+  "position": "SISTEMAS"
+},
+{
+  "_id": {
+    "$oid": "69dd4780a19d63ae3586e81a"
+  },
+  "id": "mnxlpb45umn",
+  "name": "CLAUDIA TELLO",
+  "department": "RECEPCION",
+  "position": "RECEPCION"
+},
+{
+  "_id": {
+    "$oid": "69dd47a8a19d63ae3586e81b"
+  },
+  "id": "mnxlq5rsfa3",
+  "name": "XIMENA GUERRERO",
+  "department": "MARKETING",
+  "position": "MARKETING"
+},
+{
+  "_id": {
+    "$oid": "69dd4802a19d63ae3586e81c"
+  },
+  "id": "mnxls3dntis",
+  "name": "ELIZABEHT GRANADOS",
+  "department": "OPERACIONES",
+  "position": "OPERACIONES"
+},
+{
+  "_id": {
+    "$oid": "69dd4831a19d63ae3586e81d"
+  },
+  "id": "mnxlt3jnit2",
+  "name": "NITZIA FACIO",
+  "department": "OPERACIONES",
+  "position": "SR OPERACIONES"
+},
+{
+  "_id": {
+    "$oid": "69e8edc3cd85a9af3fd24510"
+  },
+  "id": "moa88w4n6lt",
+  "name": "ARACELI CASTRO",
+  "department": "OPERACIONES",
+  "position": "GERENTE DE OPERACIONES"
+},
+{
+  "_id": {
+    "$oid": "69e8eddfcd85a9af3fd24511"
+  },
+  "id": "moa89hvcdjp",
+  "name": "JOSE ALBERTO NAVA",
+  "department": "SEGUROS",
+  "position": "SEGUROS"
+},
+{
+  "_id": {
+    "$oid": "69e8ee2bcd85a9af3fd24512"
+  },
+  "id": "moa8b4itirb",
+  "name": "SONIA GOVEA",
+  "department": "AUDITORIA",
+  "position": "AUDITORIA"
+},
+{
+  "_id": {
+    "$oid": "69e8ee5ecd85a9af3fd24513"
+  },
+  "id": "moa8c75zor4",
+  "name": "JAVIER ELIZALDE",
+  "department": "SISTEMAS",
+  "position": "GERENTE SISTEMAS"
+},
+{
+  "_id": {
+    "$oid": "69e8ee8ccd85a9af3fd24514"
+  },
+  "id": "moa8d7b5sfy",
+  "name": "GERENTE COMERCIAL",
+  "department": "COMERCIAL",
+  "position": "GERENTE COMERCIAL"
+},
+{
+  "_id": {
+    "$oid": "69e8eeb8cd85a9af3fd24515"
+  },
+  "id": "moa8e4ssv7o",
+  "name": "FERNANDA BACA",
+  "department": "ADMINISTRACION DE CARTERA",
+  "position": "CARTERA JR"
+},
+{
+  "_id": {
+    "$oid": "69e8ef3bcd85a9af3fd24516"
+  },
+  "id": "moa8gxoes6a",
+  "name": "JOCELYN GUERRERO",
+  "department": "ADMINISTRACION DE CARTERA",
+  "position": "CARTERA"
+},
+{
+  "_id": {
+    "$oid": "69e8ef56cd85a9af3fd24517"
+  },
+  "id": "moa8hj16o09",
+  "name": "ANDRES BARBA",
+  "department": "ADMINISTRACION DE CARTERA",
+  "position": "CARTERA SR"
+},
+{
+  "_id": {
+    "$oid": "69e8ef74cd85a9af3fd24518"
+  },
+  "id": "moa8i6e8c59",
+  "name": "MANUEL ALDRETE",
+  "department": "CEO",
+  "position": "CEO"
+},
+{
+  "_id": {
+    "$oid": "69e8f010cd85a9af3fd24519"
+  },
+  "id": "moa8liluii2",
+  "name": "TOMAS TRUJILLO",
+  "department": "COBRANZA",
+  "position": ""
+},
+{
+  "_id": {
+    "$oid": "69e8f06dcd85a9af3fd2451a"
+  },
+  "id": "moa8nhspdld",
+  "name": "ALEJANDRO UGALDE",
+  "department": "COMERCIAL Y OPERACIONES",
+  "position": "DIRECTOR COMERCIAL Y OPERACIONES"
+},
+{
+  "_id": {
+    "$oid": "69e8f081cd85a9af3fd2451b"
+  },
+  "id": "moa8nx9t203",
+  "name": "IRIS LIN",
+  "department": "FACTURACION",
+  "position": "FACTURACION"
+},
+{
+  "_id": {
+    "$oid": "69e8f093cd85a9af3fd2451c"
+  },
+  "id": "moa8oblp8do",
+  "name": "ALEXIS LEON",
+  "department": "TESORERIA",
+  "position": "TESORERIA"
+},
+{
+  "_id": {
+    "$oid": "69e8f0b7cd85a9af3fd2451d"
+  },
+  "id": "moa8p3mx2da",
+  "name": "FERNANDO MAYORGA",
+  "department": "FONDEO",
+  "position": "FONDEO"
+},
+{
+  "_id": {
+    "$oid": "69e8f1eecd85a9af3fd2451e"
+  },
+  "id": "moa8vril5wg",
+  "name": "DANIEL BAUTISTA",
+  "department": "CONTABILIDAD",
+  "position": "CONTABILIDAD"
+},
+{
+  "_id": {
+    "$oid": "69e8f201cd85a9af3fd2451f"
+  },
+  "id": "moa8w691p7o",
+  "name": "NOE PUGA",
+  "department": "CONTABILIDAD",
+  "position": "CONTABILIDAD"
+},
+{
+  "_id": {
+    "$oid": "69e8f230cd85a9af3fd24520"
+  },
+  "id": "moa8x6fx1e5",
+  "name": "CESAR DE LA TORRE",
+  "department": "CONTABILIDAD",
+  "position": "CONTADOR GENERAL"
+},
+{
+  "_id": {
+    "$oid": "69e8f260cd85a9af3fd24521"
+  },
+  "id": "moa8y7jxjxq",
+  "name": "MARIANA MONTEON",
+  "department": "RIESGOS",
+  "position": "ANALISTA DE CREDITO"
+},
+{
+  "_id": {
+    "$oid": "69e8f2e2cd85a9af3fd24522"
+  },
+  "id": "moa90z4kqqo",
+  "name": "ADRIAN ZAMUDIO",
+  "department": "RIESGOS",
+  "position": "ANALISTA DE CREDITO JR"
+},
+{
+  "_id": {
+    "$oid": "69e8f308cd85a9af3fd24523"
+  },
+  "id": "moa91syl07h",
+  "name": "PAULINA DAUTT",
+  "department": "RIESGOS",
+  "position": "GERENTE DE RIESGOS"
+},
+{
+  "_id": {
+    "$oid": "69e8f340cd85a9af3fd24524"
+  },
+  "id": "moa92zqpcdc",
+  "name": "ROGELIO SALAZAR",
+  "department": "FINANZAS",
+  "position": "FINANZAS SR"
+},
+{
+  "_id": {
+    "$oid": "69e8f364cd85a9af3fd24525"
+  },
+  "id": "moa93rvkaop",
+  "name": "KAREN AYALA",
+  "department": "TESORERIA",
+  "position": "TESORERIA SR"
+},
+{
+  "_id": {
+    "$oid": "69e8f380cd85a9af3fd24526"
+  },
+  "id": "moa94dsn56i",
+  "name": "MARGARITA VALADEZ",
+  "department": "RH",
+  "position": "GERENTE RH"
+},
+{
+  "_id": {
+    "$oid": "69e8f3b2cd85a9af3fd24527"
+  },
+  "id": "moa95g3e66w",
+  "name": "ALEJANDRO RODRIGUEZ",
+  "department": "JURIDICO",
+  "position": "JURIDICO"
+},
+{
+  "_id": {
+    "$oid": "69e8f407cd85a9af3fd24528"
+  },
+  "id": "moa979g519t",
+  "name": "XIMENA SERRANO",
+  "department": "JURIDICO",
+  "position": "BECARIO"
+},
+{
+  "_id": {
+    "$oid": "69e8f42bcd85a9af3fd24529"
+  },
+  "id": "moa981iz10g",
+  "name": "MARIANO GOMEZ",
+  "department": "GESTORIA",
+  "position": "GESTORIA SR"
+},
+{
+  "_id": {
+    "$oid": "69e8f441cd85a9af3fd2452a"
+  },
+  "id": "moa98ili3sz",
+  "name": "JOSE LUIS MORENO",
+  "department": "GESTORIA",
+  "position": "GESTORIA"
+},
+{
+  "_id": {
+    "$oid": "69f3ce233dd6fea35663be90"
+  },
+  "id": "mom0mnt6tqg",
+  "name": "KARINA SERRANO GONZALEZ",
+  "department": "ADMINISTRACION DE CARTERA",
+  "position": "CARTERA JR"
+},
+{
+  "_id": {
+    "$oid": "69f3ce673dd6fea35663be91"
+  },
+  "id": "mom0o4kd87u",
+  "name": "PEDRO SOLIS RODRIGUEZ",
+  "department": "VENTAS",
+  "position": "EJECUTIVO DE VENTAS"
+},
+{
+  "_id": {
+    "$oid": "6a0b2d84930457095c7e9b3f"
+  },
+  "id": "mpbcl9schv5",
+  "name": "FATIMA GARCIA NUÑEZ",
+  "department": "SEGUROS",
+  "position": "SEGUROS SR"
+},
+{
+  "_id": {
+    "$oid": "6a1869565c1ff357434cdb33"
+  },
+  "id": "mppoy5e8jdz",
+  "name": "BERENICE TORRES",
+  "department": "VENTAS",
+  "position": "EJECUTIVO DE VENTAS"
+},
+{
+  "_id": {
+    "$oid": "6a1869a35c1ff357434cdb34"
+  },
+  "id": "mppozsmulrs",
+  "name": "CELIA MEDINA",
+  "department": "VENTAS",
+  "position": "VENTAS"
+},
+{
+  "_id": {
+    "$oid": "6a186a275c1ff357434cdb35"
+  },
+  "id": "mppp2m7z0kg",
+  "name": "ISSACK RAMOS",
+  "department": "VENTAS",
+  "position": "VENTAS"
+},
+{
+  "_id": {
+    "$oid": "6a186a525c1ff357434cdb36"
+  },
+  "id": "mppp3jdyrsh",
+  "name": "JOSE MIGUEL",
+  "department": "VENTAS",
+  "position": "GERENTE COMERCIAL"
+},
+{
+  "_id": {
+    "$oid": "6a186a795c1ff357434cdb37"
+  },
+  "id": "mppp4ds456e",
+  "name": "JUAN PABLO",
+  "department": "CUANTICUS",
+  "position": "CUANTICUS"
+},
+{
+  "_id": {
+    "$oid": "6a186a9f5c1ff357434cdb38"
+  },
+  "id": "mppp56hrath",
+  "name": "LETICIA",
+  "department": "VENTAS",
+  "position": "VENTAS"
+},
+{
+  "_id": {
+    "$oid": "6a186afa5c1ff357434cdb39"
+  },
+  "id": "mppp752f93p",
+  "name": "CARTERA",
+  "department": "CARTERA",
+  "position": "ADMINISTRACION DE CARTERA"
+},
+{
+  "_id": {
+    "$oid": "6a186b1a5c1ff357434cdb3a"
+  },
+  "id": "mppp7tn7wsm",
+  "name": "PAMELA SOLORIO",
+  "department": "VENTAS",
+  "position": "VENTAS"
+},
+{
+  "_id": {
+    "$oid": "6a186b3b5c1ff357434cdb3b"
+  },
+  "id": "mppp8jfcqji",
+  "name": "TERESA ULLOA",
+  "department": "VENTAS",
+  "position": "VENTAS"
+},
+{
+  "_id": {
+    "$oid": "6a186b715c1ff357434cdb3c"
+  },
+  "id": "mppp9p7d6cz",
+  "name": "SERVIDOR DE ENVIOS",
+  "department": "FACTURACION",
+  "position": "FACTURACION"
+},
+{
+  "_id": {
+    "$oid": "6a186b905c1ff357434cdb3d"
+  },
+  "id": "mpppacq9mo5",
+  "name": "MESA DE CONTROL",
+  "department": "RIESGOS",
+  "position": "MESA DE CONTROL"
+},
+{
+  "_id": {
+    "$oid": "6a186ebe5c1ff357434cdb51"
+  },
+  "id": "mppprt62ad9",
+  "name": "SERVIDOR DE CONTABILIDAD",
+  "department": "TI",
+  "position": "TI"
+},
+{
+  "_id": {
+    "$oid": "6a186ed45c1ff357434cdb52"
+  },
+  "id": "mpppsa7dknj",
+  "name": "SERVIDOR DE AD",
+  "department": "TI",
+  "position": "TI"
+},
+{
+  "_id": {
+    "$oid": "6a186ee95c1ff357434cdb53"
+  },
+  "id": "mpppsqbmiij",
+  "name": "SERVIDOR DE ARCHIVOS",
+  "department": "TI",
+  "position": "TI"
+},
+{
+  "_id": {
+    "$oid": "6a458e3fffd83c08abae3505"
+  },
+  "id": "mr2meje0j8i",
+  "name": "PEDRO LOMELII CORNEJO",
+  "department": "VENTAS",
+  "position": "GERENTE COMERCIAL"
+},
+{
+  "_id": {
+    "$oid": "6a7228924d751c31e6db9d98"
+  },
+  "id": "mseyqim70ri",
+  "name": "ANDREA HERNANDEZ ABAD",
+  "department": "TESORERIA",
+  "position": "TESORERIA JR"
+}]
