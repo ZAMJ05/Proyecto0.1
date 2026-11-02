@@ -41,6 +41,7 @@ yarn-error.log*
 /prisma/dev.db-journal
 /data/*.db
 /data/*.db-journal
+/data/.desk-sheet-applied
 !/data/mongo-export/
 
 # agent skill caches from tooling

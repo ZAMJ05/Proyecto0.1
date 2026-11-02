@@ -32,11 +32,15 @@ export async function PATCH(request: Request, { params }: Params) {
       },
     });
 
+    const keepStatus =
+      assignment.asset.status === "Activo" || assignment.asset.status === "Stock";
     await prisma.activityLog.create({
       data: {
         assetId: assignment.assetId,
         action: "Desasignación",
-        details: `${assignment.asset.name} liberado de ${assignment.employee.name}`,
+        details: keepStatus
+          ? `${assignment.asset.name} liberado de ${assignment.employee.name}. Conserva el estado ${assignment.asset.status} y queda disponible en Stock para volver a asignarse.`
+          : `${assignment.asset.name} liberado de ${assignment.employee.name}`,
       },
     });
 

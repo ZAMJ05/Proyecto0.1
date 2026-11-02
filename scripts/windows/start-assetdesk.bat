@@ -92,6 +92,14 @@ if not exist "%DB_FILE%" (
   call "%NPM_CMD%" run db:push >> "%LOG_FILE%" 2>&1
 )
 
+REM Alinea la hoja de escritorios una sola vez. Si ya se aplico, no toca asignaciones.
+echo Alineando hoja de escritorios si aun no esta aplicada...>> "%LOG_FILE%"
+call "%NPM_CMD%" run db:sync-desk >> "%LOG_FILE%" 2>&1
+if errorlevel 1 (
+  echo ERROR: db:sync-desk fallo>> "%LOG_FILE%"
+  exit /b 1
+)
+
 netstat -ano | findstr /R /C:":%PORT% .*LISTENING" >nul 2>&1
 if not errorlevel 1 (
   echo INFO: El puerto %PORT% ya esta en uso. Se omite el arranque.>> "%LOG_FILE%"

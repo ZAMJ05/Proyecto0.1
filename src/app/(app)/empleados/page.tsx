@@ -120,7 +120,7 @@ export default function EmpleadosPage() {
       }
       if (data.releasedCount > 0) {
         alert(
-          `Usuario actualizado. Se liberaron ${data.releasedCount} equipo(s) a Stock.`
+          `Usuario actualizado. Se liberaron ${data.releasedCount} equipo(s) a Stock. Siguen en estado Activo.`
         );
       }
       cancelEdit();
@@ -134,7 +134,7 @@ export default function EmpleadosPage() {
     const assigned = emp.assignments.length;
     const ok = confirm(
       assigned > 0
-        ? `¿Marcar a ${emp.name} como “ya no trabaja aquí”?\nSe liberarán ${assigned} equipo(s) y pasarán a Stock.`
+        ? `¿Marcar a ${emp.name} como “ya no trabaja aquí”?\nSe liberarán ${assigned} equipo(s). Conservan el estado Activo y quedan en Stock para volver a asignarse.`
         : `¿Marcar a ${emp.name} como “ya no trabaja aquí”?`
     );
     if (!ok) return;
@@ -253,7 +253,7 @@ export default function EmpleadosPage() {
     <div>
       <PageHeader
         title="Usuarios y activos"
-        subtitle="Usuarios del inventario. Puedes marcar quién ya no trabaja aquí; sus equipos se liberan a Stock."
+        subtitle="Usuarios del inventario. Si alguien ya no trabaja aquí, sus equipos se liberan a Stock y conservan el estado Activo."
       />
 
       {role === "ADMIN" && (
@@ -327,8 +327,8 @@ export default function EmpleadosPage() {
                 </Select>
                 {!form.active && (
                   <p className="mt-1 text-xs text-[var(--muted)]">
-                    Al guardar, se liberarán sus equipos asignados y pasarán a
-                    Stock.
+                    Al guardar, se liberarán sus equipos. Conservan el estado
+                    Activo y quedan en Stock para volver a asignarse.
                   </p>
                 )}
               </div>

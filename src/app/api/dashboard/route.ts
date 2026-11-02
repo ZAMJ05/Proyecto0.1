@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/auth";
 import { handleApiError, jsonOk } from "@/lib/api";
+import { availableForAssignmentWhere } from "@/lib/available";
 
 export async function GET() {
   try {
@@ -10,6 +11,7 @@ export async function GET() {
       total,
       active,
       stock,
+      assignable,
       inactive,
       baja,
       reparacion,
@@ -25,6 +27,7 @@ export async function GET() {
       prisma.asset.count({ where: { status: { not: "Baja" } } }),
       prisma.asset.count({ where: { status: "Activo" } }),
       prisma.asset.count({ where: { status: "Stock" } }),
+      prisma.asset.count({ where: availableForAssignmentWhere() }),
       prisma.asset.count({ where: { status: "Inactivo" } }),
       prisma.asset.count({ where: { status: "Baja" } }),
       prisma.asset.count({ where: { status: "Reparacion" } }),
@@ -107,6 +110,7 @@ export async function GET() {
         disabled,
         baja,
         stock,
+        assignable,
         reparacion,
         renewalsDue,
         maintenancesDue,

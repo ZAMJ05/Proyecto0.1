@@ -138,13 +138,13 @@ export default function StockPage() {
     <div>
       <PageHeader
         title="Stock / Reserva"
-        subtitle="Asigna equipos en reserva a un usuario activo en un clic."
+        subtitle="Equipos en estado Stock y equipos Activos sin usuario. Asígnalos en un clic; el estado Activo no cambia al liberarlos."
       />
 
       <div className="mb-4 grid gap-4 sm:grid-cols-3">
         <Card className="animate-rise">
           <p className="text-xs uppercase tracking-wide text-[var(--muted)]">
-            Total en stock
+            Listos para asignar
           </p>
           <p className="mt-2 font-[family-name:var(--font-display)] text-4xl">
             {assets.length}
@@ -236,7 +236,7 @@ export default function StockPage() {
       />
 
       {list.total === 0 ? (
-        <EmptyState text="No hay equipos en stock/reserva con esos filtros." />
+        <EmptyState text="No hay equipos listos para asignar con esos filtros." />
       ) : list.view === "grid" ? (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {list.pageItems.map((asset) => (
@@ -342,6 +342,7 @@ export default function StockPage() {
                   direction={list.sortDir}
                   onSort={list.toggleSort}
                 />
+                <th className="px-4 py-3 text-left">Estado</th>
                 {role === "ADMIN" && (
                   <th className="px-4 py-3 text-left">Acciones</th>
                 )}
@@ -362,6 +363,9 @@ export default function StockPage() {
                   <td className="px-4 py-3">{asset.serialNumber}</td>
                   <td className="px-4 py-3">{asset.inventoryNumber}</td>
                   <td className="px-4 py-3">{formatDate(asset.purchaseDate)}</td>
+                  <td className="px-4 py-3">
+                    <Badge tone={statusTone(asset.status)}>{asset.status}</Badge>
+                  </td>
                   {role === "ADMIN" && (
                     <td className="px-4 py-3">
                       <div className="row-actions">

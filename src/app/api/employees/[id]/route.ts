@@ -98,7 +98,8 @@ export async function PUT(request: Request, { params }: Params) {
 
     let releasedCount = 0;
 
-    // Si pasa a "ya no trabaja aquí", liberar equipos y devolverlos a Stock
+    // Si pasa a "ya no trabaja aquí", cerrar asignaciones.
+    // El estado Activo se conserva; Stock los lista porque ya no tienen usuario.
     if (wasActive && !nextActive && releaseAssets) {
       const open = await prisma.assignment.findMany({
         where: { employeeId: id, unassignedAt: null },
@@ -115,17 +116,11 @@ export async function PUT(request: Request, { params }: Params) {
               : "Liberado por baja de usuario (ya no trabaja aquí)",
           },
         });
-        if (a.asset.status === "Activo") {
-          await prisma.asset.update({
-            where: { id: a.assetId },
-            data: { status: "Stock" },
-          });
-        }
         await prisma.activityLog.create({
           data: {
             assetId: a.assetId,
             action: "Liberación",
-            details: `${a.asset.name} liberado de ${employee.name} (usuario ya no trabaja aquí)`,
+            details: `${a.asset.name} liberado de ${employee.name} (usuario ya no trabaja aquí). Conserva el estado ${a.asset.status} y queda disponible en Stock.`,
           },
         });
         releasedCount += 1;

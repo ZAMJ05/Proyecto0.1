@@ -9,6 +9,7 @@ import {
   ASSET_STATUSES,
   supportsQuantity,
 } from "@/lib/constants";
+import { availableForAssignmentWhere } from "@/lib/available";
 
 function withIndex(base: string, index: number, total: number) {
   if (total <= 1) return base;
@@ -30,8 +31,14 @@ function buildWhere(searchParams: URLSearchParams): Prisma.AssetWhereInput {
   const stockOnly = searchParams.get("stockOnly");
   const unassigned = searchParams.get("unassigned");
 
-  if (stockOnly === "1") where.status = "Stock";
-  else if (status && (ASSET_STATUSES as readonly string[]).includes(status)) {
+  if (stockOnly === "1") {
+    const and = Array.isArray(where.AND)
+      ? where.AND
+      : where.AND
+        ? [where.AND]
+        : [];
+    where.AND = [...and, availableForAssignmentWhere()];
+  } else if (status && (ASSET_STATUSES as readonly string[]).includes(status)) {
     where.status = status;
   }
 

@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/auth";
 import { handleApiError } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
+import { isAvailableForAssignment } from "@/lib/available";
 
 function csvEscape(value: unknown) {
   return `"${String(value ?? "").replace(/"/g, '""')}"`;
@@ -108,7 +109,7 @@ export async function GET(request: Request) {
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
 
-    const stockAssets = assets.filter((a) => a.status === "Stock");
+    const stockAssets = assets.filter((a) => isAvailableForAssignment(a));
     const assetsTracked = assets.filter((a) => a.status !== "Baja");
     const activeAssignments = assignments.filter((a) => !a.unassignedAt);
     const employeesActive = employees.filter((e) => e.active).length;

@@ -41,6 +41,7 @@ type DashboardData = {
     total: number;
     disabled: number;
     stock: number;
+    assignable: number;
     reparacion: number;
     renewalsDue: number;
     maintenancesDue: number;
@@ -324,7 +325,7 @@ export default function DashboardPage() {
       href: "/activos?unassigned=1",
       icon: PackageOpen,
       tone: "info" as const,
-      hint: "En estado Activo sin usuario",
+      hint: "Siguen Activos y aparecen en Stock para asignarse",
     },
     {
       key: "repair",
@@ -459,8 +460,8 @@ export default function DashboardPage() {
                 href: "/activos",
               },
               {
-                label: "Stock",
-                value: data.cards.stock,
+                label: "Para asignar",
+                value: data.cards.assignable,
                 icon: Warehouse,
                 href: "/stock",
               },
@@ -703,8 +704,8 @@ export default function DashboardPage() {
         {[
           {
             label: "Ir a Stock",
-            value: data.cards.stock,
-            desc: "Equipos en reserva",
+            value: data.cards.assignable,
+            desc: "Stock y Activos sin usuario",
             href: "/stock",
             icon: Box,
             stagger: "stagger-1",
