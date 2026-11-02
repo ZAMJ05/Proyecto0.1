@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Trash2, UserPlus } from "lucide-react";
+import Link from "next/link";
+import { Plus, Trash2, UserPlus } from "lucide-react";
 import {
   Badge,
   Button,
   Card,
   EmptyState,
-  Label,
   PageHeader,
   Select,
   statusTone,
@@ -116,7 +116,7 @@ export default function StockPage() {
   const list = useListControls(filteredByCategory, {
     storageKey: "stock-p25",
     defaultView: "list",
-    getName: (a) => a.name,
+    getName: (a) => `${a.name} ${a.brand} ${a.model} ${a.notes || ""}`,
     getSerial: (a) => `${a.serialNumber} ${a.inventoryNumber}`,
     defaultSortKey: "name",
     sortFields: {
@@ -139,6 +139,16 @@ export default function StockPage() {
       <PageHeader
         title="Stock / Reserva"
         subtitle="Equipos en estado Stock y equipos Activos sin usuario. Asígnalos en un clic; el estado Activo no cambia al liberarlos."
+        actions={
+          role === "ADMIN" ? (
+            <Link href="/inventario?alta=1">
+              <Button>
+                <Plus className="h-4 w-4" />
+                Agregar a stock
+              </Button>
+            </Link>
+          ) : undefined
+        }
       />
 
       <div className="mb-4 grid gap-4 sm:grid-cols-3">
@@ -197,26 +207,23 @@ export default function StockPage() {
         </div>
       )}
 
-      <Card className="mb-4">
-        <Label>Filtrar por categoría</Label>
-        <Select
-          value={category}
-          onChange={(e) => {
-            setCategory(e.target.value);
-            list.setPage(1);
-          }}
-        >
-          <option value="">Todas las categorías</option>
-          {categoriesInStock.map((c) => (
-            <option key={c} value={c}>
-              {CATEGORY_LABELS[c] || c} (
-              {assets.filter((a) => a.category === c).length})
-            </option>
-          ))}
-        </Select>
-      </Card>
-
       <ListToolbar
+        extra={
+          <Select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            aria-label="Categoría"
+            className="w-full lg:w-48"
+          >
+            <option value="">Todas las categorías</option>
+            {categoriesInStock.map((c) => (
+              <option key={c} value={c}>
+                {CATEGORY_LABELS[c] || c} (
+                {assets.filter((a) => a.category === c).length})
+              </option>
+            ))}
+          </Select>
+        }
         name={list.name}
         serial={list.serial}
         onNameChange={list.setName}

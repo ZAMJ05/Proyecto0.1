@@ -2,15 +2,12 @@
 
 import { useEffect, useMemo, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { Plus, Pencil, Trash2, Filter, MonitorCheck } from "lucide-react";
+import { Plus, Pencil, Trash2, UserPlus } from "lucide-react";
 import {
   Badge,
   Button,
   Card,
   EmptyState,
-  Input,
-  Label,
   PageHeader,
   Select,
   statusTone,
@@ -24,7 +21,11 @@ import { CopyableValue } from "@/components/CopyableValue";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
-import { ASSET_CATEGORIES, ASSET_STATUSES } from "@/lib/constants";
+import {
+  QuickAssignModal,
+  useActiveEmployees,
+} from "@/components/QuickAssign";
+import { ASSET_CATEGORIES, ASSET_STATUSES, CATEGORY_LABELS } from "@/lib/constants";
 import { formatDate, toInputDate } from "@/lib/utils";
 
 type Asset = {
@@ -54,34 +55,22 @@ function InventarioContent() {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [role, setRole] = useState<"ADMIN" | "USER">("USER");
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(searchParams.get("alta") === "1");
   const [editing, setEditing] = useState<Asset | null>(null);
   const [previewId, setPreviewId] = useState<string | null>(null);
+  const [assignAsset, setAssignAsset] = useState<Asset | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [filters, setFilters] = useState({
-    q: "",
-    category: searchParams.get("category") || "",
-    status: searchParams.get("status") || "",
-    brand: "",
-    serialNumber: "",
-    inventoryNumber: "",
-    employee: "",
-    anydesk: "",
-    unassigned: searchParams.get("unassigned") || "",
-  });
-
-  const query = useMemo(() => {
-    const p = new URLSearchParams();
-    Object.entries(filters).forEach(([k, v]) => {
-      if (v) p.set(k, v);
-    });
-    return p.toString();
-  }, [filters]);
+  const [category, setCategory] = useState(searchParams.get("category") || "");
+  const [status, setStatus] = useState(searchParams.get("status") || "");
+  const [unassignedOnly, setUnassignedOnly] = useState(
+    searchParams.get("unassigned") === "1"
+  );
+  const { employees } = useActiveEmployees();
 
   async function load() {
     setLoading(true);
     const [assetsRes, meRes] = await Promise.all([
-      fetch(`/api/assets?${query}`),
+      fetch("/api/assets"),
       fetch("/api/auth/me"),
     ]);
     const assetsData = await assetsRes.json();
@@ -93,14 +82,22 @@ function InventarioContent() {
 
   useEffect(() => {
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
+  }, []);
 
-  const list = useListControls(assets, {
-    storageKey: "inventario-p25",
+  const visible = useMemo(() => {
+    return assets.filter((asset) => {
+      if (category && asset.category !== category) return false;
+      if (status && asset.status !== status) return false;
+      if (unassignedOnly && asset.assignments.length > 0) return false;
+      return true;
+    });
+  }, [assets, category, status, unassignedOnly]);
+
+  const list = useListControls(visible, {
+    storageKey: "inventario-p50",
     defaultView: "list",
     getName: (a) =>
-      `${a.name} ${a.assignments[0]?.employee.name || ""} ${a.assignments[0]?.employee.email || ""}`,
+      `${a.name} ${a.brand} ${a.model} ${a.notes || ""} ${a.anydesk || ""} ${a.assignments[0]?.employee.name || ""} ${a.assignments[0]?.employee.email || ""}`,
     getSerial: (a) => `${a.serialNumber} ${a.inventoryNumber}`,
     defaultSortKey: "name",
     sortFields: {
@@ -165,129 +162,70 @@ function InventarioContent() {
     <div>
       <PageHeader
         title="Inventario"
-        subtitle="Alta, consulta y filtros avanzados de equipos IT."
+        subtitle="Busca, filtra y asigna desde la misma lista. El alta entra directo a stock."
         actions={
           <div className="flex flex-wrap gap-2">
-            <Link href="/activos">
-              <Button type="button" variant="secondary">
-                <MonitorCheck className="h-4 w-4" />
-                Ver activos
-              </Button>
-            </Link>
             {role === "ADMIN" && (
               <Button
                 onClick={() => {
                   setEditing(null);
                   setShowForm(true);
+                  window.setTimeout(() => {
+                    document.getElementById("alta-equipo")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }, 50);
                 }}
               >
                 <Plus className="h-4 w-4" />
-                Alta de equipo
+                Agregar a stock
               </Button>
             )}
           </div>
         }
       />
 
-      <Card className="mb-4 animate-rise">
-        <div className="mb-3 flex items-center gap-2 text-sm font-medium text-[var(--ink)]">
-          <Filter className="h-4 w-4" />
-          Filtros avanzados
-        </div>
-        <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-4">
-          <div>
-            <Label>Búsqueda general</Label>
-            <Input
-              value={filters.q}
-              onChange={(e) => setFilters((f) => ({ ...f, q: e.target.value }))}
-              placeholder="Nombre, serial, notas..."
-            />
-          </div>
-          <div>
-            <Label>Categoría</Label>
+      <ListToolbar
+        extra={
+          <>
             <Select
-              value={filters.category}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, category: e.target.value }))
-              }
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              aria-label="Categoría"
+              className="w-full lg:w-40"
             >
-              <option value="">Todas</option>
+              <option value="">Categoría</option>
               {ASSET_CATEGORIES.map((c) => (
                 <option key={c} value={c}>
-                  {c === "AccesPoint" ? "Access Point" : c}
+                  {CATEGORY_LABELS[c] || c}
                 </option>
               ))}
             </Select>
-          </div>
-          <div>
-            <Label>Estado</Label>
             <Select
-              value={filters.status}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, status: e.target.value }))
-              }
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              aria-label="Estado"
+              className="w-full lg:w-36"
             >
-              <option value="">Todos</option>
+              <option value="">Estado</option>
               {ASSET_STATUSES.map((s) => (
                 <option key={s} value={s}>
                   {s}
                 </option>
               ))}
             </Select>
-          </div>
-          <div>
-            <Label>Marca</Label>
-            <Input
-              value={filters.brand}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, brand: e.target.value }))
-              }
-            />
-          </div>
-          <div>
-            <Label>No. inventario</Label>
-            <Input
-              value={filters.inventoryNumber}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, inventoryNumber: e.target.value }))
-              }
-            />
-          </div>
-          <div>
-            <Label>Usuario asignado</Label>
-            <Input
-              value={filters.employee}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, employee: e.target.value }))
-              }
-            />
-          </div>
-          <div>
-            <Label>AnyDesk (solo laptops)</Label>
-            <Input
-              value={filters.anydesk}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, anydesk: e.target.value }))
-              }
-              placeholder="Buscar ID AnyDesk..."
-            />
-          </div>
-          <div>
-            <Label>Sin asignar</Label>
             <Select
-              value={filters.unassigned}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, unassigned: e.target.value }))
-              }
+              value={unassignedOnly ? "1" : ""}
+              onChange={(e) => setUnassignedOnly(e.target.value === "1")}
+              aria-label="Asignación"
+              className="w-full lg:w-40"
             >
-              <option value="">No</option>
-              <option value="1">Solo activos sin asignar</option>
+              <option value="">Asignación</option>
+              <option value="1">Sin asignar</option>
             </Select>
-          </div>
-        </div>
-      </Card>
-
-      <ListToolbar
+          </>
+        }
         name={list.name}
         serial={list.serial}
         onNameChange={list.setName}
@@ -300,8 +238,7 @@ function InventarioContent() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
-        namePlaceholder="Nombre del equipo o usuario asignado..."
-        serialPlaceholder="Serial o no. inventario..."
+        namePlaceholder="Nombre, usuario, serie, inventario o AnyDesk..."
         sortOptions={list.sortOptions}
         sortKey={list.sortKey}
         sortDir={list.sortDir}
@@ -309,9 +246,9 @@ function InventarioContent() {
       />
 
       {showForm && role === "ADMIN" && (
-        <Card className="mb-6 animate-fade">
+        <Card id="alta-equipo" className="mb-6 animate-fade">
           <h2 className="mb-4 font-[family-name:var(--font-display)] text-xl">
-            {editing ? "Editar equipo" : "Registrar equipo"}
+            {editing ? "Editar equipo" : "Nuevo equipo en stock"}
           </h2>
           <AssetForm
             initial={
@@ -456,6 +393,17 @@ function InventarioContent() {
                       <AssetPreviewButton
                         onClick={() => setPreviewId(asset.id)}
                       />
+                      {role === "ADMIN" &&
+                        !asset.assignments[0] &&
+                        (asset.status === "Activo" || asset.status === "Stock") && (
+                          <Button
+                            className="px-2 py-1"
+                            title="Asignar a un usuario"
+                            onClick={() => setAssignAsset(asset)}
+                          >
+                            <UserPlus className="h-4 w-4" />
+                          </Button>
+                        )}
                       {role === "ADMIN" && (
                         <>
                           <Button
@@ -533,6 +481,17 @@ function InventarioContent() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <AssetPreviewButton onClick={() => setPreviewId(asset.id)} />
+                {role === "ADMIN" &&
+                  !asset.assignments[0] &&
+                  (asset.status === "Activo" || asset.status === "Stock") && (
+                    <Button
+                      className="px-2 py-1"
+                      onClick={() => setAssignAsset(asset)}
+                    >
+                      <UserPlus className="h-4 w-4" />
+                      Asignar
+                    </Button>
+                  )}
                 {role === "ADMIN" && (
                   <>
                     <Button
@@ -567,6 +526,17 @@ function InventarioContent() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
+      />
+
+      <QuickAssignModal
+        open={!!assignAsset}
+        asset={assignAsset}
+        employees={employees}
+        onClose={() => setAssignAsset(null)}
+        onAssigned={async () => {
+          setAssignAsset(null);
+          await load();
+        }}
       />
 
       <AssetPreview

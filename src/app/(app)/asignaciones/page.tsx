@@ -270,7 +270,6 @@ export default function AsignacionesPage() {
   const activeList = useListControls(activeGroups, {
     storageKey: "asignaciones-grupos-p25",
     defaultView: "list",
-    pageSize: 15,
     getName: (g) =>
       `${g.employeeName} ${g.position} ${g.assignments
         .map((a) => a.asset.name)
@@ -291,7 +290,6 @@ export default function AsignacionesPage() {
   const historyList = useListControls(historyGroups, {
     storageKey: "asignaciones-hist-grupos-p25",
     defaultView: "list",
-    pageSize: 15,
     getName: (g) =>
       `${g.employeeName} ${g.assignments.map((a) => a.asset.name).join(" ")}`,
     getSerial: (g) =>

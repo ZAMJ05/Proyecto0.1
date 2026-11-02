@@ -1,15 +1,14 @@
 "use client";
 
+import type { ReactNode } from "react";
 import {
   LayoutGrid,
   List,
   ChevronLeft,
   ChevronRight,
-  ArrowDownAZ,
-  ArrowUpZA,
   Search,
 } from "lucide-react";
-import { Button, Input, Select } from "./ui";
+import { Button, Input } from "./ui";
 import type { ListViewMode, SortDir } from "@/hooks/useListControls";
 import { LIST_PAGE_SIZE } from "@/hooks/useListControls";
 import { cn } from "@/lib/utils";
@@ -123,34 +122,24 @@ export function Pager({
 
 export function ListToolbar({
   name,
-  serial,
   onNameChange,
-  onSerialChange,
   view,
   onViewChange,
-  page,
-  totalPages,
-  onPageChange,
   showingFrom,
   showingTo,
   total,
-  showSerial = true,
-  namePlaceholder = "Buscar por nombre...",
-  serialPlaceholder = "Buscar por serial...",
-  sortOptions,
-  sortKey,
-  sortDir,
-  onSortChange,
+  namePlaceholder = "Buscar por nombre, serie o usuario...",
+  extra,
 }: {
   name: string;
-  serial: string;
+  serial?: string;
   onNameChange: (value: string) => void;
-  onSerialChange: (value: string) => void;
+  onSerialChange?: (value: string) => void;
   view: ListViewMode;
   onViewChange: (view: ListViewMode) => void;
-  page: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
+  page?: number;
+  totalPages?: number;
+  onPageChange?: (page: number) => void;
   showingFrom: number;
   showingTo: number;
   total: number;
@@ -163,142 +152,66 @@ export function ListToolbar({
   sortKey?: string;
   sortDir?: SortDir;
   onSortChange?: (key: string, dir: SortDir) => void;
+  extra?: ReactNode;
 }) {
   return (
     <div className="mb-3">
       <div className="list-toolbar">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <div
-            className={cn(
-              "grid flex-1 gap-2",
-              showSerial ? "md:grid-cols-2" : "md:grid-cols-1"
-            )}
-          >
-            <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
-              <Input
-                value={name}
-                onChange={(e) => onNameChange(e.target.value)}
-                placeholder={namePlaceholder}
-                aria-label="Buscar por nombre"
-                className="pl-10"
-              />
-            </div>
-            {showSerial && (
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
-                <Input
-                  value={serial}
-                  onChange={(e) => onSerialChange(e.target.value)}
-                  placeholder={serialPlaceholder}
-                  aria-label="Buscar por serial"
-                  className="pl-10"
-                />
-              </div>
-            )}
+        <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
+          <div className="relative min-w-0 flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
+            <Input
+              value={name}
+              onChange={(e) => onNameChange(e.target.value)}
+              placeholder={namePlaceholder}
+              aria-label="Buscar"
+              className="pl-10"
+            />
           </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            {sortOptions && sortOptions.length > 0 && onSortChange && (
-              <div className="flex items-center gap-1.5 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-1">
-                <Select
-                  value={sortKey || sortOptions[0].key}
-                  onChange={(e) =>
-                    onSortChange(e.target.value, sortDir || "asc")
-                  }
-                  className="min-w-[8.5rem] border-0 bg-transparent py-1.5 text-xs shadow-none focus:ring-0"
-                  aria-label="Ordenar por"
-                  title="Ordenar por"
-                >
-                  {sortOptions.map((opt) => (
-                    <option key={opt.key} value={opt.key}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </Select>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="px-2 py-1.5"
-                  title={
-                    sortDir === "desc"
-                      ? "Mayor → menor / Z → A"
-                      : "Menor → mayor / A → Z"
-                  }
-                  onClick={() =>
-                    onSortChange(
-                      sortKey || sortOptions[0].key,
-                      sortDir === "asc" ? "desc" : "asc"
-                    )
-                  }
-                >
-                  {sortDir === "desc" ? (
-                    <ArrowUpZA className="h-3.5 w-3.5" />
-                  ) : (
-                    <ArrowDownAZ className="h-3.5 w-3.5" />
-                  )}
-                </Button>
-              </div>
-            )}
-
-            <div className="flex shrink-0 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-1">
-              <button
-                type="button"
-                onClick={() => onViewChange("list")}
-                className={cn(
-                  "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition",
-                  view === "list"
-                    ? "bg-[var(--surface)] text-[var(--ink)] shadow-sm"
-                    : "text-[var(--muted)] hover:text-[var(--ink)]"
-                )}
-                title="Vista en lista"
-              >
-                <List className="h-3.5 w-3.5" />
-                Lista
-              </button>
-              <button
-                type="button"
-                onClick={() => onViewChange("grid")}
-                className={cn(
-                  "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition",
-                  view === "grid"
-                    ? "bg-[var(--surface)] text-[var(--ink)] shadow-sm"
-                    : "text-[var(--muted)] hover:text-[var(--ink)]"
-                )}
-                title="Vista en tarjetas"
-              >
-                <LayoutGrid className="h-3.5 w-3.5" />
-                Tarjetas
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="list-toolbar-meta">
-          <p className="text-xs text-[var(--muted)]">
+          {extra}
+          <p className="shrink-0 text-xs text-[var(--muted)]">
             {total === 0 ? (
               "Sin resultados"
             ) : (
               <>
-                Mostrando{" "}
                 <span className="font-semibold text-[var(--ink)]">
                   {showingFrom}–{showingTo}
                 </span>{" "}
                 de {total}
+                <span className="hidden sm:inline"> · 50 por página</span>
               </>
             )}
           </p>
-          {totalPages > 1 && (
-            <Pager
-              compact
-              page={page}
-              totalPages={totalPages}
-              onPageChange={onPageChange}
-              showingFrom={showingFrom}
-              showingTo={showingTo}
-              total={total}
-            />
-          )}
+          <div className="flex shrink-0 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-1">
+            <button
+              type="button"
+              onClick={() => onViewChange("list")}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition",
+                view === "list"
+                  ? "bg-[var(--surface)] text-[var(--ink)] shadow-sm"
+                  : "text-[var(--muted)] hover:text-[var(--ink)]"
+              )}
+              title="Vista en lista"
+            >
+              <List className="h-3.5 w-3.5" />
+              Lista
+            </button>
+            <button
+              type="button"
+              onClick={() => onViewChange("grid")}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition",
+                view === "grid"
+                  ? "bg-[var(--surface)] text-[var(--ink)] shadow-sm"
+                  : "text-[var(--muted)] hover:text-[var(--ink)]"
+              )}
+              title="Vista en tarjetas"
+            >
+              <LayoutGrid className="h-3.5 w-3.5" />
+              Tarjetas
+            </button>
+          </div>
         </div>
       </div>
     </div>

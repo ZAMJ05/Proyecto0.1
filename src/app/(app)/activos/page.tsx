@@ -2,14 +2,12 @@
 
 import { useEffect, useMemo, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Eye, Filter, Pencil, Trash2, X } from "lucide-react";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 import {
   Badge,
   Button,
   Card,
   EmptyState,
-  Input,
-  Label,
   PageHeader,
   Select,
   statusTone,
@@ -36,33 +34,15 @@ function ActivosContent() {
   const [editing, setEditing] = useState<AssetListItem | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [filters, setFilters] = useState({
-    q: searchParams.get("q") || "",
-    category: searchParams.get("category") || "",
-    brand: searchParams.get("brand") || "",
-    model: searchParams.get("model") || "",
-    serialNumber: searchParams.get("serialNumber") || "",
-    inventoryNumber: searchParams.get("inventoryNumber") || "",
-    employee: searchParams.get("employee") || "",
-    anydesk: searchParams.get("anydesk") || "",
-    unassigned: searchParams.get("unassigned") || "",
-  });
-
-  const query = useMemo(() => {
-    const p = new URLSearchParams();
-    p.set("status", "Activo");
-    Object.entries(filters).forEach(([k, v]) => {
-      if (v) p.set(k, v);
-    });
-    return p.toString();
-  }, [filters]);
-
-  const hasFilters = Object.values(filters).some(Boolean);
+  const [category, setCategory] = useState(searchParams.get("category") || "");
+  const [unassignedOnly, setUnassignedOnly] = useState(
+    searchParams.get("unassigned") === "1"
+  );
 
   async function load() {
     setLoading(true);
     const [assetsRes, meRes] = await Promise.all([
-      fetch(`/api/assets?${query}`),
+      fetch("/api/assets?status=Activo"),
       fetch("/api/auth/me"),
     ]);
     const assetsData = await assetsRes.json();
@@ -74,14 +54,21 @@ function ActivosContent() {
 
   useEffect(() => {
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
+  }, []);
 
-  const list = useListControls(assets, {
-    storageKey: "activos-p25",
+  const visible = useMemo(() => {
+    return assets.filter((asset) => {
+      if (category && asset.category !== category) return false;
+      if (unassignedOnly && asset.assignments.length > 0) return false;
+      return true;
+    });
+  }, [assets, category, unassignedOnly]);
+
+  const list = useListControls(visible, {
+    storageKey: "activos-p50",
     defaultView: "list",
     getName: (a) =>
-      `${a.name} ${a.assignments[0]?.employee.name || ""} ${a.assignments[0]?.employee.email || ""}`,
+      `${a.name} ${a.brand} ${a.model} ${a.notes || ""} ${a.anydesk || ""} ${a.assignments[0]?.employee.name || ""} ${a.assignments[0]?.employee.email || ""}`,
     getSerial: (a) => `${a.serialNumber} ${a.inventoryNumber}`,
     defaultSortKey: "name",
     sortFields: {
@@ -106,20 +93,6 @@ function ActivosContent() {
       anydesk: { label: "AnyDesk", getValue: (a) => a.anydesk || "" },
     },
   });
-
-  function clearFilters() {
-    setFilters({
-      q: "",
-      category: "",
-      brand: "",
-      model: "",
-      serialNumber: "",
-      inventoryNumber: "",
-      employee: "",
-      anydesk: "",
-      unassigned: "",
-    });
-  }
 
   async function saveAsset(values: AssetFormValues) {
     if (!editing) return;
@@ -152,163 +125,40 @@ function ActivosContent() {
     await load();
   }
 
-  const quickChips = [
-    { label: "Todos activos", apply: () => clearFilters() },
-    {
-      label: "Laptops",
-      apply: () => setFilters((f) => ({ ...f, category: "Laptop" })),
-      active: filters.category === "Laptop",
-    },
-    {
-      label: "Sin asignar",
-      apply: () => setFilters((f) => ({ ...f, unassigned: "1" })),
-      active: filters.unassigned === "1",
-    },
-    {
-      label: "Monitores",
-      apply: () => setFilters((f) => ({ ...f, category: "Monitor" })),
-      active: filters.category === "Monitor",
-    },
-  ];
-
   return (
     <div>
       <PageHeader
         title="Equipos activos"
-        subtitle="Consulta rápida de equipos en estado Activo, con filtros y vista previa."
+        subtitle="Solo equipos en estado Activo. La búsqueda incluye nombre, usuario, serie e inventario."
       />
 
-      <div className="mb-3 flex flex-wrap gap-2">
-        {quickChips.map((chip) => (
-          <button
-            key={chip.label}
-            type="button"
-            onClick={chip.apply}
-            className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition ${
-              chip.active
-                ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent-strong)]"
-                : "border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] hover:border-[var(--accent)] hover:text-[var(--ink)]"
-            }`}
-          >
-            {chip.label}
-          </button>
-        ))}
-        {hasFilters && (
-          <button
-            type="button"
-            onClick={clearFilters}
-            className="inline-flex items-center gap-1 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-xs font-medium text-[var(--muted)] hover:text-[var(--ink)]"
-          >
-            <X className="h-3.5 w-3.5" />
-            Limpiar filtros
-          </button>
-        )}
-      </div>
-
-      <Card className="mb-4 animate-rise">
-        <div className="mb-3 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 text-sm font-medium text-[var(--ink)]">
-            <Filter className="h-4 w-4" />
-            Filtros
-          </div>
-          <Badge tone="success">Estado: Activo</Badge>
-        </div>
-        <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-4">
-          <div>
-            <Label>Búsqueda general</Label>
-            <Input
-              value={filters.q}
-              onChange={(e) => setFilters((f) => ({ ...f, q: e.target.value }))}
-              placeholder="Nombre, serial, notas, usuario..."
-            />
-          </div>
-          <div>
-            <Label>Categoría</Label>
+      <ListToolbar
+        extra={
+          <>
             <Select
-              value={filters.category}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, category: e.target.value }))
-              }
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              aria-label="Categoría"
+              className="w-full lg:w-40"
             >
-              <option value="">Todas</option>
+              <option value="">Categoría</option>
               {ASSET_CATEGORIES.map((c) => (
                 <option key={c} value={c}>
                   {CATEGORY_LABELS[c] || c}
                 </option>
               ))}
             </Select>
-          </div>
-          <div>
-            <Label>Marca</Label>
-            <Input
-              value={filters.brand}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, brand: e.target.value }))
-              }
-            />
-          </div>
-          <div>
-            <Label>Modelo</Label>
-            <Input
-              value={filters.model}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, model: e.target.value }))
-              }
-            />
-          </div>
-          <div>
-            <Label>Serial</Label>
-            <Input
-              value={filters.serialNumber}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, serialNumber: e.target.value }))
-              }
-            />
-          </div>
-          <div>
-            <Label>N° inventario</Label>
-            <Input
-              value={filters.inventoryNumber}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, inventoryNumber: e.target.value }))
-              }
-            />
-          </div>
-          <div>
-            <Label>Usuario asignado</Label>
-            <Input
-              value={filters.employee}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, employee: e.target.value }))
-              }
-              placeholder="Nombre o email..."
-            />
-          </div>
-          <div>
-            <Label>AnyDesk (laptops)</Label>
-            <Input
-              value={filters.anydesk}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, anydesk: e.target.value }))
-              }
-            />
-          </div>
-          <div>
-            <Label>Asignación</Label>
             <Select
-              value={filters.unassigned}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, unassigned: e.target.value }))
-              }
+              value={unassignedOnly ? "1" : ""}
+              onChange={(e) => setUnassignedOnly(e.target.value === "1")}
+              aria-label="Asignación"
+              className="w-full lg:w-40"
             >
-              <option value="">Todos</option>
-              <option value="1">Solo sin asignar</option>
+              <option value="">Asignación</option>
+              <option value="1">Sin asignar</option>
             </Select>
-          </div>
-        </div>
-      </Card>
-
-      <ListToolbar
+          </>
+        }
         name={list.name}
         serial={list.serial}
         onNameChange={list.setName}
@@ -321,8 +171,7 @@ function ActivosContent() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
-        namePlaceholder="Equipo o usuario..."
-        serialPlaceholder="Serial o inventario..."
+        namePlaceholder="Nombre, usuario, serie, inventario o AnyDesk..."
         sortOptions={list.sortOptions}
         sortKey={list.sortKey}
         sortDir={list.sortDir}

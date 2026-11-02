@@ -60,7 +60,7 @@ export function AppShell({
         )}
       >
         <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--header)] px-4 py-3 shadow-[0_1px_0_rgba(15,36,52,0.03)] backdrop-blur-xl md:px-6">
-          <div className="mb-2.5 flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <Button
                 type="button"
@@ -99,11 +99,11 @@ export function AppShell({
               <span className="rounded-lg bg-[var(--surface-2)] px-2 py-1 text-xs text-[var(--muted)] md:hidden">
                 {user.role}
               </span>
+              <TopSearch />
               <ThemeToggle />
               <LogoutButton />
             </div>
           </div>
-          <TopSearch />
           <nav className="mt-2.5 flex gap-1.5 overflow-x-auto pb-1 md:hidden">
             {[
               ["/dashboard", "Dashboard"],

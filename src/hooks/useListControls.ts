@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 export type ListViewMode = "grid" | "list";
 export type SortDir = "asc" | "desc";
 export type SortValue = string | number | null | undefined;
-export const LIST_PAGE_SIZE = 25;
+export const LIST_PAGE_SIZE = 50;
 
 export type SortFieldDef<T> = {
   label: string;
@@ -63,10 +63,16 @@ export function useListControls<T>(
     (sortFields ? Object.keys(sortFields)[0] : undefined);
   const defaultSortDir = options.defaultSortDir ?? "asc";
 
-  const [name, setName] = useState("");
-  const [serial, setSerial] = useState("");
+  const [query, setQuery] = useState("");
   const [view, setViewState] = useState<ListViewMode>(defaultView);
-  const [page, setPage] = useState(1);
+  const [page, setPageState] = useState(1);
+
+  function setPage(next: number) {
+    setPageState(next);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
   const [sortKey, setSortKey] = useState<string | undefined>(defaultSortKey);
   const [sortDir, setSortDir] = useState<SortDir>(defaultSortDir);
 
@@ -89,25 +95,22 @@ export function useListControls<T>(
       setSortKey(key);
       setSortDir("asc");
     }
-    setPage(1);
+    setPageState(1);
   }
 
   function setSort(key: string, dir?: SortDir) {
     if (!sortFields?.[key]) return;
     setSortKey(key);
     setSortDir(dir ?? "asc");
-    setPage(1);
+    setPageState(1);
   }
 
   const filtered = useMemo(() => {
-    const n = name.trim().toLowerCase();
-    const s = serial.trim().toLowerCase();
+    const q = query.trim().toLowerCase();
     const result = items.filter((item) => {
-      const itemName = (options.getName(item) || "").toLowerCase();
-      const itemSerial = (options.getSerial?.(item) || "").toLowerCase();
-      const matchName = !n || itemName.includes(n);
-      const matchSerial = !s || itemSerial.includes(s);
-      return matchName && matchSerial;
+      if (!q) return true;
+      const blob = `${options.getName(item) || ""} ${options.getSerial?.(item) || ""}`.toLowerCase();
+      return blob.includes(q);
     });
 
     if (sortFields && sortKey && sortFields[sortKey]) {
@@ -127,8 +130,7 @@ export function useListControls<T>(
     return [...result].sort(sorter);
   }, [
     items,
-    name,
-    serial,
+    query,
     options.getName,
     options.getSerial,
     options.sortFn,
@@ -138,8 +140,8 @@ export function useListControls<T>(
   ]);
 
   useEffect(() => {
-    setPage(1);
-  }, [name, serial, items]);
+    setPageState(1);
+  }, [query, items]);
 
   const total = filtered.length;
   const totalPages = Math.max(1, Math.ceil(total / pageSize) || 1);
@@ -159,10 +161,12 @@ export function useListControls<T>(
     : [];
 
   return {
-    name,
-    setName,
-    serial,
-    setSerial,
+    query,
+    setQuery,
+    name: query,
+    setName: setQuery,
+    serial: "",
+    setSerial: setQuery,
     view,
     setView,
     page: safePage,
