@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { Search, Download, FileText } from "lucide-react";
+import { Search, Download, FileSpreadsheet, FileText } from "lucide-react";
 import { Button, Input, Badge } from "./ui";
 import {
   buildExportPdf,
@@ -30,7 +30,7 @@ export function TopSearch() {
   const [open, setOpen] = useState(false);
   const [results, setResults] = useState<Result | null>(null);
   const [pending, startTransition] = useTransition();
-  const [exporting, setExporting] = useState<"csv" | "pdf" | null>(null);
+  const [exporting, setExporting] = useState<"csv" | "pdf" | "xlsx" | null>(null);
 
   useEffect(() => {
     if (!q.trim()) {
@@ -62,6 +62,31 @@ export function TopSearch() {
       URL.revokeObjectURL(url);
     } catch (e) {
       alert(e instanceof Error ? e.message : "Error al exportar CSV");
+    } finally {
+      setExporting(null);
+    }
+  }
+
+  async function exportPendingExcel() {
+    setExporting("xlsx");
+    try {
+      const res = await fetch("/api/export/pendientes");
+      if (!res.ok) throw new Error("No se pudo generar el Excel");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const stamp = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "America/Mexico_City",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(new Date());
+      a.href = url;
+      a.download = `assetdesk-por-asignar-${stamp}.xlsx`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Error al exportar Excel");
     } finally {
       setExporting(null);
     }
@@ -156,6 +181,16 @@ export function TopSearch() {
         >
           <Download className="h-4 w-4" />
           {exporting === "csv" ? "CSV..." : "CSV"}
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={exportPendingExcel}
+          disabled={!!exporting}
+          title="Excel: laptops almacenadas, laptops por asignar, monitores y teléfonos"
+          className="whitespace-nowrap"
+        >
+          <FileSpreadsheet className="h-4 w-4" />
+          {exporting === "xlsx" ? "Excel..." : "Excel"}
         </Button>
         <Button
           variant="secondary"

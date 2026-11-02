@@ -18,6 +18,7 @@
     "db:import:ti": "node scripts/ensure-env.js && tsx scripts/import-inventario-ti.ts",
     "db:laptops-stock-to-inactive": "node scripts/ensure-env.js && tsx scripts/laptops-stock-to-inactive.ts",
     "db:sync-desk": "node scripts/ensure-env.js && tsx scripts/sync-desk-sheet.ts",
+    "report:pendientes": "node scripts/ensure-env.js && tsx scripts/report-pendientes.ts",
     "postinstall": "prisma generate"
   },
   "prisma": {
@@ -29,6 +30,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
     "dotenv": "^17.4.2",
+    "exceljs": "^4.4.0",
     "jose": "^6.2.8",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.8",
