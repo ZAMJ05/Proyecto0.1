@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdmin, requireSession } from "@/lib/auth";
 import { handleApiError, jsonError, jsonOk } from "@/lib/api";
+import { employeeDuplicateMessage, fullNameError } from "@/lib/employee-name";
+import { normalizePersonName } from "@/lib/person-name";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -44,32 +46,19 @@ export async function PUT(request: Request, { params }: Params) {
           : null
         : existing.email;
 
-    // Duplicados por email o nombre (excepto el propio registro)
-    if (nextEmail) {
-      const emailTaken = await prisma.employee.findFirst({
-        where: { email: nextEmail, id: { not: id } },
-        select: { name: true },
-      });
-      if (emailTaken) {
-        return jsonError(
-          `Usuario duplicado: el email "${nextEmail}" ya pertenece a ${emailTaken.name}.`,
-          409
-        );
-      }
+    const nameChanged = normalizePersonName(name) !== normalizePersonName(existing.name);
+    if (nameChanged) {
+      const invalid = fullNameError(name);
+      if (invalid) return jsonError(invalid);
     }
-    const others = await prisma.employee.findMany({
-      where: { id: { not: id } },
-      select: { name: true, active: true },
+
+    const duplicate = await employeeDuplicateMessage({
+      name,
+      email: nextEmail,
+      excludeId: id,
+      fuzzy: nameChanged,
     });
-    const nameTaken = others.find(
-      (e) => e.name.trim().toLowerCase() === name.toLowerCase()
-    );
-    if (nameTaken) {
-      return jsonError(
-        `Usuario duplicado: ya existe otro registro con el nombre "${nameTaken.name}".`,
-        409
-      );
-    }
+    if (duplicate) return jsonError(duplicate, 409);
 
     const nextActive =
       typeof body.active === "boolean" ? body.active : body.active !== false;

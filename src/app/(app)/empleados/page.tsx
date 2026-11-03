@@ -15,6 +15,7 @@ import {
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
+import { fullNameError, normalizePersonName } from "@/lib/person-name";
 
 type Position = { id: string; name: string };
 type Employee = {
@@ -97,6 +98,20 @@ export default function EmpleadosPage() {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError("");
+    const trimmed = form.name.trim();
+    const nameChanged =
+      !editing || normalizePersonName(trimmed) !== normalizePersonName(editing.name);
+    if (!trimmed) {
+      setError("El nombre es obligatorio");
+      return;
+    }
+    if (nameChanged) {
+      const invalid = fullNameError(trimmed);
+      if (invalid) {
+        setError(invalid);
+        return;
+      }
+    }
     setSaving(true);
     try {
       const url = editing ? `/api/employees/${editing.id}` : "/api/employees";
@@ -253,7 +268,7 @@ export default function EmpleadosPage() {
     <div>
       <PageHeader
         title="Usuarios y activos"
-        subtitle="Usuarios del inventario. Si alguien ya no trabaja aquí, sus equipos se liberan a Stock y conservan el estado Activo."
+        subtitle="Usuarios del inventario, con nombre y dos apellidos. Si alguien ya no trabaja aquí, sus equipos se liberan a Stock y conservan el estado Activo."
       />
 
       {role === "ADMIN" && (
@@ -273,12 +288,35 @@ export default function EmpleadosPage() {
           </div>
           <form onSubmit={onSubmit} className="grid gap-4 md:grid-cols-2">
             <div>
-              <Label>Nombre</Label>
+              <Label>Nombre completo</Label>
               <Input
                 required
                 value={form.name}
+                placeholder="Ana López García"
+                autoComplete="name"
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
+              <p
+                className={`mt-1 text-xs ${
+                  form.name.trim() &&
+                  (!editing ||
+                    normalizePersonName(form.name) !== normalizePersonName(editing.name)) &&
+                  fullNameError(form.name)
+                    ? "text-[var(--danger)]"
+                    : "text-[var(--muted)]"
+                }`}
+              >
+                {form.name.trim() &&
+                (!editing ||
+                  normalizePersonName(form.name) !== normalizePersonName(editing.name)) &&
+                fullNameError(form.name)
+                  ? fullNameError(form.name)
+                  : editing &&
+                      fullNameError(editing.name) &&
+                      normalizePersonName(form.name) === normalizePersonName(editing.name)
+                    ? "Este nombre está incompleto. Puedes guardar otros datos; si cambias el nombre, escribe un nombre y dos apellidos."
+                    : "Un nombre y dos apellidos. Ejemplo: Ana López García o César de la Torre."}
+              </p>
             </div>
             <div>
               <Label>Email</Label>
@@ -408,7 +446,12 @@ export default function EmpleadosPage() {
             <Card key={emp.id} className="animate-fade">
               <div className="mb-3 flex items-start justify-between gap-2">
                 <div>
-                  <h3 className="text-lg font-semibold">{emp.name}</h3>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="text-lg font-semibold">{emp.name}</h3>
+                    {fullNameError(emp.name) && (
+                      <Badge tone="warn">Nombre incompleto</Badge>
+                    )}
+                  </div>
                   <p className="text-sm text-[var(--muted)]">
                     {emp.email || "Sin email"}
                     {emp.department ? ` · ${emp.department}` : ""}
@@ -549,7 +592,12 @@ export default function EmpleadosPage() {
               {list.pageItems.map((emp) => (
                 <tr key={emp.id}>
                   <td>
-                    <p className="font-medium">{emp.name}</p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="font-medium">{emp.name}</p>
+                      {fullNameError(emp.name) && (
+                        <Badge tone="warn">Nombre incompleto</Badge>
+                      )}
+                    </div>
                     <p className="text-xs text-[var(--muted)]">
                       {emp.email || "Sin email"}
                     </p>

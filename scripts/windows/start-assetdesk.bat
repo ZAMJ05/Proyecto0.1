@@ -100,6 +100,14 @@ if errorlevel 1 (
   exit /b 1
 )
 
+REM Fusiona usuarios repetidos (nombre corto o typo) una sola vez.
+echo Fusionando usuarios con el mismo nombre y apellidos...>> "%LOG_FILE%"
+call "%NPM_CMD%" run db:merge-names >> "%LOG_FILE%" 2>&1
+if errorlevel 1 (
+  echo ERROR: db:merge-names fallo>> "%LOG_FILE%"
+  exit /b 1
+)
+
 netstat -ano | findstr /R /C:":%PORT% .*LISTENING" >nul 2>&1
 if not errorlevel 1 (
   echo INFO: El puerto %PORT% ya esta en uso. Se omite el arranque.>> "%LOG_FILE%"
