@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Laptop,
   LayoutDashboard,
   Package,
   Warehouse,
@@ -21,6 +22,7 @@ import { LogoutButton } from "./LogoutButton";
 
 const links = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/equipos", label: "Laptops y monitores", icon: Laptop },
   { href: "/activos", label: "Equipos activos", icon: MonitorCheck },
   { href: "/inventario", label: "Inventario", icon: Package },
   { href: "/stock", label: "Stock / Reserva", icon: Warehouse },
