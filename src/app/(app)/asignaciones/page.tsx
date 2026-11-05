@@ -83,13 +83,11 @@ function UserAssignmentGroup({
   role,
   onUnassign,
   defaultOpen,
-  showHistoryDates,
 }: {
   group: UserGroup;
   role: "ADMIN" | "USER";
   onUnassign?: (id: string) => void;
   defaultOpen?: boolean;
-  showHistoryDates?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen ?? group.count > 1);
 
@@ -143,16 +141,7 @@ function UserAssignmentGroup({
                       {a.asset.category} · {a.asset.serialNumber}
                     </p>
                     <p className="mt-0.5 text-xs text-[var(--muted)]">
-                      {showHistoryDates ? (
-                        <>
-                          {formatDate(a.assignedAt)}
-                          {a.unassignedAt
-                            ? ` → ${formatDate(a.unassignedAt)}`
-                            : " (vigente)"}
-                        </>
-                      ) : (
-                        <>Desde {formatDate(a.assignedAt)}</>
-                      )}
+                      Desde {formatDate(a.assignedAt)}
                     </p>
                     {a.notes && (
                       <p className="mt-1 text-xs text-[var(--muted)]">
@@ -162,10 +151,8 @@ function UserAssignmentGroup({
                   </div>
                 </div>
                 <div className="flex items-center gap-2 sm:shrink-0">
-                  <Badge tone={a.unassignedAt ? "neutral" : "success"}>
-                    {a.unassignedAt ? "Histórica" : "Activa"}
-                  </Badge>
-                  {role === "ADMIN" && onUnassign && !a.unassignedAt && (
+                  <Badge tone="success">Activa</Badge>
+                  {role === "ADMIN" && onUnassign && (
                     <Button
                       variant="secondary"
                       className="px-2.5 py-1.5"
@@ -186,7 +173,6 @@ function UserAssignmentGroup({
 
 export default function AsignacionesPage() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
-  const [history, setHistory] = useState<Assignment[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [assets, setAssets] = useState<Asset[]>([]);
   const [role, setRole] = useState<"ADMIN" | "USER">("USER");
@@ -196,22 +182,19 @@ export default function AsignacionesPage() {
   const [error, setError] = useState("");
 
   async function load() {
-    const [aRes, hRes, eRes, asRes, meRes] = await Promise.all([
+    const [aRes, eRes, asRes, meRes] = await Promise.all([
       fetch("/api/assignments"),
-      fetch("/api/assignments?history=1"),
       fetch("/api/employees"),
       fetch("/api/assets"),
       fetch("/api/auth/me"),
     ]);
-    const [a, h, e, as, me] = await Promise.all([
+    const [a, e, as, me] = await Promise.all([
       aRes.json(),
-      hRes.json(),
       eRes.json(),
       asRes.json(),
       meRes.json(),
     ]);
     setAssignments(a.assignments || []);
-    setHistory(h.assignments || []);
     setEmployees(
       (e.employees || []).filter((emp: Employee) => emp.active !== false)
     );
@@ -265,7 +248,6 @@ export default function AsignacionesPage() {
     () => groupByUser(assignments),
     [assignments]
   );
-  const historyGroups = useMemo(() => groupByUser(history), [history]);
 
   const activeList = useListControls(activeGroups, {
     storageKey: "asignaciones-grupos-p25",
@@ -287,25 +269,6 @@ export default function AsignacionesPage() {
     },
   });
 
-  const historyList = useListControls(historyGroups, {
-    storageKey: "asignaciones-hist-grupos-p25",
-    defaultView: "list",
-    getName: (g) =>
-      `${g.employeeName} ${g.assignments.map((a) => a.asset.name).join(" ")}`,
-    getSerial: (g) =>
-      g.assignments.map((a) => a.asset.serialNumber).join(" "),
-    defaultSortKey: "recent",
-    defaultSortDir: "desc",
-    sortFields: {
-      employee: { label: "Usuario", getValue: (g) => g.employeeName },
-      count: { label: "Equipos", getValue: (g) => g.count },
-      recent: {
-        label: "Más reciente",
-        getValue: (g) => g.latestAssignedAt,
-      },
-    },
-  });
-
   const multiCount = activeGroups.filter((g) => g.count > 1).length;
 
   return (
@@ -313,7 +276,7 @@ export default function AsignacionesPage() {
       <PageHeader
         module="Operación · Asignaciones"
         title="Asignaciones"
-        subtitle="Agrupadas por usuario para ver de un vistazo todos sus equipos."
+        subtitle="Solo las asignaciones activas, agrupadas por usuario."
       />
 
       {role === "ADMIN" && (
@@ -368,7 +331,7 @@ export default function AsignacionesPage() {
         </Card>
       )}
 
-      <section className="mb-8">
+      <section>
         <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
           <div>
             <h2 className="font-[family-name:var(--font-display)] text-2xl">
@@ -429,60 +392,6 @@ export default function AsignacionesPage() {
           showingFrom={activeList.showingFrom}
           showingTo={activeList.showingTo}
           total={activeList.total}
-        />
-      </section>
-
-      <section>
-        <div className="mb-3">
-          <h2 className="font-[family-name:var(--font-display)] text-2xl">
-            Historial por usuario
-          </h2>
-          <p className="text-xs text-[var(--muted)]">
-            Incluye asignaciones activas e históricas, agrupadas por persona
-          </p>
-        </div>
-        <ListToolbar
-          name={historyList.name}
-          serial={historyList.serial}
-          onNameChange={historyList.setName}
-          onSerialChange={historyList.setSerial}
-          view={historyList.view}
-          onViewChange={historyList.setView}
-          page={historyList.page}
-          totalPages={historyList.totalPages}
-          onPageChange={historyList.setPage}
-          showingFrom={historyList.showingFrom}
-          showingTo={historyList.showingTo}
-          total={historyList.total}
-          namePlaceholder="Buscar usuario o equipo..."
-          serialPlaceholder="Serial..."
-          sortOptions={historyList.sortOptions}
-          sortKey={historyList.sortKey}
-          sortDir={historyList.sortDir}
-          onSortChange={historyList.setSort}
-        />
-        {historyList.total === 0 ? (
-          <EmptyState text="Sin historial." />
-        ) : (
-          <div className="space-y-3">
-            {historyList.pageItems.map((group) => (
-              <UserAssignmentGroup
-                key={group.id}
-                group={group}
-                role={role}
-                defaultOpen={false}
-                showHistoryDates
-              />
-            ))}
-          </div>
-        )}
-        <ListFooter
-          page={historyList.page}
-          totalPages={historyList.totalPages}
-          onPageChange={historyList.setPage}
-          showingFrom={historyList.showingFrom}
-          showingTo={historyList.showingTo}
-          total={historyList.total}
         />
       </section>
     </div>
