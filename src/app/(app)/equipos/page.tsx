@@ -89,23 +89,22 @@ export default function EquiposPage() {
   return (
     <div>
       <PageHeader
+        module="Consulta · Inventario"
         title="Laptops y monitores"
-        subtitle="Consulta rápida de equipos de cómputo y monitores. Mouse, cables, teléfonos y el resto del inventario no entran aquí."
+        subtitle="Lista separada del inventario completo. Solo equipos de cómputo y monitores, con su asignación."
       />
 
-      <div className="mb-3 flex flex-wrap gap-2">
+      <div className="mb-3 flex flex-wrap gap-1.5">
         {VISTAS.map((item) => (
           <button
             key={item.id}
             type="button"
+            className="sn-chip"
+            data-active={vista === item.id}
             onClick={() => setVista(item.id)}
-            className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition ${
-              vista === item.id
-                ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--ink)]"
-                : "border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] hover:bg-[var(--surface-2)]"
-            }`}
           >
-            {item.label} ({counts[item.id]})
+            {item.label}
+            <span className="text-[var(--muted)]">({counts[item.id]})</span>
           </button>
         ))}
       </div>
@@ -127,16 +126,16 @@ export default function EquiposPage() {
       ) : list.total === 0 ? (
         <EmptyState text="No hay equipos con esa búsqueda." />
       ) : list.view === "grid" ? (
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
           {list.pageItems.map((asset) => (
             <button
               key={asset.id}
               type="button"
               onClick={() => setPreviewId(asset.id)}
-              className="rounded-[1.1rem] border border-[var(--border)] bg-[var(--surface)] p-4 text-left shadow-[var(--shadow)] transition hover:border-[var(--accent)]"
+              className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-3.5 text-left shadow-[var(--shadow)] transition hover:border-[var(--accent)] hover:bg-[var(--row-hover)]"
             >
               <div className="mb-2 flex items-start justify-between gap-2">
-                <p className="font-medium">{asset.name}</p>
+                <p className="font-semibold">{asset.name}</p>
                 <Badge tone={statusTone(asset.status)}>{asset.status}</Badge>
               </div>
               <p className="text-xs text-[var(--muted)]">{asset.serialNumber}</p>
@@ -191,7 +190,7 @@ export default function EquiposPage() {
                   onClick={() => setPreviewId(asset.id)}
                 >
                   <td className="px-4 py-3">
-                    <p className="font-medium">{asset.name}</p>
+                    <p className="font-semibold">{asset.name}</p>
                     <p className="text-xs text-[var(--muted)]">
                       {asset.brand} {asset.model}
                       {vista !== "monitores" && asset.anydesk

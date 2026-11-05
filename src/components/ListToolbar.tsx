@@ -182,14 +182,14 @@ export function ListToolbar({
               </>
             )}
           </p>
-          <div className="flex shrink-0 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-1">
+          <div className="flex shrink-0 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface-2)] p-0.5">
             <button
               type="button"
               onClick={() => onViewChange("list")}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition",
+                "inline-flex items-center gap-1.5 rounded-[calc(var(--radius)-1px)] px-2.5 py-1.5 text-xs font-semibold transition",
                 view === "list"
-                  ? "bg-[var(--surface)] text-[var(--ink)] shadow-sm"
+                  ? "bg-[var(--surface)] text-[var(--ink)] shadow-[var(--shadow)]"
                   : "text-[var(--muted)] hover:text-[var(--ink)]"
               )}
               title="Vista en lista"
@@ -201,9 +201,9 @@ export function ListToolbar({
               type="button"
               onClick={() => onViewChange("grid")}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition",
+                "inline-flex items-center gap-1.5 rounded-[calc(var(--radius)-1px)] px-2.5 py-1.5 text-xs font-semibold transition",
                 view === "grid"
-                  ? "bg-[var(--surface)] text-[var(--ink)] shadow-sm"
+                  ? "bg-[var(--surface)] text-[var(--ink)] shadow-[var(--shadow)]"
                   : "text-[var(--muted)] hover:text-[var(--ink)]"
               )}
               title="Vista en tarjetas"

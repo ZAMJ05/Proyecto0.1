@@ -155,8 +155,9 @@ export default function UsuariosPage() {
   return (
     <div>
       <PageHeader
+        module="Administración · Accesos"
         title="Accesos a la aplicación"
-        subtitle="Solo administradores pueden crear, editar y borrar usuarios de login. El rol USER es de solo consulta."
+        subtitle="Cuentas de login. El rol USER es de solo consulta; ADMIN gestiona el inventario."
       />
 
       <Card className="mb-6 animate-rise">

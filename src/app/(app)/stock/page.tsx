@@ -137,8 +137,9 @@ export default function StockPage() {
   return (
     <div>
       <PageHeader
+        module="Consulta · Inventario"
         title="Stock / Reserva"
-        subtitle="Equipos en estado Stock y equipos Activos sin usuario. Asígnalos en un clic; el estado Activo no cambia al liberarlos."
+        subtitle="Stock y Activos sin usuario. Asígnalos en un clic; el estado Activo no cambia al liberarlos."
         actions={
           role === "ADMIN" ? (
             <Link href="/inventario?alta=1">

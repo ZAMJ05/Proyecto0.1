@@ -158,8 +158,9 @@ export default function CicloVidaPage() {
   return (
     <div>
       <PageHeader
+        module="Operación · Ciclo de vida"
         title="Ciclo de vida"
-        subtitle="Solo laptops activas/stock/reparación: renovación a 4 años y mantenimiento cada 6 meses. Las inactivas no se incluyen. En vencidos puedes confirmarlas como inactivas."
+        subtitle="Solo laptops activas/stock/reparación: renovación a 4 años y mantenimiento cada 6 meses. En vencidos puedes marcarlas inactivas."
       />
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2">

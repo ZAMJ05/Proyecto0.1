@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { Manrope, Fraunces } from "next/font/google";
+import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
-const body = Manrope({
+const body = Source_Sans_3({
   variable: "--font-body",
   subsets: ["latin"],
 });
 
-const display = Fraunces({
+const display = Source_Serif_4({
   variable: "--font-display",
   subsets: ["latin"],
 });
@@ -16,7 +16,7 @@ const display = Fraunces({
 export const metadata: Metadata = {
   title: "AssetDesk | Inventario IT",
   description:
-    "Gestión de inventario IT, ciclo de vida, asignaciones y stock.",
+    "Workspace de inventario IT: laptops, monitores, stock, asignaciones y ciclo de vida.",
 };
 
 const themeInitScript = `

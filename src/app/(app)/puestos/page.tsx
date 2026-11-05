@@ -252,6 +252,7 @@ export default function PuestosPage() {
   return (
     <div>
       <PageHeader
+        module="Operación · Organigrama"
         title="Puestos"
         subtitle="Define la jerarquía (ej. Senior › Mid › Junior) y asígnala a usuarios del inventario."
       />

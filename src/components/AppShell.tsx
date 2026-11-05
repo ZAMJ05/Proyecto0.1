@@ -11,7 +11,7 @@ import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 const STORAGE_KEY = "assetdesk-sidebar-open";
-const SIDEBAR_WIDTH = 256; // 16rem
+const SIDEBAR_WIDTH = 248;
 
 export function AppShell({
   user,
@@ -40,7 +40,6 @@ export function AppShell({
 
   return (
     <div className="min-h-screen">
-      {/* Sidebar fijo (desktop) */}
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-40 hidden transition-transform duration-200 ease-out md:flex",
@@ -52,20 +51,19 @@ export function AppShell({
         <Sidebar user={user} onHide={toggle} />
       </aside>
 
-      {/* Contenido principal */}
       <div
         className={cn(
           "flex min-h-screen min-w-0 flex-col transition-[margin] duration-200 ease-out",
-          ready && open ? "md:ml-64" : "md:ml-0"
+          ready && open ? "md:ml-[248px]" : "md:ml-0"
         )}
       >
-        <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--header)] px-4 py-3 shadow-[0_1px_0_rgba(15,36,52,0.03)] backdrop-blur-xl md:px-6">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
+        <header className="sticky top-0 z-30 border-b border-black/10 bg-[var(--header)] text-[var(--header-text)] shadow-[var(--shadow)]">
+          <div className="flex items-center justify-between gap-3 px-3 py-2 md:px-4">
+            <div className="flex min-w-0 items-center gap-2">
               <Button
                 type="button"
-                variant="secondary"
-                className="hidden h-9 w-9 px-0 md:inline-flex"
+                variant="ghost"
+                className="hidden h-8 w-8 px-0 text-[var(--header-text)] hover:bg-white/10 hover:text-white md:inline-flex"
                 onClick={toggle}
                 title={open ? "Ocultar menú" : "Mostrar menú"}
                 aria-label={open ? "Ocultar menú" : "Mostrar menú"}
@@ -76,42 +74,41 @@ export function AppShell({
                   <PanelLeftOpen className="h-4 w-4" />
                 )}
               </Button>
-              <div className="md:hidden">
-                <p className="font-[family-name:var(--font-display)] text-xl text-[var(--ink)]">
+              <div className="min-w-0">
+                <p className="truncate text-sm font-bold tracking-tight md:hidden">
                   AssetDesk
                 </p>
+                {!open && (
+                  <p className="hidden truncate text-sm font-bold tracking-tight md:block">
+                    AssetDesk · Inventario IT
+                  </p>
+                )}
+                {open && (
+                  <p className="hidden text-xs text-white/65 md:block">
+                    Workspace de inventario
+                  </p>
+                )}
               </div>
-              {!open && (
-                <p className="hidden font-[family-name:var(--font-display)] text-lg text-[var(--ink)] md:block">
-                  AssetDesk
-                </p>
-              )}
             </div>
-            <div className="ml-auto flex items-center gap-2">
+            <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
               <div className="hidden text-right sm:block">
-                <p className="text-sm font-medium text-[var(--ink)]">
-                  {user.name}
-                </p>
-                <p className="text-xs text-[var(--muted)]">
+                <p className="text-sm font-semibold">{user.name}</p>
+                <p className="text-[11px] text-white/65">
                   {user.role === "ADMIN" ? "Administrador" : "Solo lectura"}
                 </p>
               </div>
-              <span className="rounded-lg bg-[var(--surface-2)] px-2 py-1 text-xs text-[var(--muted)] md:hidden">
-                {user.role}
-              </span>
               <TopSearch />
               <ThemeToggle />
               <LogoutButton />
             </div>
           </div>
-          <nav className="mt-2.5 flex gap-1.5 overflow-x-auto pb-1 md:hidden">
+          <nav className="flex gap-1 overflow-x-auto border-t border-white/10 px-3 py-1.5 md:hidden">
             {[
-              ["/dashboard", "Dashboard"],
+              ["/dashboard", "Inicio"],
               ["/equipos", "Laptops"],
               ["/activos", "Activos"],
               ["/inventario", "Inventario"],
               ["/stock", "Stock"],
-              ["/ciclo-vida", "Ciclo"],
               ["/asignaciones", "Asignaciones"],
               ["/empleados", "Usuarios"],
               ["/puestos", "Puestos"],
@@ -120,14 +117,14 @@ export function AppShell({
               <a
                 key={href}
                 href={href}
-                className="whitespace-nowrap rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-xs font-medium text-[var(--muted)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
+                className="whitespace-nowrap rounded-[var(--radius)] border border-white/15 bg-white/5 px-2.5 py-1 text-[11px] font-semibold text-white/80 transition hover:bg-white/12 hover:text-white"
               >
                 {label}
               </a>
             ))}
           </nav>
         </header>
-        <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 py-5 md:px-6 md:py-6">
+        <main className="mx-auto w-full max-w-[1480px] flex-1 px-3 py-4 md:px-5 md:py-5">
           {children}
         </main>
       </div>

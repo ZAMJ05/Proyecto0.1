@@ -311,6 +311,7 @@ export default function AsignacionesPage() {
   return (
     <div>
       <PageHeader
+        module="Operación · Asignaciones"
         title="Asignaciones"
         subtitle="Agrupadas por usuario para ver de un vistazo todos sus equipos."
       />

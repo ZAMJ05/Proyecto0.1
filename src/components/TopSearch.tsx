@@ -70,16 +70,19 @@ export function TopSearch() {
     }
   }
 
+  const btn =
+    "h-8 border-white/15 bg-white/8 px-2 text-[var(--header-text)] hover:border-white/25 hover:bg-white/14 hover:text-white";
+
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-1.5">
       <Button
         variant="secondary"
         onClick={exportCsv}
         disabled={!!exporting}
         title="CSV actualizado con todas las tablas"
-        className="whitespace-nowrap px-2.5"
+        className={btn}
       >
-        <Download className="h-4 w-4" />
+        <Download className="h-3.5 w-3.5" />
         <span className="hidden lg:inline">
           {exporting === "csv" ? "CSV..." : "CSV"}
         </span>
@@ -89,9 +92,9 @@ export function TopSearch() {
         onClick={exportPendingExcel}
         disabled={!!exporting}
         title="Excel: laptops almacenadas, laptops por asignar, monitores y teléfonos"
-        className="whitespace-nowrap px-2.5"
+        className={btn}
       >
-        <FileSpreadsheet className="h-4 w-4" />
+        <FileSpreadsheet className="h-3.5 w-3.5" />
         <span className="hidden lg:inline">
           {exporting === "xlsx" ? "Excel..." : "Excel"}
         </span>
@@ -101,9 +104,9 @@ export function TopSearch() {
         onClick={exportPdf}
         disabled={!!exporting}
         title="PDF profesional con portada, gráficas y tablas"
-        className="whitespace-nowrap px-2.5"
+        className={btn}
       >
-        <FileText className="h-4 w-4" />
+        <FileText className="h-3.5 w-3.5" />
         <span className="hidden lg:inline">
           {exporting === "pdf" ? "PDF..." : "PDF"}
         </span>

@@ -128,8 +128,9 @@ function ActivosContent() {
   return (
     <div>
       <PageHeader
+        module="Consulta · Inventario"
         title="Equipos activos"
-        subtitle="Solo equipos en estado Activo. La búsqueda incluye nombre, usuario, serie e inventario."
+        subtitle="Solo estado Activo. Para laptops y monitores con asignación usa Laptops y monitores."
       />
 
       <ListToolbar

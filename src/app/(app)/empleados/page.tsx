@@ -267,8 +267,9 @@ export default function EmpleadosPage() {
   return (
     <div>
       <PageHeader
+        module="Operación · Personas"
         title="Usuarios y activos"
-        subtitle="Usuarios del inventario, con nombre y dos apellidos. Si alguien ya no trabaja aquí, sus equipos se liberan a Stock y conservan el estado Activo."
+        subtitle="Nombre completo obligatorio (nombre y dos apellidos). Al dar de baja, los equipos pasan a Stock y siguen Activos."
       />
 
       {role === "ADMIN" && (
@@ -406,11 +407,8 @@ export default function EmpleadosPage() {
             key={key}
             type="button"
             onClick={() => setStatusFilter(key)}
-            className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition ${
-              statusFilter === key
-                ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--ink)]"
-                : "border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] hover:bg-[var(--surface-2)]"
-            }`}
+            className="sn-chip"
+            data-active={statusFilter === key}
           >
             {label}
           </button>

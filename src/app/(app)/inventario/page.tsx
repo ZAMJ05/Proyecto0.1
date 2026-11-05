@@ -161,8 +161,9 @@ function InventarioContent() {
   return (
     <div>
       <PageHeader
-        title="Inventario"
-        subtitle="Busca, filtra y asigna desde la misma lista. El alta entra directo a stock."
+        module="Consulta · Inventario"
+        title="Inventario completo"
+        subtitle="Todas las categorías. Busca, filtra y asigna desde la misma lista. El alta entra a stock."
         actions={
           <div className="flex flex-wrap gap-2">
             {role === "ADMIN" && (

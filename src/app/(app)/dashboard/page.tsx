@@ -363,15 +363,51 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Dashboard"
+        module="Inicio · Inventario IT"
+        title="Inicio"
         subtitle="Estado del inventario de un vistazo. Toca cualquier número para ir al detalle."
       />
+
+      <section className="animate-fade grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+        {[
+          {
+            href: "/equipos",
+            title: "Laptops y monitores",
+            desc: "Consulta rápida por estado y usuario",
+          },
+          {
+            href: "/stock",
+            title: "Stock / Reserva",
+            desc: "Equipos listos para asignar",
+          },
+          {
+            href: "/asignaciones",
+            title: "Asignaciones",
+            desc: "Quién tiene cada equipo",
+          },
+          {
+            href: "/empleados",
+            title: "Usuarios-Activos",
+            desc: "Personas del inventario",
+          },
+        ].map((item) => (
+          <button
+            key={item.href}
+            type="button"
+            onClick={() => router.push(item.href)}
+            className="sn-kpi text-left transition hover:border-[var(--accent)]"
+          >
+            <p className="text-sm font-bold text-[var(--ink)]">{item.title}</p>
+            <p className="mt-0.5 text-xs text-[var(--muted)]">{item.desc}</p>
+          </button>
+        ))}
+      </section>
 
       {/* Atención inmediata */}
       <section className="animate-rise">
         {alerts.length > 0 ? (
-          <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow)]">
-            <div className="flex items-center gap-2 border-b border-[var(--border)] bg-[var(--surface-2)] px-4 py-2.5">
+          <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow)]">
+            <div className="flex items-center gap-2 border-b border-[var(--border)] bg-[var(--list-header)] px-4 py-2.5">
               <AlertTriangle className="h-4 w-4 text-[var(--badge-warn-fg)]" />
               <h2 className="text-sm font-semibold text-[var(--ink)]">
                 Requiere atención
@@ -411,7 +447,7 @@ export default function DashboardPage() {
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--badge-success-bg)] px-4 py-3 text-sm text-[var(--badge-success-fg)]">
+          <div className="flex items-center gap-3 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--badge-success-bg)] px-4 py-3 text-sm text-[var(--badge-success-fg)]">
             <MonitorCheck className="h-5 w-5 shrink-0" />
             <span>
               Sin alertas urgentes: renovaciones, mantenimientos y reparaciones
