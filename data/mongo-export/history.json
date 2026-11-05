@@ -1,0 +1,4116 @@
+[{
+  "_id": {
+    "$oid": "69d925534c2d7113e97cf10e"
+  },
+  "assetId": "IT037",
+  "action": "edited",
+  "time": "2026-04-10T16:29:07.806Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "288707517"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69d925984c2d7113e97cf110"
+  },
+  "assetId": "IT047",
+  "action": "edited",
+  "time": "2026-04-10T16:30:16.474Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "433 940 191"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69d925a44c2d7113e97cf112"
+  },
+  "assetId": "IT046",
+  "action": "edited",
+  "time": "2026-04-10T16:30:28.039Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1588101330"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69d925ab4c2d7113e97cf114"
+  },
+  "assetId": "IT042",
+  "action": "edited",
+  "time": "2026-04-10T16:30:35.329Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1556041742"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69d979d3dbda064325aa3aa5"
+  },
+  "assetId": "mntharlaak0gi",
+  "action": "created",
+  "time": "2026-04-10T22:29:38.734Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69dd42246edfed8488f4b68e"
+  },
+  "assetId": "IT026",
+  "action": "edited",
+  "time": "2026-04-13T19:21:08.476Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69dd44036edfed8488f4b690"
+  },
+  "assetId": "mnxl65rv5t49e",
+  "action": "created",
+  "time": "2026-04-13T19:29:07.004Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69dd44676edfed8488f4b693"
+  },
+  "assetId": "mnxl8as2ed78k",
+  "action": "created",
+  "time": "2026-04-13T19:30:46.804Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69dd44f26edfed8488f4b696"
+  },
+  "assetId": "mnxlbagqu7zw2",
+  "action": "created",
+  "time": "2026-04-13T19:33:06.362Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69dd63a118311b45142189dc"
+  },
+  "assetId": "mnxpzmp8zebht",
+  "action": "created",
+  "time": "2026-04-13T21:44:00.429Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69dd63cb18311b45142189de"
+  },
+  "assetId": "mnxpzmp8zebht",
+  "action": "edited",
+  "time": "2026-04-13T21:44:43.781Z",
+  "changes": [
+    {
+      "field": "location",
+      "label": "Ubicacion",
+      "from": "",
+      "to": "Oficina"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd63ea18311b45142189e0"
+  },
+  "assetId": "mntharlaak0gi",
+  "action": "edited",
+  "time": "2026-04-13T21:45:14.491Z",
+  "changes": [
+    {
+      "field": "serial",
+      "label": "N. Serie",
+      "from": "",
+      "to": "1CR0170XT2"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd687cc23effe5d685a285"
+  },
+  "assetId": "IT088",
+  "action": "edited",
+  "time": "2026-04-13T22:04:44.071Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1426643355"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd6889c23effe5d685a286"
+  },
+  "assetId": "IT086",
+  "action": "edited",
+  "time": "2026-04-13T22:04:57.228Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1853350237"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd6892c23effe5d685a288"
+  },
+  "assetId": "IT085",
+  "action": "edited",
+  "time": "2026-04-13T22:05:06.931Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1407812602"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd68a7c23effe5d685a28a"
+  },
+  "assetId": "IT084",
+  "action": "edited",
+  "time": "2026-04-13T22:05:27.398Z",
+  "changes": [
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Activo",
+      "to": "Inactivo"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd68b8c23effe5d685a28c"
+  },
+  "assetId": "IT083",
+  "action": "edited",
+  "time": "2026-04-13T22:05:43.996Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1947727896"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd68bfc23effe5d685a28e"
+  },
+  "assetId": "IT082",
+  "action": "edited",
+  "time": "2026-04-13T22:05:51.362Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1684863689"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd68c6c23effe5d685a290"
+  },
+  "assetId": "IT081",
+  "action": "edited",
+  "time": "2026-04-13T22:05:58.463Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1397784254"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd68d6c23effe5d685a292"
+  },
+  "assetId": "IT079",
+  "action": "edited",
+  "time": "2026-04-13T22:06:14.507Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1021660679"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd68dec23effe5d685a294"
+  },
+  "assetId": "IT078",
+  "action": "edited",
+  "time": "2026-04-13T22:06:22.696Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69dd68e6c23effe5d685a296"
+  },
+  "assetId": "IT078",
+  "action": "edited",
+  "time": "2026-04-13T22:06:30.887Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1383570369"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd68f3c23effe5d685a298"
+  },
+  "assetId": "IT076",
+  "action": "edited",
+  "time": "2026-04-13T22:06:43.033Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1389603331"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd68fcc23effe5d685a29a"
+  },
+  "assetId": "IT087",
+  "action": "edited",
+  "time": "2026-04-13T22:06:52.051Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1757629562"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd6908c23effe5d685a29c"
+  },
+  "assetId": "IT089",
+  "action": "edited",
+  "time": "2026-04-13T22:07:04.797Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1895422080"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd6913c23effe5d685a29e"
+  },
+  "assetId": "IT090",
+  "action": "edited",
+  "time": "2026-04-13T22:07:14.987Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1992155165"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd6922c23effe5d685a2a0"
+  },
+  "assetId": "IT091",
+  "action": "edited",
+  "time": "2026-04-13T22:07:30.737Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1463559361"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd692dc23effe5d685a2a2"
+  },
+  "assetId": "IT092",
+  "action": "edited",
+  "time": "2026-04-13T22:07:41.050Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1111025315"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd6935c23effe5d685a2a4"
+  },
+  "assetId": "IT093",
+  "action": "edited",
+  "time": "2026-04-13T22:07:49.248Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1370774648"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd693cc23effe5d685a2a6"
+  },
+  "assetId": "IT094",
+  "action": "edited",
+  "time": "2026-04-13T22:07:56.912Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1264271991"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd6946c23effe5d685a2a8"
+  },
+  "assetId": "IT095",
+  "action": "edited",
+  "time": "2026-04-13T22:08:06.589Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1673002867"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd6959c23effe5d685a2aa"
+  },
+  "assetId": "IT096",
+  "action": "edited",
+  "time": "2026-04-13T22:08:25.600Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1145979471"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd6961c23effe5d685a2ac"
+  },
+  "assetId": "IT097",
+  "action": "edited",
+  "time": "2026-04-13T22:08:33.310Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1478528950"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd69aec23effe5d685a2ae"
+  },
+  "assetId": "IT077",
+  "action": "edited",
+  "time": "2026-04-13T22:09:50.247Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1054605170"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69dd69b7c23effe5d685a2b0"
+  },
+  "assetId": "IT002",
+  "action": "edited",
+  "time": "2026-04-13T22:09:59.029Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69dd732dc23effe5d685a2b2"
+  },
+  "assetId": "IT009",
+  "action": "edited",
+  "time": "2026-04-13T22:50:21.489Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1284122605"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ded21a86dfa7d865ba8770"
+  },
+  "assetId": "IT028",
+  "action": "edited",
+  "time": "2026-04-14T23:47:38.164Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "602402155"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ded22986dfa7d865ba8772"
+  },
+  "assetId": "IT027",
+  "action": "edited",
+  "time": "2026-04-14T23:47:52.961Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1141494555"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ded23586dfa7d865ba8774"
+  },
+  "assetId": "IT036",
+  "action": "edited",
+  "time": "2026-04-14T23:48:05.883Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1194948572"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ded24086dfa7d865ba8776"
+  },
+  "assetId": "IT033",
+  "action": "edited",
+  "time": "2026-04-14T23:48:16.234Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1953314492"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ded24b86dfa7d865ba8778"
+  },
+  "assetId": "IT031",
+  "action": "edited",
+  "time": "2026-04-14T23:48:27.281Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1774047034"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ded27086dfa7d865ba877a"
+  },
+  "assetId": "IT040",
+  "action": "edited",
+  "time": "2026-04-14T23:49:04.918Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1824145844"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ded28b86dfa7d865ba877c"
+  },
+  "assetId": "IT030",
+  "action": "edited",
+  "time": "2026-04-14T23:49:31.017Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1453604441"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ded2a286dfa7d865ba877e"
+  },
+  "assetId": "IT045",
+  "action": "edited",
+  "time": "2026-04-14T23:49:54.786Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1342084932"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ded2ba86dfa7d865ba8780"
+  },
+  "assetId": "IT075",
+  "action": "edited",
+  "time": "2026-04-14T23:50:18.147Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1351627343"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ded2e886dfa7d865ba8782"
+  },
+  "assetId": "IT034",
+  "action": "edited",
+  "time": "2026-04-14T23:51:04.295Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1 364 871 086"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ded2fd86dfa7d865ba8784"
+  },
+  "assetId": "IT035",
+  "action": "edited",
+  "time": "2026-04-14T23:51:24.996Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1955640200"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ded30c86dfa7d865ba8786"
+  },
+  "assetId": "IT039",
+  "action": "edited",
+  "time": "2026-04-14T23:51:39.996Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1779063630"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ded31c86dfa7d865ba8788"
+  },
+  "assetId": "IT038",
+  "action": "edited",
+  "time": "2026-04-14T23:51:56.360Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1183424908"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e2b2b904bef3080d5101f4"
+  },
+  "assetId": "IT044",
+  "action": "edited",
+  "time": "2026-04-17T22:22:49.093Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1219487066"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e8f79acd85a9af3fd2452b"
+  },
+  "assetId": "IT096",
+  "action": "edited",
+  "time": "2026-04-22T16:30:18.869Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-VENTAS02"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    },
+    {
+      "field": "responsivaFecha",
+      "label": "Fecha responsiva",
+      "from": "",
+      "to": "2026-03-17"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e8f7e2cd85a9af3fd2452d"
+  },
+  "assetId": "IT077",
+  "action": "edited",
+  "time": "2026-04-22T16:31:30.521Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "DANIL BAUTISTA",
+      "to": "DANIEL BAUTISTA"
+    },
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-CONTAB01"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e8f82bcd85a9af3fd2452f"
+  },
+  "assetId": "IT047",
+  "action": "edited",
+  "time": "2026-04-22T16:32:43.213Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-RIESGOS2"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e8f8a2cd85a9af3fd24531"
+  },
+  "assetId": "IT042",
+  "action": "edited",
+  "time": "2026-04-22T16:34:42.673Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    },
+    {
+      "field": "responsivaFecha",
+      "label": "Fecha responsiva",
+      "from": "",
+      "to": "2026-03-10"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e8f8cbcd85a9af3fd24533"
+  },
+  "assetId": "IT009",
+  "action": "edited",
+  "time": "2026-04-22T16:35:23.413Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-MARKETING"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e8f906cd85a9af3fd24535"
+  },
+  "assetId": "IT002",
+  "action": "edited",
+  "time": "2026-04-22T16:36:22.051Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-AUGALDEN"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e8f9c2cd85a9af3fd24537"
+  },
+  "assetId": "IT031",
+  "action": "edited",
+  "time": "2026-04-22T16:39:30.265Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-OPERACION01"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e8f9f7cd85a9af3fd24539"
+  },
+  "assetId": "IT039",
+  "action": "edited",
+  "time": "2026-04-22T16:40:23.628Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e8fa5ccd85a9af3fd2453b"
+  },
+  "assetId": "IT081",
+  "action": "edited",
+  "time": "2026-04-22T16:42:04.018Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e8fa62cd85a9af3fd2453d"
+  },
+  "assetId": "IT081",
+  "action": "edited",
+  "time": "2026-04-22T16:42:10.892Z",
+  "changes": [
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e8fb06cd85a9af3fd2453f"
+  },
+  "assetId": "IT092",
+  "action": "edited",
+  "time": "2026-04-22T16:44:54.218Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95aa2cd85a9af3fd24542"
+  },
+  "assetId": "IT046",
+  "action": "edited",
+  "time": "2026-04-22T23:32:50.174Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95ab7cd85a9af3fd24543"
+  },
+  "assetId": "IT089",
+  "action": "edited",
+  "time": "2026-04-22T23:33:11.062Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95ac1cd85a9af3fd24546"
+  },
+  "assetId": "IT090",
+  "action": "edited",
+  "time": "2026-04-22T23:33:21.030Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95aeecd85a9af3fd24547"
+  },
+  "assetId": "IT037",
+  "action": "edited",
+  "time": "2026-04-22T23:34:06.533Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95b02cd85a9af3fd24549"
+  },
+  "assetId": "IT075",
+  "action": "edited",
+  "time": "2026-04-22T23:34:26.296Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95b0fcd85a9af3fd2454b"
+  },
+  "assetId": "IT036",
+  "action": "edited",
+  "time": "2026-04-22T23:34:39.676Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95b1bcd85a9af3fd2454d"
+  },
+  "assetId": "IT027",
+  "action": "edited",
+  "time": "2026-04-22T23:34:51.421Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95b31cd85a9af3fd2454f"
+  },
+  "assetId": "IT034",
+  "action": "edited",
+  "time": "2026-04-22T23:35:13.854Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95b3dcd85a9af3fd24551"
+  },
+  "assetId": "IT035",
+  "action": "edited",
+  "time": "2026-04-22T23:35:25.870Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95b62cd85a9af3fd24554"
+  },
+  "assetId": "IT083",
+  "action": "edited",
+  "time": "2026-04-22T23:36:02.447Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95b74cd85a9af3fd24556"
+  },
+  "assetId": "IT093",
+  "action": "edited",
+  "time": "2026-04-22T23:36:19.908Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95b90cd85a9af3fd24557"
+  },
+  "assetId": "IT094",
+  "action": "edited",
+  "time": "2026-04-22T23:36:48.639Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95ba6cd85a9af3fd24559"
+  },
+  "assetId": "IT095",
+  "action": "edited",
+  "time": "2026-04-22T23:37:10.709Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95bb0cd85a9af3fd2455c"
+  },
+  "assetId": "IT097",
+  "action": "edited",
+  "time": "2026-04-22T23:37:19.887Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95bbbcd85a9af3fd2455d"
+  },
+  "assetId": "IT078",
+  "action": "edited",
+  "time": "2026-04-22T23:37:31.698Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95bd0cd85a9af3fd2455f"
+  },
+  "assetId": "IT033",
+  "action": "edited",
+  "time": "2026-04-22T23:37:52.905Z",
+  "changes": [
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Activo",
+      "to": "Inactivo"
+    },
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95be3cd85a9af3fd24561"
+  },
+  "assetId": "IT038",
+  "action": "edited",
+  "time": "2026-04-22T23:38:11.245Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95bf1cd85a9af3fd24563"
+  },
+  "assetId": "IT045",
+  "action": "edited",
+  "time": "2026-04-22T23:38:24.987Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95bfacd85a9af3fd24565"
+  },
+  "assetId": "IT088",
+  "action": "edited",
+  "time": "2026-04-22T23:38:34.759Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95c39cd85a9af3fd24567"
+  },
+  "assetId": "IT087",
+  "action": "edited",
+  "time": "2026-04-22T23:39:37.543Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95c46cd85a9af3fd2456a"
+  },
+  "assetId": "IT082",
+  "action": "edited",
+  "time": "2026-04-22T23:39:50.765Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95c58cd85a9af3fd2456c"
+  },
+  "assetId": "IT040",
+  "action": "edited",
+  "time": "2026-04-22T23:40:08.338Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95c67cd85a9af3fd2456d"
+  },
+  "assetId": "IT030",
+  "action": "edited",
+  "time": "2026-04-22T23:40:23.052Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95c77cd85a9af3fd2456f"
+  },
+  "assetId": "IT028",
+  "action": "edited",
+  "time": "2026-04-22T23:40:39.312Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95ca1cd85a9af3fd24571"
+  },
+  "assetId": "IT085",
+  "action": "edited",
+  "time": "2026-04-22T23:41:21.382Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95caccd85a9af3fd24573"
+  },
+  "assetId": "IT079",
+  "action": "edited",
+  "time": "2026-04-22T23:41:32.871Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95cc4cd85a9af3fd24576"
+  },
+  "assetId": "IT086",
+  "action": "edited",
+  "time": "2026-04-22T23:41:56.167Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95cdecd85a9af3fd24577"
+  },
+  "assetId": "IT018",
+  "action": "edited",
+  "time": "2026-04-22T23:42:22.291Z",
+  "changes": [
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Activo",
+      "to": "Inactivo"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95cf0cd85a9af3fd24579"
+  },
+  "assetId": "IT024",
+  "action": "edited",
+  "time": "2026-04-22T23:42:40.903Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 10"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95d17cd85a9af3fd2457b"
+  },
+  "assetId": "IT006",
+  "action": "edited",
+  "time": "2026-04-22T23:43:18.966Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95d27cd85a9af3fd2457d"
+  },
+  "assetId": "IT044",
+  "action": "edited",
+  "time": "2026-04-22T23:43:35.452Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95d3bcd85a9af3fd2457f"
+  },
+  "assetId": "IT080",
+  "action": "edited",
+  "time": "2026-04-22T23:43:55.019Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95e62cd85a9af3fd24581"
+  },
+  "assetId": "IT031",
+  "action": "edited",
+  "time": "2026-04-22T23:48:50.124Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "ELIZABETH GRANADOS",
+      "to": "ELIZABEHT GRANADOS"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95e7ecd85a9af3fd24583"
+  },
+  "assetId": "IT081",
+  "action": "edited",
+  "time": "2026-04-22T23:49:18.092Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "FREDY MAYORGA",
+      "to": "FERNANDO MAYORGA"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95e8bcd85a9af3fd24585"
+  },
+  "assetId": "IT020",
+  "action": "edited",
+  "time": "2026-04-22T23:49:31.772Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "FREDY MAYORGA",
+      "to": "FERNANDO MAYORGA"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95eb4cd85a9af3fd24587"
+  },
+  "assetId": "IT084",
+  "action": "edited",
+  "time": "2026-04-22T23:50:12.243Z",
+  "changes": [
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Inactivo",
+      "to": "Activo"
+    },
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95ebbcd85a9af3fd24589"
+  },
+  "assetId": "IT018",
+  "action": "edited",
+  "time": "2026-04-22T23:50:19.489Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69e95ecacd85a9af3fd2458b"
+  },
+  "assetId": "IT087",
+  "action": "edited",
+  "time": "2026-04-22T23:50:34.878Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "JOCELYN GUERRERI",
+      "to": "JOCELYN GUERRERO"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95ed8cd85a9af3fd2458d"
+  },
+  "assetId": "IT001",
+  "action": "edited",
+  "time": "2026-04-22T23:50:48.380Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69e95efecd85a9af3fd2458f"
+  },
+  "assetId": "IT088",
+  "action": "edited",
+  "time": "2026-04-22T23:51:26.583Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "ALBERTO NAVA",
+      "to": "JOSE ALBERTO NAVA"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95f06cd85a9af3fd24591"
+  },
+  "assetId": "IT102",
+  "action": "edited",
+  "time": "2026-04-22T23:51:34.737Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69e95f0ccd85a9af3fd24593"
+  },
+  "assetId": "IT017",
+  "action": "edited",
+  "time": "2026-04-22T23:51:40.474Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69e95f26cd85a9af3fd24595"
+  },
+  "assetId": "IT045",
+  "action": "edited",
+  "time": "2026-04-22T23:52:06.746Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "MARGARITA VALDEZ",
+      "to": "MARGARITA VALADEZ"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95f34cd85a9af3fd24597"
+  },
+  "assetId": "IT039",
+  "action": "edited",
+  "time": "2026-04-22T23:52:20.074Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "NITZIA FACIO MELENDREZ",
+      "to": "NITZIA FACIO"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69e95f54cd85a9af3fd24599"
+  },
+  "assetId": "IT078",
+  "action": "edited",
+  "time": "2026-04-22T23:52:52.294Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "PAULINA DUATT",
+      "to": "PAULINA DAUTT"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69eb9a1ae81bc809d172f860"
+  },
+  "assetId": "IT091",
+  "action": "edited",
+  "time": "2026-04-24T16:28:10.664Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69eb9a94e81bc809d172f862"
+  },
+  "assetId": "IT005",
+  "action": "edited",
+  "time": "2026-04-24T16:30:12.847Z",
+  "changes": [
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69f12a347b3412722558bade"
+  },
+  "assetId": "mnxlbagqu7zw2",
+  "action": "edited",
+  "time": "2026-04-28T21:44:20.155Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-04-28"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69f12c007b3412722558bae0"
+  },
+  "assetId": "IT035",
+  "action": "edited",
+  "time": "2026-04-28T21:52:00.198Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "EDGAR REYES",
+      "to": ""
+    },
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Activo",
+      "to": "Inactivo"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "true",
+      "to": "false"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69f2867120b58b22baf780aa"
+  },
+  "assetId": "IT029",
+  "action": "edited",
+  "time": "2026-04-29T22:30:09.610Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "DANIEL JARAS IBARRA",
+      "to": ""
+    },
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Inactivo",
+      "to": "En stock"
+    },
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-VENTAS5"
+    },
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1620248263"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69f3ce9c3dd6fea35663be92"
+  },
+  "assetId": "IT038",
+  "action": "edited",
+  "time": "2026-04-30T21:50:20.012Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "SONIA GOVEA",
+      "to": "KARINA SERRANO GONZALEZ"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "true",
+      "to": "false"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69f3cec83dd6fea35663be94"
+  },
+  "assetId": "IT029",
+  "action": "edited",
+  "time": "2026-04-30T21:51:04.734Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "",
+      "to": "PEDRO SOLIS RODRIGUEZ"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69f3ced43dd6fea35663be96"
+  },
+  "assetId": "IT029",
+  "action": "edited",
+  "time": "2026-04-30T21:51:16.630Z",
+  "changes": [
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "En stock",
+      "to": "Activo"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69f8f0621fd43ad9130b46cd"
+  },
+  "assetId": "morkxvdo3u6xs",
+  "action": "created",
+  "time": "2026-05-04T19:15:45.565Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69f8f8ee1fd43ad9130b46d0"
+  },
+  "assetId": "IT115",
+  "action": "edited",
+  "time": "2026-05-04T19:52:14.189Z",
+  "changes": [
+    {
+      "field": "category",
+      "label": "Categoria",
+      "from": "Otro",
+      "to": "Mouse"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69f8f9021fd43ad9130b46d2"
+  },
+  "assetId": "IT114",
+  "action": "edited",
+  "time": "2026-05-04T19:52:33.982Z",
+  "changes": [
+    {
+      "field": "category",
+      "label": "Categoria",
+      "from": "mouse",
+      "to": "Mouse"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69fe0029f73cf67ffddf3ece"
+  },
+  "assetId": "IT031",
+  "action": "edited",
+  "time": "2026-05-08T15:24:25.401Z",
+  "changes": [
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69fe0052f73cf67ffddf3ed0"
+  },
+  "assetId": "IT009",
+  "action": "edited",
+  "time": "2026-05-08T15:25:06.873Z",
+  "changes": [
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69fe0067f73cf67ffddf3ed2"
+  },
+  "assetId": "IT004",
+  "action": "edited",
+  "time": "2026-05-08T15:25:26.950Z",
+  "changes": [
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69fe024bf73cf67ffddf3ed4"
+  },
+  "assetId": "mox2rhdct9qv0",
+  "action": "created",
+  "time": "2026-05-08T15:33:31.440Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69fe0285f73cf67ffddf3ed7"
+  },
+  "assetId": "mox2sqd6g5p6u",
+  "action": "created",
+  "time": "2026-05-08T15:34:29.754Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69fe0361f73cf67ffddf3eda"
+  },
+  "assetId": "mox2xg1rvhw5o",
+  "action": "created",
+  "time": "2026-05-08T15:38:09.663Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "69fe0377f73cf67ffddf3edd"
+  },
+  "assetId": "mox2sqd6g5p6u",
+  "action": "edited",
+  "time": "2026-05-08T15:38:31.382Z",
+  "changes": [
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Activo",
+      "to": "En stock"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69fe03caf73cf67ffddf3edf"
+  },
+  "assetId": "mox2sqd6g5p6u",
+  "action": "edited",
+  "time": "2026-05-08T15:39:54.484Z",
+  "changes": [
+    {
+      "field": "serial",
+      "label": "N. Serie",
+      "from": "FGSW-2622VHP",
+      "to": "AK500925900004"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69fe03cff73cf67ffddf3ee2"
+  },
+  "assetId": "morkxvdo3u6xs",
+  "action": "deleted",
+  "time": "2026-05-08T15:39:59.606Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a0b2dbb930457095c7e9b41"
+  },
+  "assetId": "IT016",
+  "action": "edited",
+  "time": "2026-05-18T15:18:18.692Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "CARLA EUGUENIA",
+      "to": "FATIMA GARCIA NUÑEZ"
+    },
+    {
+      "field": "os",
+      "label": "SO/Firmware",
+      "from": "",
+      "to": "Windows 11"
+    },
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1914562796"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a0b2dc5930457095c7e9b42"
+  },
+  "assetId": "IT016",
+  "action": "edited",
+  "time": "2026-05-18T15:18:28.959Z",
+  "changes": [
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Inactivo",
+      "to": "Activo"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a0f92f6cc91ffb97784bd3e"
+  },
+  "assetId": "IT026",
+  "action": "edited",
+  "time": "2026-05-21T23:19:18.277Z",
+  "changes": [
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "1673002867"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1867c95c1ff357434cdb31"
+  },
+  "assetId": "IT004",
+  "action": "edited",
+  "time": "2026-05-28T16:05:29.208Z",
+  "changes": [
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Activo",
+      "to": "Inactivo"
+    },
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "true",
+      "to": "false"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a186bbd5c1ff357434cdb3f"
+  },
+  "assetId": "IT006",
+  "action": "edited",
+  "time": "2026-05-28T16:22:20.996Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "Sevidor de Envios",
+      "to": "SERVIDOR DE ENVIOS"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a186bd65c1ff357434cdb41"
+  },
+  "assetId": "IT042",
+  "action": "edited",
+  "time": "2026-05-28T16:22:46.111Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "JOSE MIGUEL URIBE",
+      "to": "JOSE MIGUEL"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a186bec5c1ff357434cdb43"
+  },
+  "assetId": "IT028",
+  "action": "edited",
+  "time": "2026-05-28T16:23:08.288Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "ISSAC RAMOS",
+      "to": "ISSACK RAMOS"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a186bf75c1ff357434cdb44"
+  },
+  "assetId": "IT027",
+  "action": "edited",
+  "time": "2026-05-28T16:23:19.516Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "TERE ULLOA",
+      "to": "TERESA ULLOA"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a186c0d5c1ff357434cdb46"
+  },
+  "assetId": "IT036",
+  "action": "edited",
+  "time": "2026-05-28T16:23:41.821Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "LETICIA CENDEJAS",
+      "to": "LETICIA"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a186c1d5c1ff357434cdb48"
+  },
+  "assetId": "IT098",
+  "action": "deleted",
+  "time": "2026-05-28T16:23:57.803Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a186c345c1ff357434cdb4a"
+  },
+  "assetId": "IT090",
+  "action": "edited",
+  "time": "2026-05-28T16:24:20.873Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "NTZIA FACIO",
+      "to": "NITZIA FACIO"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a186c775c1ff357434cdb4c"
+  },
+  "assetId": "IT096",
+  "action": "edited",
+  "time": "2026-05-28T16:25:27.662Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "PAMELA SOLORIA",
+      "to": "PAMELA SOLORIO"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a186e1e5c1ff357434cdb4e"
+  },
+  "assetId": "mpppodsh6qdt1",
+  "action": "created",
+  "time": "2026-05-28T16:32:30.929Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a18d22b53047a9022af9118"
+  },
+  "assetId": "mox2rhdct9qv0",
+  "action": "edited",
+  "time": "2026-05-28T23:39:23.703Z",
+  "changes": [
+    {
+      "field": "serial",
+      "label": "N. Serie",
+      "from": "",
+      "to": "PSZ19381Q8Y"
+    },
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Activo",
+      "to": "En stock"
+    },
+    {
+      "field": "notes",
+      "label": "Notas",
+      "from": "",
+      "to": "18-Port Gigabit Smart Switch, MAC: 9C57ADA067B3"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a18d34f53047a9022af911a"
+  },
+  "assetId": "IT021",
+  "action": "edited",
+  "time": "2026-05-28T23:44:15.473Z",
+  "changes": [
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Inactivo",
+      "to": "Dado de baja"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1f1453428d3ff91063bf7d"
+  },
+  "assetId": "IT016",
+  "action": "edited",
+  "time": "2026-06-02T17:35:14.939Z",
+  "changes": [
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a208af5428d3ff91063bf7f"
+  },
+  "assetId": "IT009",
+  "action": "edited",
+  "time": "2026-06-03T20:13:41.206Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-03"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a208aff428d3ff91063bf80"
+  },
+  "assetId": "IT034",
+  "action": "edited",
+  "time": "2026-06-03T20:13:51.498Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-03"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a208b08428d3ff91063bf82"
+  },
+  "assetId": "IT090",
+  "action": "edited",
+  "time": "2026-06-03T20:14:00.421Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-03"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a208b0d428d3ff91063bf84"
+  },
+  "assetId": "IT037",
+  "action": "edited",
+  "time": "2026-06-03T20:14:05.576Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-03"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a208b13428d3ff91063bf86"
+  },
+  "assetId": "IT036",
+  "action": "edited",
+  "time": "2026-06-03T20:14:11.476Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-03"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a208b1f428d3ff91063bf88"
+  },
+  "assetId": "IT028",
+  "action": "edited",
+  "time": "2026-06-03T20:14:23.247Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-03"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a231dba13dc918e62e9c023"
+  },
+  "assetId": "IT094",
+  "action": "edited",
+  "time": "2026-06-05T19:04:26.116Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-JURIDICO"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a231dc713dc918e62e9c025"
+  },
+  "assetId": "IT002",
+  "action": "edited",
+  "time": "2026-06-05T19:04:39.789Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a231df313dc918e62e9c028"
+  },
+  "assetId": "IT092",
+  "action": "edited",
+  "time": "2026-06-05T19:05:23.410Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "CUA-",
+      "to": "CUA-TESORERIA01"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a231e4413dc918e62e9c029"
+  },
+  "assetId": "IT082",
+  "action": "edited",
+  "time": "2026-06-05T19:06:43.982Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-COBRANZA1"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a231e6013dc918e62e9c02b"
+  },
+  "assetId": "IT075",
+  "action": "edited",
+  "time": "2026-06-05T19:07:12.190Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-ACASTRO1"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a231e8b13dc918e62e9c02e"
+  },
+  "assetId": "IT076",
+  "action": "edited",
+  "time": "2026-06-05T19:07:55.495Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-CONTAGSR"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a231e9913dc918e62e9c02f"
+  },
+  "assetId": "IT093",
+  "action": "edited",
+  "time": "2026-06-05T19:08:09.806Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-RECEPCION"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a231eb813dc918e62e9c031"
+  },
+  "assetId": "IT016",
+  "action": "edited",
+  "time": "2026-06-05T19:08:40.230Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-SEGUROS1"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a231ed413dc918e62e9c034"
+  },
+  "assetId": "IT097",
+  "action": "edited",
+  "time": "2026-06-05T19:09:08.493Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-CARTERA4"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a231ef013dc918e62e9c035"
+  },
+  "assetId": "IT081",
+  "action": "edited",
+  "time": "2026-06-05T19:09:36.364Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "CUA-",
+      "to": "CUA-TESORERIA03"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a231efd13dc918e62e9c038"
+  },
+  "assetId": "IT040",
+  "action": "edited",
+  "time": "2026-06-05T19:09:49.347Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-SISTEMAS2"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a231f4e13dc918e62e9c03a"
+  },
+  "assetId": "IT084",
+  "action": "edited",
+  "time": "2026-06-05T19:11:10.040Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-GSISTEMAS"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a231f6e13dc918e62e9c03b"
+  },
+  "assetId": "IT087",
+  "action": "edited",
+  "time": "2026-06-05T19:11:41.948Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-CARTERA02"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a231f8213dc918e62e9c03d"
+  },
+  "assetId": "IT088",
+  "action": "edited",
+  "time": "2026-06-05T19:12:02.602Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-SEGUROS02"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a231fc613dc918e62e9c03f"
+  },
+  "assetId": "IT044",
+  "action": "edited",
+  "time": "2026-06-05T19:13:10.356Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-TESORERIASR"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a23202513dc918e62e9c042"
+  },
+  "assetId": "IT038",
+  "action": "edited",
+  "time": "2026-06-05T19:14:45.022Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-CARTERA1N"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a23205f13dc918e62e9c043"
+  },
+  "assetId": "IT079",
+  "action": "edited",
+  "time": "2026-06-05T19:15:43.771Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-RIESGOS01"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a23209513dc918e62e9c046"
+  },
+  "assetId": "IT037",
+  "action": "edited",
+  "time": "2026-06-05T19:16:37.300Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-MGOMEZN"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a2320a513dc918e62e9c047"
+  },
+  "assetId": "mpppodsh6qdt1",
+  "action": "edited",
+  "time": "2026-06-05T19:16:53.606Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-MCONTROL"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a2320d913dc918e62e9c04a"
+  },
+  "assetId": "IT039",
+  "action": "edited",
+  "time": "2026-06-05T19:17:45.051Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "CUA-",
+      "to": "CUA-OPERACION01"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a2320f213dc918e62e9c04b"
+  },
+  "assetId": "IT039",
+  "action": "edited",
+  "time": "2026-06-05T19:18:10.272Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "NITZIA FACIO",
+      "to": "NITZIA CARTERA"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a23214213dc918e62e9c04d"
+  },
+  "assetId": "IT039",
+  "action": "edited",
+  "time": "2026-06-05T19:19:30.510Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "CUA-OPERACION01",
+      "to": "CUA-CARTERA1N"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a23215113dc918e62e9c04f"
+  },
+  "assetId": "IT039",
+  "action": "edited",
+  "time": "2026-06-05T19:19:45.117Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "CUA-CARTERA1N",
+      "to": "CUA-CARTERAN"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a23215f13dc918e62e9c052"
+  },
+  "assetId": "IT090",
+  "action": "edited",
+  "time": "2026-06-05T19:19:59.688Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-OPERACIONES01"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a23216b13dc918e62e9c054"
+  },
+  "assetId": "IT038",
+  "action": "edited",
+  "time": "2026-06-05T19:20:11.187Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a23217e13dc918e62e9c055"
+  },
+  "assetId": "IT030",
+  "action": "edited",
+  "time": "2026-06-05T19:20:30.702Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-CONTAB3"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a2321b013dc918e62e9c057"
+  },
+  "assetId": "IT034",
+  "action": "edited",
+  "time": "2026-06-05T19:21:20.889Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-FINANZASSR"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a2321c613dc918e62e9c059"
+  },
+  "assetId": "IT029",
+  "action": "edited",
+  "time": "2026-06-05T19:21:42.337Z",
+  "changes": [
+    {
+      "field": "location",
+      "label": "Ubicacion",
+      "from": "Almacenado",
+      "to": "Oficina"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a2321fc13dc918e62e9c05b"
+  },
+  "assetId": "IT006",
+  "action": "edited",
+  "time": "2026-06-05T19:22:36.778Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-FACTAUX"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a23220c13dc918e62e9c05d"
+  },
+  "assetId": "IT089",
+  "action": "edited",
+  "time": "2026-06-05T19:22:52.087Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-AUDITORIA"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a23222413dc918e62e9c05f"
+  },
+  "assetId": "IT027",
+  "action": "edited",
+  "time": "2026-06-05T19:23:16.715Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-VENTAST"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a23224513dc918e62e9c061"
+  },
+  "assetId": "IT080",
+  "action": "edited",
+  "time": "2026-06-05T19:23:49.612Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-TTRUJILLO1"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a23228313dc918e62e9c063"
+  },
+  "assetId": "IT046",
+  "action": "edited",
+  "time": "2026-06-05T19:24:50.954Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-GESTORIA2"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a2322b513dc918e62e9c065"
+  },
+  "assetId": "IT095",
+  "action": "edited",
+  "time": "2026-06-05T19:25:41.115Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-BARAJASJP"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a2322d213dc918e62e9c067"
+  },
+  "assetId": "IT085",
+  "action": "edited",
+  "time": "2026-06-05T19:26:10.561Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-COORDINA1"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a2322e313dc918e62e9c069"
+  },
+  "assetId": "IT086",
+  "action": "edited",
+  "time": "2026-06-05T19:26:27.287Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-VENTAS01"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a23230a13dc918e62e9c06b"
+  },
+  "assetId": "IT091",
+  "action": "edited",
+  "time": "2026-06-05T19:27:06.784Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-FACTURA01"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a23235613dc918e62e9c06d"
+  },
+  "assetId": "IT083",
+  "action": "edited",
+  "time": "2026-06-05T19:28:22.366Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-MALDRETEDG"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a23237813dc918e62e9c070"
+  },
+  "assetId": "IT078",
+  "action": "edited",
+  "time": "2026-06-05T19:28:56.246Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-GRIESGOS"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a23249513dc918e62e9c071"
+  },
+  "assetId": "IT045",
+  "action": "edited",
+  "time": "2026-06-05T19:33:41.452Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-MVALADEZ"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a26e20213dc918e62e9c074"
+  },
+  "assetId": "IT031",
+  "action": "edited",
+  "time": "2026-06-08T15:38:42.917Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "CUA-OPERACION01",
+      "to": "CUA-OPERACION2"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a26f16213dc918e62e9c076"
+  },
+  "assetId": "IT028",
+  "action": "edited",
+  "time": "2026-06-08T16:44:18.034Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-VENTAS7"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a26f1d613dc918e62e9c077"
+  },
+  "assetId": "IT036",
+  "action": "edited",
+  "time": "2026-06-08T16:46:14.101Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-VENTAS7"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a26f1ea13dc918e62e9c079"
+  },
+  "assetId": "IT028",
+  "action": "edited",
+  "time": "2026-06-08T16:46:34.170Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "CUA-VENTAS7",
+      "to": "CUA-VENTAS4"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a26f35b13dc918e62e9c07b"
+  },
+  "assetId": "IT035",
+  "action": "edited",
+  "time": "2026-06-08T16:52:43.638Z",
+  "changes": [
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Inactivo",
+      "to": "En stock"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a26f38413dc918e62e9c07e"
+  },
+  "assetId": "IT033",
+  "action": "edited",
+  "time": "2026-06-08T16:53:24.148Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "CESAR CORONA",
+      "to": ""
+    },
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Inactivo",
+      "to": "En stock"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a2990a5114279bc6b16ae76"
+  },
+  "assetId": "IT026",
+  "action": "edited",
+  "time": "2026-06-10T16:28:21.408Z",
+  "changes": [
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Inactivo",
+      "to": "Dado de baja"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a307f68032b1b53b2ef6087"
+  },
+  "assetId": "IT016",
+  "action": "edited",
+  "time": "2026-06-15T22:40:40.339Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-15"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a307f6b032b1b53b2ef6088"
+  },
+  "assetId": "IT029",
+  "action": "edited",
+  "time": "2026-06-15T22:40:43.430Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-15"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a307f7a032b1b53b2ef608a"
+  },
+  "assetId": "mpppodsh6qdt1",
+  "action": "edited",
+  "time": "2026-06-15T22:40:58.188Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-15"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a307f80032b1b53b2ef608c"
+  },
+  "assetId": "IT046",
+  "action": "edited",
+  "time": "2026-06-15T22:41:04.556Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-15"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a307fa9032b1b53b2ef608e"
+  },
+  "assetId": "IT027",
+  "action": "edited",
+  "time": "2026-06-15T22:41:45.453Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-15"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a307fad032b1b53b2ef6090"
+  },
+  "assetId": "IT030",
+  "action": "edited",
+  "time": "2026-06-15T22:41:49.368Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-15"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a307fb0032b1b53b2ef6093"
+  },
+  "assetId": "IT031",
+  "action": "edited",
+  "time": "2026-06-15T22:41:52.121Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-15"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a307fb1032b1b53b2ef6094"
+  },
+  "assetId": "IT038",
+  "action": "edited",
+  "time": "2026-06-15T22:41:53.727Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-15"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a307fb5032b1b53b2ef6096"
+  },
+  "assetId": "IT039",
+  "action": "edited",
+  "time": "2026-06-15T22:41:57.214Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-15"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a3acdc24e284a0dec50bd86"
+  },
+  "assetId": "IT047",
+  "action": "edited",
+  "time": "2026-06-23T18:17:38.795Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-23"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a3acdcd4e284a0dec50bd88"
+  },
+  "assetId": "IT077",
+  "action": "edited",
+  "time": "2026-06-23T18:17:49.458Z",
+  "changes": [
+    {
+      "field": "responsiva",
+      "label": "Responsiva",
+      "from": "false",
+      "to": "true"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a3acdd34e284a0dec50bd8a"
+  },
+  "assetId": "IT002",
+  "action": "edited",
+  "time": "2026-06-23T18:17:55.778Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-23"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a3acdfd4e284a0dec50bd8c"
+  },
+  "assetId": "IT045",
+  "action": "edited",
+  "time": "2026-06-23T18:18:36.953Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-23"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a3ace394e284a0dec50bd8e"
+  },
+  "assetId": "IT006",
+  "action": "edited",
+  "time": "2026-06-23T18:19:37.261Z",
+  "changes": [
+    {
+      "field": "lastMaintenance",
+      "label": "Ultimo mantenimiento",
+      "from": "(sin registro)",
+      "to": "2026-06-23"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a458e52ffd83c08abae3506"
+  },
+  "assetId": "IT035",
+  "action": "edited",
+  "time": "2026-07-01T22:01:54.500Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "",
+      "to": "PEDRO LOMELII CORNEJO"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a458ed2ffd83c08abae3508"
+  },
+  "assetId": "IT035",
+  "action": "edited",
+  "time": "2026-07-01T22:04:02.183Z",
+  "changes": [
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "En stock",
+      "to": "Activo"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a565cbd7c90b6a94d4d86b0"
+  },
+  "assetId": "IT024",
+  "action": "edited",
+  "time": "2026-07-14T15:58:53.495Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-ARODRIGUEZN"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a565d2a7c90b6a94d4d86b2"
+  },
+  "assetId": "IT005",
+  "action": "edited",
+  "time": "2026-07-14T16:00:42.533Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-CDELATORRE"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a5661f97c90b6a94d4d86b4"
+  },
+  "assetId": "IT006",
+  "action": "edited",
+  "time": "2026-07-14T16:21:13.696Z",
+  "changes": [
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "CUA-FACTAUX",
+      "to": "CUA-SERENV"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a721c794d751c31e6db9d97"
+  },
+  "assetId": "IT020",
+  "action": "edited",
+  "time": "2026-08-04T17:08:09.099Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "FERNANDO MAYORGA",
+      "to": ""
+    },
+    {
+      "field": "adName",
+      "label": "Nombre en AD",
+      "from": "",
+      "to": "CUA-TESORERIA-M"
+    },
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "",
+      "to": "366 481 028"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a7228a94d751c31e6db9d99"
+  },
+  "assetId": "IT020",
+  "action": "edited",
+  "time": "2026-08-04T18:00:09.019Z",
+  "changes": [
+    {
+      "field": "assignedTo",
+      "label": "Asignado a",
+      "from": "",
+      "to": "ANDREA HERNANDEZ ABAD"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a73610be1413db1556c586e"
+  },
+  "assetId": "IT020",
+  "action": "edited",
+  "time": "2026-08-05T16:12:58.203Z",
+  "changes": [
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Inactivo",
+      "to": "Activo"
+    },
+    {
+      "field": "anydesk",
+      "label": "N. AnyDesk",
+      "from": "366 481 028",
+      "to": "1 189 422 624"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a7a4891a31789b30e899766"
+  },
+  "assetId": "msnrread02b8w",
+  "action": "created",
+  "time": "2026-08-10T21:54:25.430Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a48cba31789b30e89976a"
+  },
+  "assetId": "msnrsncekzbeq",
+  "action": "created",
+  "time": "2026-08-10T21:55:23.822Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4910a31789b30e89976d"
+  },
+  "assetId": "msnru4243n9ec",
+  "action": "created",
+  "time": "2026-08-10T21:56:32.141Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4962a31789b30e89976e"
+  },
+  "assetId": "msnrvvuux7k6v",
+  "action": "created",
+  "time": "2026-08-10T21:57:54.822Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4a3aa31789b30e899771"
+  },
+  "assetId": "msns0ibl4kuan",
+  "action": "created",
+  "time": "2026-08-10T22:01:30.562Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4a62a31789b30e899774"
+  },
+  "assetId": "msns1ct6kbzjj",
+  "action": "created",
+  "time": "2026-08-10T22:02:10.075Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4a8fa31789b30e899777"
+  },
+  "assetId": "msns2bp8x7eqx",
+  "action": "created",
+  "time": "2026-08-10T22:02:55.292Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4acca31789b30e89977a"
+  },
+  "assetId": "msns3n5ean9w8",
+  "action": "created",
+  "time": "2026-08-10T22:03:56.787Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4af5a31789b30e89977d"
+  },
+  "assetId": "msns4irw9i7ri",
+  "action": "created",
+  "time": "2026-08-10T22:04:37.773Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4b1ea31789b30e899780"
+  },
+  "assetId": "msns5e7synbfi",
+  "action": "created",
+  "time": "2026-08-10T22:05:18.521Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4b51a31789b30e899785"
+  },
+  "assetId": "msns6hnjkvt0a",
+  "action": "created",
+  "time": "2026-08-10T22:06:09.632Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4b7ea31789b30e899786"
+  },
+  "assetId": "msns7girghnfm",
+  "action": "created",
+  "time": "2026-08-10T22:06:54.819Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4c09a31789b30e899789"
+  },
+  "assetId": "msnsafb3mb9jf",
+  "action": "created",
+  "time": "2026-08-10T22:09:13.216Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4c2ca31789b30e89978c"
+  },
+  "assetId": "msnsb6v42dhpa",
+  "action": "created",
+  "time": "2026-08-10T22:09:48.928Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4df5a31789b30e89978f"
+  },
+  "assetId": "msnsb6v42dhpa",
+  "action": "edited",
+  "time": "2026-08-10T22:17:24.949Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4e4aa31789b30e899791"
+  },
+  "assetId": "msnsmsnzeaxqr",
+  "action": "created",
+  "time": "2026-08-10T22:18:50.400Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4f9da31789b30e899794"
+  },
+  "assetId": "msnsu27fvmldg",
+  "action": "created",
+  "time": "2026-08-10T22:24:29.356Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a4faca31789b30e899797"
+  },
+  "assetId": "msnsu27fvmldg",
+  "action": "edited",
+  "time": "2026-08-10T22:24:44.740Z",
+  "changes": [
+    {
+      "field": "status",
+      "label": "Estado",
+      "from": "Activo",
+      "to": "En stock"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a7a4fbea31789b30e899799"
+  },
+  "assetId": "msnsmsnzeaxqr",
+  "action": "edited",
+  "time": "2026-08-10T22:25:02.627Z",
+  "changes": [
+    {
+      "field": "category",
+      "label": "Categoria",
+      "from": "Mouse",
+      "to": "Otro"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a7a501ea31789b30e89979b"
+  },
+  "assetId": "msnswtni3spls",
+  "action": "created",
+  "time": "2026-08-10T22:26:38.239Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a5038a31789b30e89979f"
+  },
+  "assetId": "msnsxdtydjbyn",
+  "action": "created",
+  "time": "2026-08-10T22:27:04.391Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a505ba31789b30e8997a1"
+  },
+  "assetId": "msnsy4y8ilqjb",
+  "action": "created",
+  "time": "2026-08-10T22:27:39.536Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a5077a31789b30e8997a4"
+  },
+  "assetId": "msnsyqnekic2x",
+  "action": "created",
+  "time": "2026-08-10T22:28:07.658Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a509ba31789b30e8997a7"
+  },
+  "assetId": "msnszi1cc9xx0",
+  "action": "created",
+  "time": "2026-08-10T22:28:43.152Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a50b8a31789b30e8997aa"
+  },
+  "assetId": "msnt04vu77nzy",
+  "action": "created",
+  "time": "2026-08-10T22:29:12.762Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a50e6a31789b30e8997ad"
+  },
+  "assetId": "msnt146l8m2ua",
+  "action": "created",
+  "time": "2026-08-10T22:29:58.509Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a5104a31789b30e8997b2"
+  },
+  "assetId": "msnt1r442vnp3",
+  "action": "created",
+  "time": "2026-08-10T22:30:28.228Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a511ea31789b30e8997b3"
+  },
+  "assetId": "msnt2bbuhsk1y",
+  "action": "created",
+  "time": "2026-08-10T22:30:54.426Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a513ea31789b30e8997b6"
+  },
+  "assetId": "msnt30d5jaqip",
+  "action": "created",
+  "time": "2026-08-10T22:31:26.873Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a5152a31789b30e8997b9"
+  },
+  "assetId": "msnt3ft3p41ih",
+  "action": "created",
+  "time": "2026-08-10T22:31:46.887Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a5174a31789b30e8997bc"
+  },
+  "assetId": "msnt45ud209ej",
+  "action": "created",
+  "time": "2026-08-10T22:32:20.629Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a5180a31789b30e8997bf"
+  },
+  "assetId": "msnt45ud209ej",
+  "action": "edited",
+  "time": "2026-08-10T22:32:32.369Z",
+  "changes": [
+    {
+      "field": "serial",
+      "label": "N. Serie",
+      "from": "",
+      "to": "16"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a7a51a9a31789b30e8997c1"
+  },
+  "assetId": "msnt5acxgezdv",
+  "action": "created",
+  "time": "2026-08-10T22:33:13.139Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a51cca31789b30e8997c4"
+  },
+  "assetId": "msnt61gyu2nwj",
+  "action": "created",
+  "time": "2026-08-10T22:33:48.275Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a5314a31789b30e8997c7"
+  },
+  "assetId": "msntd2g2ets4u",
+  "action": "created",
+  "time": "2026-08-10T22:39:16.131Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a5336a31789b30e8997ca"
+  },
+  "assetId": "msntd2g2ets4u",
+  "action": "edited",
+  "time": "2026-08-10T22:39:50.855Z",
+  "changes": [
+    {
+      "field": "serial",
+      "label": "N. Serie",
+      "from": "",
+      "to": "19"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a7a53f8a31789b30e8997cc"
+  },
+  "assetId": "msnthyzurihr4",
+  "action": "created",
+  "time": "2026-08-10T22:43:04.939Z",
+  "changes": []
+},
+{
+  "_id": {
+    "$oid": "6a7a5860a31789b30e8997d0"
+  },
+  "assetId": "IT020",
+  "action": "edited",
+  "time": "2026-08-10T23:01:52.679Z",
+  "changes": [
+    {
+      "field": "location",
+      "label": "Ubicacion",
+      "from": "Almacenado",
+      "to": ""
+    }
+  ]
+}]

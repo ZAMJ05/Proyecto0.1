@@ -1,1 +1,117 @@
-# Proyecto0.1
+# AssetDesk — Inventario IT
+
+Aplicación web para gestionar inventario de equipos IT: dashboard, ciclo de vida, asignaciones, stock, puestos y control de accesos (admin / user).
+
+## Características
+
+1. **Dashboard** con equipos activos, cambios recientes, activos sin asignar, totales y deshabilitados (clic para filtrar).
+2. **Ciclo de vida**: renovación a 4 años desde la compra y mantenimiento de cómputo cada 6 meses.
+3. **Asignaciones** de equipos/complementos a usuarios + historial.
+4. **Stock / reserva** de equipos nuevos.
+5. **Alta de inventario** con nombre, categoría, marca, modelo, serial, no. inventario, estado, fechas, AnyDesk (laptops activas) y notas.
+6. **Filtros avanzados** y vista de usuarios con sus activos.
+7. **Búsqueda general** (serial o usuario), exportación CSV/PDF y gráficas.
+8. **Puestos** para asignar a usuarios.
+9. Persistencia en **SQLite** (Prisma).
+10. Roles **ADMIN** (CRUD) y **USER** (solo consulta).
+
+## Requisitos
+
+- Node.js 20+
+- npm
+
+## Instalación
+
+```bash
+npm install
+npm run db:init
+npm run dev
+```
+
+- `db:init` prepara la BD **sin borrar** datos (crea admin solo si esta vacia).
+- Los datos se guardan en `data/assetdesk.db` (ruta absoluta en `.env`).
+- **No uses `db:setup`/`db:seed` en el dia a dia**: reinician la BD demo y borran cambios.
+
+Si ves `Environment variable not found: DATABASE_URL`:
+
+```bash
+npm run env:init
+npm run db:init
+```
+
+Abre [http://localhost:3000](http://localhost:3000).
+
+### Acceso en red local (LAN)
+
+Para que otros equipos de tu red empresarial vean la app:
+
+```bash
+# desarrollo
+npm run dev:lan
+
+# o producción (recomendado en red)
+npm run build
+npm run start:lan
+```
+
+1. En tu PC, obtén tu IP local:
+   - Windows: `ipconfig` → busca **IPv4** (ej. `192.168.1.45`)
+   - macOS/Linux: `ip addr` o `hostname -I`
+2. Desde otro equipo abre: `http://TU_IP:3000` (ej. `http://192.168.1.45:3000`)
+3. Si no carga, permite el puerto **3000** en el Firewall de Windows (entrada TCP).
+4. Tu PC y los demás deben estar en la misma red/VLAN (o con enrutamiento permitido).
+
+Si ves el login pero **no entra al dashboard**, es la cookie de sesión en HTTP.
+Asegúrate de tener en `.env`:
+
+```
+COOKIE_SECURE="false"
+```
+
+Luego reinicia (`npm run start:lan` o `npm run dev:lan`).
+Solo pon `COOKIE_SECURE="true"` cuando publiques con HTTPS.
+
+## Acceso inicial
+
+Las credenciales de demo **no se muestran en la app**. Solo se crean al ejecutar `npm run db:seed` / `db:setup` y se imprimen en la terminal del seed. Cámbialas después del primer acceso desde **Accesos app**.
+
+## Scripts
+
+- `npm run dev` — servidor de desarrollo
+- `npm run build` / `npm start` — producción
+- `npm run db:init` — crea/actualiza esquema **sin borrar** datos
+- `npm run db:setup` — SOLO demo: borra todo y carga datos de prueba
+- `npm run db:seed -- --force` — reinicia demo (destructivo)
+- `npm run db:import` — importa JSON genéricos de MongoDB
+- `npm run db:import:ti` — importa el export inventario-ti (`assets/people/history/log`)
+- `postinstall`: prisma generate
+
+Para migrar desde MongoDB, ver `data/mongo-export/README.md`.
+
+### Arranque automático en Windows
+
+Ver `scripts/windows/README.md`. Resumen:
+
+```powershell
+npm run build
+powershell -ExecutionPolicy Bypass -File .\scripts\windows\install-autostart.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\windows\test-autostart.ps1
+```
+
+Si falla, revisa `logs\assetdesk-startup.log`.
+
+Si `npm run build` marca **EPERM** con `query_engine-windows.dll.node`, detén la app primero:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\windows\stop-assetdesk.ps1
+npm run build
+```
+
+## Variables de entorno
+
+Copia `.env.example` a `.env`:
+
+```
+DATABASE_URL="file:./dev.db"
+JWT_SECRET="change-me-in-production"
+```
