@@ -1,26 +1,60 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Laptop } from "lucide-react";
 import { Button, Input, Label } from "@/components/ui";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
+const REMEMBER_KEY = "assetdesk-remember-login";
+
+type RememberedLogin = {
+  email: string;
+  password: string;
+};
+
+function readRemembered(): RememberedLogin | null {
+  try {
+    const raw = localStorage.getItem(REMEMBER_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<RememberedLogin>;
+    const email = String(parsed.email || "").trim();
+    const password = String(parsed.password || "");
+    if (!email) return null;
+    return { email, password };
+  } catch {
+    return null;
+  }
+}
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const saved = readRemembered();
+    if (saved) {
+      setEmail(saved.email);
+      setPassword(saved.password);
+      setRemember(true);
+    }
+    setReady(true);
+  }, []);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
+    const nextEmail = email.trim().toLowerCase();
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: email.trim().toLowerCase(),
+          email: nextEmail,
           password,
         }),
         credentials: "same-origin",
@@ -28,12 +62,33 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Error de acceso");
-      setEmail("");
-      setPassword("");
+
+      try {
+        if (remember) {
+          localStorage.setItem(
+            REMEMBER_KEY,
+            JSON.stringify({ email: nextEmail, password })
+          );
+        } else {
+          localStorage.removeItem(REMEMBER_KEY);
+        }
+      } catch {
+        // Si el navegador bloquea localStorage, igual se permite el acceso.
+      }
+
+      // No vaciar los campos antes de redirigir: así el navegador
+      // también puede ofrecer guardar las credenciales.
       window.location.replace("/dashboard");
       return;
     } catch (err) {
       setPassword("");
+      if (!remember) {
+        try {
+          localStorage.removeItem(REMEMBER_KEY);
+        } catch {
+          // ignore
+        }
+      }
       setError(err instanceof Error ? err.message : "Error de acceso");
     } finally {
       setLoading(false);
@@ -86,23 +141,23 @@ export default function LoginPage() {
           <p className="sn-breadcrumb">Inicio de sesión</p>
           <h2 className="sn-title">Entrar al workspace</h2>
           <p className="sn-subtitle">
-            Usa la cuenta que te asignó el administrador. La sesión no se guarda
-            automáticamente.
+            Usa la cuenta que te asignó el administrador. Puedes recordar
+            usuario y contraseña en este equipo.
           </p>
 
           <form
             onSubmit={onSubmit}
             className="mt-7 space-y-4"
-            autoComplete="off"
+            autoComplete="on"
             method="post"
           >
             <div>
               <Label>Email</Label>
               <Input
                 type="email"
-                name="email"
+                name="username"
                 required
-                autoComplete="off"
+                autoComplete="username"
                 autoCapitalize="none"
                 autoCorrect="off"
                 spellCheck={false}
@@ -117,12 +172,38 @@ export default function LoginPage() {
                 type="password"
                 name="password"
                 required
-                autoComplete="new-password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
               />
             </div>
+            <label className="flex cursor-pointer items-start gap-2.5 text-sm text-[var(--ink)]">
+              <input
+                type="checkbox"
+                className="mt-0.5 h-4 w-4 accent-[var(--accent)]"
+                checked={remember}
+                disabled={!ready}
+                onChange={(e) => {
+                  const next = e.target.checked;
+                  setRemember(next);
+                  if (!next) {
+                    try {
+                      localStorage.removeItem(REMEMBER_KEY);
+                    } catch {
+                      // ignore
+                    }
+                  }
+                }}
+              />
+              <span>
+                Recordar usuario y contraseña en este equipo
+                <span className="mt-0.5 block text-xs text-[var(--muted)]">
+                  Se guardan solo en este navegador. Desmárcalo en equipos
+                  compartidos.
+                </span>
+              </span>
+            </label>
             {error && <p className="text-sm text-[var(--danger)]">{error}</p>}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Entrando..." : "Entrar"}
