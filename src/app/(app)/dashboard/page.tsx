@@ -376,9 +376,9 @@ export default function DashboardPage() {
             desc: "Consulta rápida por estado y usuario",
           },
           {
-            href: "/stock",
-            title: "Stock / Reserva",
-            desc: "Equipos listos para asignar",
+            href: "/tablero",
+            title: "Tablero asignación",
+            desc: "Stock e inventario juntos, con Kanban",
           },
           {
             href: "/asignaciones",

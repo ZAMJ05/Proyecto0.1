@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   Briefcase,
   ClipboardList,
+  Columns3,
   Laptop,
   LayoutDashboard,
   MonitorCheck,
@@ -36,6 +37,7 @@ const groups = [
   {
     label: "Operación",
     items: [
+      { href: "/tablero", label: "Tablero asignación", icon: Columns3 },
       { href: "/asignaciones", label: "Asignaciones", icon: ClipboardList },
       { href: "/ciclo-vida", label: "Ciclo de vida", icon: RefreshCw },
       { href: "/empleados", label: "Usuarios-Activos", icon: Users },

@@ -139,16 +139,21 @@ export default function StockPage() {
       <PageHeader
         module="Consulta · Inventario"
         title="Stock / Reserva"
-        subtitle="Stock y Activos sin usuario. Asígnalos en un clic; el estado Activo no cambia al liberarlos."
+        subtitle="Stock y Activos sin usuario. Para asignar por categoría con Kanban usa Tablero asignación."
         actions={
-          role === "ADMIN" ? (
-            <Link href="/inventario?alta=1">
-              <Button>
-                <Plus className="h-4 w-4" />
-                Agregar a stock
-              </Button>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/tablero">
+              <Button variant="secondary">Ir al tablero</Button>
             </Link>
-          ) : undefined
+            {role === "ADMIN" ? (
+              <Link href="/inventario?alta=1">
+                <Button>
+                  <Plus className="h-4 w-4" />
+                  Agregar a stock
+                </Button>
+              </Link>
+            ) : null}
+          </div>
         }
       />
 

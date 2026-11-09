@@ -109,6 +109,7 @@ export function AppShell({
               ["/activos", "Activos"],
               ["/inventario", "Inventario"],
               ["/stock", "Stock"],
+              ["/tablero", "Tablero"],
               ["/asignaciones", "Asignaciones"],
               ["/empleados", "Usuarios"],
               ["/puestos", "Puestos"],
