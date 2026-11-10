@@ -16,7 +16,10 @@ export type SortFieldDef<T> = {
 function readView(storageKey: string, fallback: ListViewMode): ListViewMode {
   if (typeof window === "undefined") return fallback;
   const saved = window.localStorage.getItem(`assetdesk-view:${storageKey}`);
-  return saved === "list" || saved === "grid" ? saved : fallback;
+  if (saved === "list" || saved === "grid") return saved;
+  // En móvil, las tarjetas se leen mejor que una tabla estrecha.
+  if (window.matchMedia("(max-width: 639px)").matches) return "grid";
+  return fallback;
 }
 
 export function compareSortValues(

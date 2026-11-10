@@ -153,7 +153,7 @@ export function AssetPreview({
     CATEGORY_LABELS[asset?.category || ""] || asset?.category || "";
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div className="fixed inset-0 z-50 flex items-end justify-end sm:items-stretch">
       <button
         type="button"
         className="absolute inset-0 bg-black/40 backdrop-blur-[2px] animate-fade"
@@ -161,17 +161,17 @@ export function AssetPreview({
         onClick={onClose}
       />
       <aside
-        className="relative z-10 flex h-full w-full max-w-lg flex-col border-l border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-lg)] animate-rise"
+        className="relative z-10 flex h-[min(92dvh,100%)] w-full max-w-lg flex-col rounded-t-[1rem] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-lg)] animate-rise sm:h-full sm:rounded-none sm:border-l sm:border-y-0 sm:border-r-0"
         role="dialog"
         aria-modal="true"
         aria-label="Vista previa del equipo"
       >
-        <div className="flex items-start justify-between gap-3 border-b border-[var(--border)] px-5 py-4">
+        <div className="flex items-start justify-between gap-3 border-b border-[var(--border)] px-4 py-3.5 sm:px-5 sm:py-4">
           <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
               Vista previa
             </p>
-            <h2 className="mt-0.5 truncate font-[family-name:var(--font-display)] text-xl text-[var(--ink)]">
+            <h2 className="mt-0.5 break-words font-[family-name:var(--font-display)] text-lg text-[var(--ink)] sm:truncate sm:text-xl">
               {loading ? "Cargando..." : asset?.name || "Equipo"}
             </h2>
             {asset && (
@@ -194,7 +194,7 @@ export function AssetPreview({
           </Button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-5 py-4">
+        <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-5">
           {loading && (
             <div className="space-y-3 animate-pulse">
               <div className="h-16 rounded-xl bg-[var(--surface-2)]" />

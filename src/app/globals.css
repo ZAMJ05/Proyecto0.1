@@ -108,8 +108,14 @@ body {
   color: var(--foreground);
   font-family: var(--font-body), "Segoe UI", sans-serif;
   min-height: 100vh;
-  font-size: 14px;
-  line-height: 1.45;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  text-wrap: pretty;
+}
+
+.app-main {
+  overflow-x: clip;
 }
 
 ::selection {
@@ -132,6 +138,7 @@ body {
 /* ——— ServiceNow-style list / tables ——— */
 .table-shell {
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
   max-height: min(72vh, 780px);
   border: 1px solid var(--border);
   background: var(--surface);
@@ -154,8 +161,8 @@ body {
 }
 
 .table-shell table {
-  width: 100%;
-  min-width: 640px;
+  width: max(100%, 560px);
+  min-width: 560px;
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
@@ -167,8 +174,8 @@ body {
   z-index: 2;
   background: var(--list-header);
   border-bottom: 1px solid var(--border-strong);
-  padding: 0.55rem 0.75rem;
-  font-size: 0.7rem;
+  padding: 0.65rem 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -178,24 +185,26 @@ body {
 }
 
 .table-shell thead th:first-child {
-  padding-left: 0.9rem;
+  padding-left: 0.85rem;
 }
 
 .table-shell thead th:last-child {
-  padding-right: 0.9rem;
+  padding-right: 0.85rem;
 }
 
 .table-shell tbody td {
-  padding: 0.55rem 0.75rem;
+  padding: 0.65rem 0.7rem;
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
   color: var(--ink);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
   word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .table-shell tbody td:first-child {
-  padding-left: 0.9rem;
+  padding-left: 0.85rem;
   font-weight: 600;
 }
 
@@ -253,12 +262,90 @@ body {
   gap: 0.3rem;
 }
 
+/* Oculta columnas secundarias en media pantalla / móvil */
+@media (max-width: 1099px) {
+  .table-shell .hide-narrow,
+  .table-shell th.hide-narrow,
+  .table-shell td.hide-narrow {
+    display: none;
+  }
+
+  .table-shell table {
+    /* Preferir scroll horizontal antes que aplastar texto */
+    width: max(100%, 640px);
+    min-width: 640px;
+  }
+
+  .table-shell .col-lg {
+    width: 12rem;
+  }
+  .table-shell .col-md {
+    width: 9.5rem;
+  }
+  .table-shell .col-actions {
+    width: 7.5rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .table-shell {
+    max-height: min(68vh, 640px);
+    border-radius: var(--radius);
+  }
+
+  .table-shell table {
+    width: max(100%, 620px);
+    min-width: 620px;
+  }
+
+  .table-shell thead th,
+  .table-shell tbody td {
+    padding: 0.7rem 0.65rem;
+    font-size: 0.875rem;
+  }
+
+  .table-shell thead th {
+    font-size: 0.7rem;
+  }
+
+  .table-shell .hide-phone,
+  .table-shell th.hide-phone,
+  .table-shell td.hide-phone {
+    display: none;
+  }
+}
+
 .list-toolbar {
   border: 1px solid var(--border);
   background: var(--surface);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
-  padding: 0.65rem 0.85rem;
+  padding: 0.75rem;
+}
+
+.toolbar-extras {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+@media (min-width: 480px) {
+  .toolbar-extras {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .toolbar-extras {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .toolbar-extras {
+    display: contents;
+  }
 }
 
 .sn-module-header {
@@ -282,17 +369,18 @@ body {
 
 .sn-title {
   font-family: var(--font-display), var(--font-body), sans-serif;
-  font-size: 1.35rem;
+  font-size: clamp(1.15rem, 2.4vw, 1.4rem);
   font-weight: 650;
   letter-spacing: -0.01em;
   color: var(--ink);
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .sn-subtitle {
-  margin-top: 0.25rem;
+  margin-top: 0.3rem;
   max-width: 48rem;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
   color: var(--muted);
 }
 
@@ -304,10 +392,37 @@ body {
   background: var(--surface);
   color: var(--muted);
   border-radius: var(--radius);
-  padding: 0.35rem 0.7rem;
-  font-size: 0.75rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+.kanban-board {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.75rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.kanban-column {
+  display: flex;
+  width: min(300px, 86vw);
+  flex-shrink: 0;
+  flex-direction: column;
+  scroll-snap-align: start;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  box-shadow: var(--shadow);
+}
+
+@media (min-width: 1100px) {
+  .kanban-column {
+    width: 280px;
+  }
 }
 
 .sn-chip:hover {

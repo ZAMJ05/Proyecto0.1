@@ -194,7 +194,7 @@ function InventarioContent() {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               aria-label="Categoría"
-              className="w-full lg:w-40"
+              className="w-full min-h-10"
             >
               <option value="">Categoría</option>
               {ASSET_CATEGORIES.map((c) => (
@@ -207,7 +207,7 @@ function InventarioContent() {
               value={status}
               onChange={(e) => setStatus(e.target.value)}
               aria-label="Estado"
-              className="w-full lg:w-36"
+              className="w-full min-h-10"
             >
               <option value="">Estado</option>
               {ASSET_STATUSES.map((s) => (
@@ -220,7 +220,7 @@ function InventarioContent() {
               value={unassignedOnly ? "1" : ""}
               onChange={(e) => setUnassignedOnly(e.target.value === "1")}
               aria-label="Asignación"
-              className="w-full lg:w-40"
+              className="w-full min-h-10"
             >
               <option value="">Asignación</option>
               <option value="1">Sin asignar</option>
@@ -300,6 +300,7 @@ function InventarioContent() {
                   activeKey={list.sortKey}
                   direction={list.sortDir}
                   onSort={list.toggleSort}
+                  className="hide-phone"
                 />
                 <SortableTh
                   label="Serial / Inv."
@@ -328,6 +329,7 @@ function InventarioContent() {
                   activeKey={list.sortKey}
                   direction={list.sortDir}
                   onSort={list.toggleSort}
+                  className="hide-narrow"
                 />
                 <SortableTh
                   label="AnyDesk"
@@ -335,6 +337,7 @@ function InventarioContent() {
                   activeKey={list.sortKey}
                   direction={list.sortDir}
                   onSort={list.toggleSort}
+                  className="hide-narrow"
                 />
                 <th className="px-4 py-3">Acciones</th>
               </tr>
@@ -351,10 +354,13 @@ function InventarioContent() {
                     <p className="text-xs text-[var(--muted)]">
                       {asset.brand} {asset.model}
                     </p>
+                    <p className="mt-0.5 text-xs text-[var(--muted)] sm:hidden">
+                      {asset.category}
+                    </p>
                   </td>
-                  <td className="px-4 py-3">{asset.category}</td>
+                  <td className="hide-phone px-4 py-3">{asset.category}</td>
                   <td className="px-4 py-3">
-                    <p>{asset.serialNumber}</p>
+                    <p className="font-mono text-[13px]">{asset.serialNumber}</p>
                     <p className="text-xs text-[var(--muted)]">
                       {asset.inventoryNumber}
                     </p>
@@ -367,7 +373,7 @@ function InventarioContent() {
                       <span className="text-[var(--muted)]">Sin asignar</span>
                     )}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="hide-narrow px-4 py-3">
                     <p>{formatDate(asset.purchaseDate)}</p>
                     <p className="text-xs text-[var(--muted)]">
                       {asset.category === "Laptop"
@@ -375,7 +381,7 @@ function InventarioContent() {
                         : "Sin renovación"}
                     </p>
                   </td>
-                  <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
+                  <td className="hide-narrow px-4 py-3" onClick={(e) => e.stopPropagation()}>
                     {asset.category === "Laptop" ? (
                       <CopyableValue
                         value={asset.anydesk}
@@ -432,7 +438,7 @@ function InventarioContent() {
           </table>
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {list.pageItems.map((asset) => (
             <Card
               key={asset.id}

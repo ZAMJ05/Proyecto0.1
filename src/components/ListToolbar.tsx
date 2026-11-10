@@ -61,7 +61,7 @@ export function Pager({
       )}
     >
       {!compact && (
-        <p className="text-xs text-[var(--muted)]">
+        <p className="text-xs text-[var(--muted)] sm:text-sm">
           <span className="font-medium text-[var(--ink)]">
             {showingFrom}–{showingTo}
           </span>{" "}
@@ -72,7 +72,7 @@ export function Pager({
         <Button
           type="button"
           variant="secondary"
-          className="px-2 py-1.5"
+          className="min-h-9 px-2.5 py-1.5"
           disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
           aria-label="Página anterior"
@@ -93,7 +93,7 @@ export function Pager({
                 onClick={() => onPageChange(p)}
                 aria-current={p === page ? "page" : undefined}
                 className={cn(
-                  "min-w-8 rounded-lg px-2 py-1.5 text-xs font-semibold transition",
+                  "min-h-9 min-w-9 rounded-lg px-2 py-1.5 text-xs font-semibold transition sm:text-sm",
                   p === page
                     ? "bg-[var(--accent)] text-white shadow-sm"
                     : "bg-[var(--surface-2)] text-[var(--muted)] hover:bg-[var(--border)] hover:text-[var(--ink)]"
@@ -107,7 +107,7 @@ export function Pager({
         <Button
           type="button"
           variant="secondary"
-          className="px-2 py-1.5"
+          className="min-h-9 px-2.5 py-1.5"
           disabled={page >= totalPages}
           onClick={() => onPageChange(page + 1)}
           aria-label="Página siguiente"
@@ -151,7 +151,7 @@ export function ListToolbar({
   return (
     <div className="mb-3">
       <div className="list-toolbar">
-        <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
+        <div className="flex flex-col gap-2.5 xl:flex-row xl:items-center">
           <div className="relative min-w-0 flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
             <Input
@@ -159,52 +159,54 @@ export function ListToolbar({
               onChange={(e) => onNameChange(e.target.value)}
               placeholder={namePlaceholder}
               aria-label="Buscar"
-              className="pl-10"
+              className="min-h-10 pl-10 text-[15px]"
             />
           </div>
-          {extra}
-          <p className="shrink-0 text-xs text-[var(--muted)]">
-            {total === 0 ? (
-              "Sin resultados"
-            ) : (
-              <>
-                <span className="font-semibold text-[var(--ink)]">
-                  {showingFrom}–{showingTo}
-                </span>{" "}
-                de {total}
-                <span className="hidden sm:inline"> · 50 por página</span>
-              </>
-            )}
-          </p>
-          <div className="flex shrink-0 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface-2)] p-0.5">
-            <button
-              type="button"
-              onClick={() => onViewChange("list")}
-              className={cn(
-                "inline-flex items-center gap-1.5 rounded-[calc(var(--radius)-1px)] px-2.5 py-1.5 text-xs font-semibold transition",
-                view === "list"
-                  ? "bg-[var(--surface)] text-[var(--ink)] shadow-[var(--shadow)]"
-                  : "text-[var(--muted)] hover:text-[var(--ink)]"
+          {extra ? <div className="toolbar-extras">{extra}</div> : null}
+          <div className="flex flex-wrap items-center justify-between gap-2 xl:justify-end">
+            <p className="shrink-0 text-xs text-[var(--muted)] sm:text-sm">
+              {total === 0 ? (
+                "Sin resultados"
+              ) : (
+                <>
+                  <span className="font-semibold text-[var(--ink)]">
+                    {showingFrom}–{showingTo}
+                  </span>{" "}
+                  de {total}
+                  <span className="hidden sm:inline"> · 50 por página</span>
+                </>
               )}
-              title="Vista en lista"
-            >
-              <List className="h-3.5 w-3.5" />
-              Lista
-            </button>
-            <button
-              type="button"
-              onClick={() => onViewChange("grid")}
-              className={cn(
-                "inline-flex items-center gap-1.5 rounded-[calc(var(--radius)-1px)] px-2.5 py-1.5 text-xs font-semibold transition",
-                view === "grid"
-                  ? "bg-[var(--surface)] text-[var(--ink)] shadow-[var(--shadow)]"
-                  : "text-[var(--muted)] hover:text-[var(--ink)]"
-              )}
-              title="Vista en tarjetas"
-            >
-              <LayoutGrid className="h-3.5 w-3.5" />
-              Tarjetas
-            </button>
+            </p>
+            <div className="flex shrink-0 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface-2)] p-0.5">
+              <button
+                type="button"
+                onClick={() => onViewChange("list")}
+                className={cn(
+                  "inline-flex min-h-9 items-center gap-1.5 rounded-[calc(var(--radius)-1px)] px-3 py-1.5 text-xs font-semibold transition sm:text-sm",
+                  view === "list"
+                    ? "bg-[var(--surface)] text-[var(--ink)] shadow-[var(--shadow)]"
+                    : "text-[var(--muted)] hover:text-[var(--ink)]"
+                )}
+                title="Vista en lista"
+              >
+                <List className="h-3.5 w-3.5" />
+                Lista
+              </button>
+              <button
+                type="button"
+                onClick={() => onViewChange("grid")}
+                className={cn(
+                  "inline-flex min-h-9 items-center gap-1.5 rounded-[calc(var(--radius)-1px)] px-3 py-1.5 text-xs font-semibold transition sm:text-sm",
+                  view === "grid"
+                    ? "bg-[var(--surface)] text-[var(--ink)] shadow-[var(--shadow)]"
+                    : "text-[var(--muted)] hover:text-[var(--ink)]"
+                )}
+                title="Vista en tarjetas"
+              >
+                <LayoutGrid className="h-3.5 w-3.5" />
+                Tarjetas
+              </button>
+            </div>
           </div>
         </div>
       </div>

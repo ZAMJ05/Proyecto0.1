@@ -199,7 +199,7 @@ export default function EquiposPage() {
                     </p>
                   </td>
                   <td className="px-4 py-3">
-                    <p>{asset.serialNumber}</p>
+                    <p className="font-mono text-[13px]">{asset.serialNumber}</p>
                     <p className="text-xs text-[var(--muted)]">{asset.inventoryNumber}</p>
                   </td>
                   <td className="px-4 py-3">

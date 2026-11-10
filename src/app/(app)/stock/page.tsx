@@ -220,7 +220,7 @@ export default function StockPage() {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             aria-label="Categoría"
-            className="w-full lg:w-48"
+            className="w-full min-h-10"
           >
             <option value="">Todas las categorías</option>
             {categoriesInStock.map((c) => (
@@ -251,7 +251,7 @@ export default function StockPage() {
       {list.total === 0 ? (
         <EmptyState text="No hay equipos listos para asignar con esos filtros." />
       ) : list.view === "grid" ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {list.pageItems.map((asset) => (
             <Card key={asset.id}>
               <div className="mb-3 flex items-start justify-between gap-2">

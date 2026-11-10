@@ -307,12 +307,9 @@ export default function TableroPage() {
         kanbanColumns.every((col) => col.items.length === 0) ? (
           <EmptyState text="No hay equipos con esa búsqueda o categoría." />
         ) : (
-          <div className="flex gap-3 overflow-x-auto pb-3">
+          <div className="kanban-board">
             {kanbanColumns.map((col) => (
-              <section
-                key={col.category}
-                className="flex w-[280px] shrink-0 flex-col rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-2)] shadow-[var(--shadow)]"
-              >
+              <section key={col.category} className="kanban-column">
                 <header className="sticky top-0 z-[1] flex items-center justify-between gap-2 border-b border-[var(--border)] bg-[var(--list-header)] px-3 py-2.5">
                   <div>
                     <p className="text-sm font-bold text-[var(--ink)]">
@@ -410,6 +407,7 @@ export default function TableroPage() {
                     activeKey={list.sortKey}
                     direction={list.sortDir}
                     onSort={list.toggleSort}
+                    className="hide-phone"
                   />
                   <SortableTh
                     label="Serie"
@@ -432,7 +430,7 @@ export default function TableroPage() {
                     direction={list.sortDir}
                     onSort={list.toggleSort}
                   />
-                  {role === "ADMIN" && <th>Acción</th>}
+                  {role === "ADMIN" && <th className="hide-narrow">Acción</th>}
                 </tr>
               </thead>
               <tbody>
@@ -448,10 +446,15 @@ export default function TableroPage() {
                             ? ` · Compra ${formatDate(asset.purchaseDate)}`
                             : ""}
                         </p>
+                        <p className="mt-0.5 text-xs text-[var(--muted)] sm:hidden">
+                          {CATEGORY_LABELS[asset.category] || asset.category}
+                        </p>
                       </td>
-                      <td>{CATEGORY_LABELS[asset.category] || asset.category}</td>
+                      <td className="hide-phone">
+                        {CATEGORY_LABELS[asset.category] || asset.category}
+                      </td>
                       <td>
-                        <p>{asset.serialNumber}</p>
+                        <p className="font-mono text-[13px]">{asset.serialNumber}</p>
                         <p className="text-xs text-[var(--muted)]">
                           {asset.inventoryNumber}
                         </p>
@@ -467,7 +470,7 @@ export default function TableroPage() {
                         )}
                       </td>
                       {role === "ADMIN" && (
-                        <td>
+                        <td className="hide-narrow">
                           {canAssign ? (
                             <Button
                               type="button"

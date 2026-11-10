@@ -50,7 +50,7 @@ export function SortableTh({
             : `Ordenar por ${label}`
         }
       >
-        <span className="truncate">{label}</span>
+        <span className="whitespace-nowrap">{label}</span>
         <Icon
           className={cn(
             "h-3.5 w-3.5 shrink-0",

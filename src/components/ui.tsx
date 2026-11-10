@@ -25,7 +25,7 @@ export function Card({
       id={id}
       onClick={onClick}
       className={cn(
-        "rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[var(--shadow)] sm:p-5",
+        "rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-3.5 shadow-[var(--shadow)] sm:p-4 lg:p-5",
         onClick &&
           "cursor-pointer transition duration-150 hover:border-[var(--accent)] hover:bg-[var(--row-hover)]",
         className
@@ -65,7 +65,7 @@ export function Button({
 }
 
 const fieldClass =
-  "w-full rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--muted)] hover:border-[var(--border-strong)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--ring)]";
+  "w-full min-h-10 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-[15px] text-[var(--ink)] outline-none transition placeholder:text-[var(--muted)] hover:border-[var(--border-strong)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--ring)]";
 
 export function Input({
   className,
@@ -123,7 +123,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-[0.25rem] px-1.5 py-0.5 text-[11px] font-bold tracking-wide",
+        "inline-flex items-center rounded-[0.25rem] px-1.5 py-0.5 text-xs font-bold tracking-wide",
         tones[tone]
       )}
     >

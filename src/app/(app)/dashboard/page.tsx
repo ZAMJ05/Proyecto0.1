@@ -368,7 +368,7 @@ export default function DashboardPage() {
         subtitle="Estado del inventario de un vistazo. Toca cualquier número para ir al detalle."
       />
 
-      <section className="animate-fade grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="animate-fade grid gap-2 grid-cols-2 xl:grid-cols-4">
         {[
           {
             href: "/equipos",
@@ -458,7 +458,7 @@ export default function DashboardPage() {
       </section>
 
       {/* Inventario general */}
-      <section className="grid gap-4 lg:grid-cols-[1.35fr_0.65fr]">
+      <section className="grid gap-4 xl:grid-cols-[1.35fr_0.65fr]">
         <Card className="animate-rise stagger-1 !p-5">
           <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
             <div>

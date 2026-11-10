@@ -364,7 +364,7 @@ export default function PuestosPage() {
       {list.total === 0 ? (
         <EmptyState text="No hay puestos con esos filtros." />
       ) : list.view === "grid" ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {list.pageItems.map((p) => (
             <Card key={p.id}>
               <div className="mb-2 flex items-start justify-between gap-2">
