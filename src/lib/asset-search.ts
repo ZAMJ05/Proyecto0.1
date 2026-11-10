@@ -1,3 +1,7 @@
+/** Placeholder único para la barra de búsqueda de equipos. */
+export const ASSET_SEARCH_PLACEHOLDER =
+  "Buscar por nombre, marca, modelo, serie, inventario o usuario...";
+
 /** Texto unificado para la barra de búsqueda de equipos. */
 export function assetSearchText(asset: {
   name?: string | null;

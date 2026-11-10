@@ -1,12 +1,27 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { AssetPreview, type AssetListItem } from "@/components/AssetPreview";
+import { Pencil } from "lucide-react";
+import {
+  AssetPreview,
+  AssetPreviewButton,
+  type AssetListItem,
+} from "@/components/AssetPreview";
+import { AssetEditModal } from "@/components/AssetEditModal";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { SortableTh } from "@/components/SortableTh";
-import { Badge, EmptyState, PageHeader, statusTone } from "@/components/ui";
+import {
+  Badge,
+  Button,
+  EmptyState,
+  PageHeader,
+  statusTone,
+} from "@/components/ui";
 import { useListControls } from "@/hooks/useListControls";
-import { assetSearchText } from "@/lib/asset-search";
+import {
+  ASSET_SEARCH_PLACEHOLDER,
+  assetSearchText,
+} from "@/lib/asset-search";
 
 type Vista = "activas" | "inactivas" | "monitores";
 
@@ -26,28 +41,29 @@ export default function EquiposPage() {
   const [loading, setLoading] = useState(true);
   const [vista, setVista] = useState<Vista>("activas");
   const [previewId, setPreviewId] = useState<string | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [role, setRole] = useState<"ADMIN" | "USER">("USER");
+
+  async function load() {
+    setLoading(true);
+    const [laptopRes, monitorRes, meRes] = await Promise.all([
+      fetch("/api/assets?category=Laptop"),
+      fetch("/api/assets?category=Monitor"),
+      fetch("/api/auth/me"),
+    ]);
+    const [laptopData, monitorData, meData] = await Promise.all([
+      laptopRes.json(),
+      monitorRes.json(),
+      meRes.json(),
+    ]);
+    setLaptops(laptopData.assets || []);
+    setMonitors(monitorData.assets || []);
+    setRole(meData.user?.role || "USER");
+    setLoading(false);
+  }
 
   useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      setLoading(true);
-      const [laptopRes, monitorRes] = await Promise.all([
-        fetch("/api/assets?category=Laptop"),
-        fetch("/api/assets?category=Monitor"),
-      ]);
-      const [laptopData, monitorData] = await Promise.all([
-        laptopRes.json(),
-        monitorRes.json(),
-      ]);
-      if (cancelled) return;
-      setLaptops(laptopData.assets || []);
-      setMonitors(monitorData.assets || []);
-      setLoading(false);
-    }
     load();
-    return () => {
-      cancelled = true;
-    };
   }, []);
 
   const counts = useMemo(
@@ -60,8 +76,10 @@ export default function EquiposPage() {
   );
 
   const visible = useMemo(() => {
-    if (vista === "activas") return laptops.filter((asset) => asset.status === "Activo");
-    if (vista === "inactivas") return laptops.filter((asset) => asset.status !== "Activo");
+    if (vista === "activas")
+      return laptops.filter((asset) => asset.status === "Activo");
+    if (vista === "inactivas")
+      return laptops.filter((asset) => asset.status !== "Activo");
     return monitors;
   }, [vista, laptops, monitors]);
 
@@ -118,33 +136,55 @@ export default function EquiposPage() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
-        namePlaceholder="Equipo, marca, modelo, serie, inventario o usuario..."
+        namePlaceholder={ASSET_SEARCH_PLACEHOLDER}
       />
 
       {loading ? (
-        <p className="text-sm text-[var(--muted)]">Cargando laptops y monitores...</p>
+        <p className="text-sm text-[var(--muted)]">
+          Cargando laptops y monitores...
+        </p>
       ) : list.total === 0 ? (
         <EmptyState text="No hay equipos con esa búsqueda." />
       ) : list.view === "grid" ? (
         <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
           {list.pageItems.map((asset) => (
-            <button
+            <div
               key={asset.id}
-              type="button"
-              onClick={() => setPreviewId(asset.id)}
-              className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-3.5 text-left shadow-[var(--shadow)] transition hover:border-[var(--accent)] hover:bg-[var(--row-hover)]"
+              className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-3.5 shadow-[var(--shadow)]"
             >
-              <div className="mb-2 flex items-start justify-between gap-2">
-                <p className="font-semibold">{asset.name}</p>
-                <Badge tone={statusTone(asset.status)}>{asset.status}</Badge>
-              </div>
-              <p className="text-xs text-[var(--muted)]">{asset.serialNumber}</p>
-              <p className="mt-2 text-sm">
-                {assignee(asset) || (
-                  <span className="text-[var(--muted)]">Sin asignar</span>
-                )}
-              </p>
-            </button>
+              <button
+                type="button"
+                onClick={() => setPreviewId(asset.id)}
+                className="w-full text-left transition hover:opacity-90"
+              >
+                <div className="mb-2 flex items-start justify-between gap-2">
+                  <p className="font-semibold">{asset.name}</p>
+                  <Badge tone={statusTone(asset.status)}>{asset.status}</Badge>
+                </div>
+                <p className="text-xs text-[var(--muted)]">
+                  {asset.serialNumber}
+                </p>
+                <p className="mt-2 text-sm">
+                  {assignee(asset) || (
+                    <span className="text-[var(--muted)]">Sin asignar</span>
+                  )}
+                </p>
+              </button>
+              {role === "ADMIN" && (
+                <div className="mt-3 flex gap-2">
+                  <AssetPreviewButton onClick={() => setPreviewId(asset.id)} />
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="px-2 py-1"
+                    title="Editar"
+                    onClick={() => setEditId(asset.id)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+            </div>
           ))}
         </div>
       ) : (
@@ -180,6 +220,7 @@ export default function EquiposPage() {
                   direction={list.sortDir}
                   onSort={list.toggleSort}
                 />
+                {role === "ADMIN" && <th>Acciones</th>}
               </tr>
             </thead>
             <tbody>
@@ -200,10 +241,14 @@ export default function EquiposPage() {
                   </td>
                   <td className="px-4 py-3">
                     <p className="font-mono text-[13px]">{asset.serialNumber}</p>
-                    <p className="text-xs text-[var(--muted)]">{asset.inventoryNumber}</p>
+                    <p className="text-xs text-[var(--muted)]">
+                      {asset.inventoryNumber}
+                    </p>
                   </td>
                   <td className="px-4 py-3">
-                    <Badge tone={statusTone(asset.status)}>{asset.status}</Badge>
+                    <Badge tone={statusTone(asset.status)}>
+                      {asset.status}
+                    </Badge>
                   </td>
                   <td className="px-4 py-3">
                     {assignee(asset) ? (
@@ -219,6 +264,27 @@ export default function EquiposPage() {
                       <span className="text-[var(--muted)]">Sin asignar</span>
                     )}
                   </td>
+                  {role === "ADMIN" && (
+                    <td
+                      className="px-4 py-3"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="row-actions">
+                        <AssetPreviewButton
+                          onClick={() => setPreviewId(asset.id)}
+                        />
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          className="px-2 py-1"
+                          title="Editar"
+                          onClick={() => setEditId(asset.id)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -235,8 +301,17 @@ export default function EquiposPage() {
         total={list.total}
       />
 
-      {previewId && (
-        <AssetPreview assetId={previewId} onClose={() => setPreviewId(null)} />
+      <AssetPreview
+        assetId={previewId}
+        onClose={() => setPreviewId(null)}
+        onSaved={load}
+      />
+      {editId && (
+        <AssetEditModal
+          assetId={editId}
+          onClose={() => setEditId(null)}
+          onSaved={load}
+        />
       )}
     </div>
   );

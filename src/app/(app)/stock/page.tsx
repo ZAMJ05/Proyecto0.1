@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Plus, Trash2, UserPlus } from "lucide-react";
+import { Pencil, Plus, Trash2, UserPlus } from "lucide-react";
 import {
   Badge,
   Button,
@@ -12,6 +12,11 @@ import {
   Select,
   statusTone,
 } from "@/components/ui";
+import {
+  AssetPreview,
+  AssetPreviewButton,
+} from "@/components/AssetPreview";
+import { AssetEditModal } from "@/components/AssetEditModal";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
@@ -21,7 +26,10 @@ import {
   assignAssetToEmployee,
   useActiveEmployees,
 } from "@/components/QuickAssign";
-import { assetSearchText } from "@/lib/asset-search";
+import {
+  ASSET_SEARCH_PLACEHOLDER,
+  assetSearchText,
+} from "@/lib/asset-search";
 import { CATEGORY_LABELS } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
 
@@ -46,6 +54,8 @@ export default function StockPage() {
   const [assigningId, setAssigningId] = useState<string | null>(null);
   const [modalAsset, setModalAsset] = useState<Asset | null>(null);
   const [flash, setFlash] = useState("");
+  const [previewId, setPreviewId] = useState<string | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
   const { employees, loading: loadingEmployees } = useActiveEmployees();
 
   async function load() {
@@ -241,7 +251,7 @@ export default function StockPage() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
-        namePlaceholder="Nombre, marca, modelo, serie o inventario..."
+        namePlaceholder={ASSET_SEARCH_PLACEHOLDER}
         sortOptions={list.sortOptions}
         sortKey={list.sortKey}
         sortDir={list.sortDir}
@@ -284,34 +294,46 @@ export default function StockPage() {
               {asset.notes && (
                 <p className="mt-3 text-xs text-[var(--muted)]">{asset.notes}</p>
               )}
-              {role === "ADMIN" && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Button
-                    className="px-2 py-1"
-                    disabled={assigningId === asset.id}
-                    onClick={() => quickAssign(asset)}
-                    title={
-                      selectedUser
-                        ? `Asignar a ${selectedUser.name}`
-                        : "Elegir usuario y asignar"
-                    }
-                  >
-                    <UserPlus className="h-4 w-4" />
-                    {assigningId === asset.id
-                      ? "..."
-                      : selectedUser
-                        ? `Asignar a ${selectedUser.name.split(" ")[0]}`
-                        : "Asignar"}
-                  </Button>
-                  <Button
-                    variant="danger"
-                    className="px-2 py-1"
-                    onClick={() => removeAsset(asset)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              )}
+              <div className="mt-3 flex flex-wrap gap-2">
+                <AssetPreviewButton onClick={() => setPreviewId(asset.id)} />
+                {role === "ADMIN" && (
+                  <>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="px-2 py-1"
+                      title="Editar"
+                      onClick={() => setEditId(asset.id)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      className="px-2 py-1"
+                      disabled={assigningId === asset.id}
+                      onClick={() => quickAssign(asset)}
+                      title={
+                        selectedUser
+                          ? `Asignar a ${selectedUser.name}`
+                          : "Elegir usuario y asignar"
+                      }
+                    >
+                      <UserPlus className="h-4 w-4" />
+                      {assigningId === asset.id
+                        ? "..."
+                        : selectedUser
+                          ? `Asignar a ${selectedUser.name.split(" ")[0]}`
+                          : "Asignar"}
+                    </Button>
+                    <Button
+                      variant="danger"
+                      className="px-2 py-1"
+                      onClick={() => removeAsset(asset)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </>
+                )}
+              </div>
             </Card>
           ))}
         </div>
@@ -356,9 +378,7 @@ export default function StockPage() {
                   onSort={list.toggleSort}
                 />
                 <th className="px-4 py-3 text-left">Estado</th>
-                {role === "ADMIN" && (
-                  <th className="px-4 py-3 text-left">Acciones</th>
-                )}
+                <th className="px-4 py-3 text-left">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -379,37 +399,51 @@ export default function StockPage() {
                   <td className="px-4 py-3">
                     <Badge tone={statusTone(asset.status)}>{asset.status}</Badge>
                   </td>
-                  {role === "ADMIN" && (
-                    <td className="px-4 py-3">
-                      <div className="row-actions">
-                        <Button
-                          className="px-2 py-1"
-                          disabled={assigningId === asset.id}
-                          onClick={() => quickAssign(asset)}
-                          title={
-                            selectedUser
-                              ? `Asignar a ${selectedUser.name}`
-                              : "Elegir usuario y asignar"
-                          }
-                        >
-                          <UserPlus className="h-4 w-4" />
-                          {assigningId === asset.id
-                            ? "..."
-                            : selectedUser
-                              ? "Asignar"
-                              : "Asignar"}
-                        </Button>
-                        <Button
-                          variant="danger"
-                          className="px-2 py-1"
-                          title="Eliminar del inventario"
-                          onClick={() => removeAsset(asset)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </td>
-                  )}
+                  <td className="px-4 py-3">
+                    <div className="row-actions">
+                      <AssetPreviewButton
+                        onClick={() => setPreviewId(asset.id)}
+                      />
+                      {role === "ADMIN" && (
+                        <>
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            className="px-2 py-1"
+                            title="Editar"
+                            onClick={() => setEditId(asset.id)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            className="px-2 py-1"
+                            disabled={assigningId === asset.id}
+                            onClick={() => quickAssign(asset)}
+                            title={
+                              selectedUser
+                                ? `Asignar a ${selectedUser.name}`
+                                : "Elegir usuario y asignar"
+                            }
+                          >
+                            <UserPlus className="h-4 w-4" />
+                            {assigningId === asset.id
+                              ? "..."
+                              : selectedUser
+                                ? "Asignar"
+                                : "Asignar"}
+                          </Button>
+                          <Button
+                            variant="danger"
+                            className="px-2 py-1"
+                            title="Eliminar del inventario"
+                            onClick={() => removeAsset(asset)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -441,6 +475,19 @@ export default function StockPage() {
           await load();
         }}
       />
+
+      <AssetPreview
+        assetId={previewId}
+        onClose={() => setPreviewId(null)}
+        onSaved={load}
+      />
+      {editId && (
+        <AssetEditModal
+          assetId={editId}
+          onClose={() => setEditId(null)}
+          onSaved={load}
+        />
+      )}
     </div>
   );
 }

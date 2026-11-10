@@ -1,16 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Pencil, Search } from "lucide-react";
 import {
   Badge,
   Button,
   Card,
   EmptyState,
+  Input,
   PageHeader,
 } from "@/components/ui";
+import {
+  AssetPreview,
+  AssetPreviewButton,
+} from "@/components/AssetPreview";
+import { AssetEditModal } from "@/components/AssetEditModal";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
+import {
+  ASSET_SEARCH_PLACEHOLDER,
+  matchesSearchQuery,
+} from "@/lib/asset-search";
 import { formatDate } from "@/lib/utils";
 
 type Renewal = {
@@ -46,6 +57,9 @@ export default function CicloVidaPage() {
   const [maintenances, setMaintenances] = useState<Maintenance[]>([]);
   const [role, setRole] = useState<"ADMIN" | "USER">("USER");
   const [summary, setSummary] = useState({ maintenanceDue: 0, renewalsDue: 0 });
+  const [query, setQuery] = useState("");
+  const [previewId, setPreviewId] = useState<string | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
 
   async function load() {
     const [lifeRes, meRes] = await Promise.all([
@@ -109,7 +123,29 @@ export default function CicloVidaPage() {
     return "success" as const;
   }
 
-  const renewalList = useListControls(renewals, {
+  const filteredRenewals = useMemo(
+    () =>
+      renewals.filter((r) =>
+        matchesSearchQuery(
+          `${r.name} ${r.serialNumber} ${r.category} ${r.renewalStatus}`,
+          query
+        )
+      ),
+    [renewals, query]
+  );
+
+  const filteredMaintenances = useMemo(
+    () =>
+      maintenances.filter((m) =>
+        matchesSearchQuery(
+          `${m.asset.name} ${m.asset.serialNumber} ${m.asset.category} ${m.status}`,
+          query
+        )
+      ),
+    [maintenances, query]
+  );
+
+  const renewalList = useListControls(filteredRenewals, {
     storageKey: "ciclo-renovaciones-p25",
     defaultView: "list",
     getName: (r) => r.name,
@@ -134,7 +170,7 @@ export default function CicloVidaPage() {
     },
   });
 
-  const maintList = useListControls(maintenances, {
+  const maintList = useListControls(filteredMaintenances, {
     storageKey: "ciclo-mantenimientos-p25",
     defaultView: "list",
     getName: (m) => m.asset.name,
@@ -182,14 +218,28 @@ export default function CicloVidaPage() {
         </Card>
       </div>
 
+      <div className="list-toolbar mb-4">
+        <div className="relative min-w-0">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={ASSET_SEARCH_PLACEHOLDER}
+            aria-label="Buscar"
+            className="min-h-10 pl-10 text-[15px]"
+          />
+        </div>
+      </div>
+
       <div className="grid gap-6 xl:grid-cols-2">
         <section>
           <h2 className="mb-3 font-[family-name:var(--font-display)] text-2xl">
             Renovación de laptops (4 años)
           </h2>
           <ListToolbar
-            name={renewalList.name}
-            onNameChange={renewalList.setName}
+            name=""
+            onNameChange={() => {}}
+            showSearch={false}
             view={renewalList.view}
             onViewChange={renewalList.setView}
             page={renewalList.page}
@@ -238,15 +288,28 @@ export default function CicloVidaPage() {
                       {item.assignments[0]?.employee.name || "—"}
                     </p>
                   </div>
-                  {role === "ADMIN" && item.renewalStatus === "Vencido" && (
-                    <Button
-                      className="mt-3"
-                      variant="secondary"
-                      onClick={() => confirmInactive(item)}
-                    >
-                      Confirmar como inactiva
-                    </Button>
-                  )}
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <AssetPreviewButton onClick={() => setPreviewId(item.id)} />
+                    {role === "ADMIN" && (
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        className="px-2 py-1"
+                        title="Editar"
+                        onClick={() => setEditId(item.id)}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    )}
+                    {role === "ADMIN" && item.renewalStatus === "Vencido" && (
+                      <Button
+                        variant="secondary"
+                        onClick={() => confirmInactive(item)}
+                      >
+                        Confirmar como inactiva
+                      </Button>
+                    )}
+                  </div>
                 </Card>
               ))}
             </div>
@@ -283,9 +346,7 @@ export default function CicloVidaPage() {
                       direction={renewalList.sortDir}
                       onSort={renewalList.toggleSort}
                     />
-                    {role === "ADMIN" && (
-                      <th className="px-4 py-3 text-left">Acción</th>
-                    )}
+                    <th className="px-4 py-3 text-left">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -299,21 +360,34 @@ export default function CicloVidaPage() {
                           {item.renewalStatus}
                         </Badge>
                       </td>
-                      {role === "ADMIN" && (
-                        <td className="px-4 py-3">
-                          {item.renewalStatus === "Vencido" ? (
+                      <td className="px-4 py-3">
+                        <div className="row-actions">
+                          <AssetPreviewButton
+                            onClick={() => setPreviewId(item.id)}
+                          />
+                          {role === "ADMIN" && (
                             <Button
-                              className="px-2 py-1"
+                              type="button"
                               variant="secondary"
-                              onClick={() => confirmInactive(item)}
+                              className="px-2 py-1"
+                              title="Editar"
+                              onClick={() => setEditId(item.id)}
                             >
-                              Confirmar inactiva
+                              <Pencil className="h-4 w-4" />
                             </Button>
-                          ) : (
-                            <span className="text-xs text-[var(--muted)]">—</span>
                           )}
-                        </td>
-                      )}
+                          {role === "ADMIN" &&
+                            item.renewalStatus === "Vencido" && (
+                              <Button
+                                className="px-2 py-1"
+                                variant="secondary"
+                                onClick={() => confirmInactive(item)}
+                              >
+                                Confirmar inactiva
+                              </Button>
+                            )}
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -335,8 +409,9 @@ export default function CicloVidaPage() {
             Mantenimiento de laptops (6 meses)
           </h2>
           <ListToolbar
-            name={maintList.name}
-            onNameChange={maintList.setName}
+            name=""
+            onNameChange={() => {}}
+            showSearch={false}
             view={maintList.view}
             onViewChange={maintList.setView}
             page={maintList.page}
@@ -378,11 +453,27 @@ export default function CicloVidaPage() {
                         {item.asset.assignments[0]?.employee.name || "—"}
                       </p>
                     </div>
-                    {role === "ADMIN" && (
-                      <Button onClick={() => completeMaintenance(item.id)}>
-                        Marcar completado
-                      </Button>
-                    )}
+                    <div className="flex flex-wrap gap-2">
+                      <AssetPreviewButton
+                        onClick={() => setPreviewId(item.asset.id)}
+                      />
+                      {role === "ADMIN" && (
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          className="px-2 py-1"
+                          title="Editar"
+                          onClick={() => setEditId(item.asset.id)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {role === "ADMIN" && (
+                        <Button onClick={() => completeMaintenance(item.id)}>
+                          Marcar completado
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </Card>
               ))}
@@ -420,9 +511,7 @@ export default function CicloVidaPage() {
                       direction={maintList.sortDir}
                       onSort={maintList.toggleSort}
                     />
-                    {role === "ADMIN" && (
-                      <th className="px-4 py-3 text-left">Acción</th>
-                    )}
+                    <th className="px-4 py-3 text-left">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -438,16 +527,32 @@ export default function CicloVidaPage() {
                           {item.status}
                         </Badge>
                       </td>
-                      {role === "ADMIN" && (
-                        <td className="px-4 py-3">
-                          <Button
-                            className="px-2 py-1"
-                            onClick={() => completeMaintenance(item.id)}
-                          >
-                            Completar
-                          </Button>
-                        </td>
-                      )}
+                      <td className="px-4 py-3">
+                        <div className="row-actions">
+                          <AssetPreviewButton
+                            onClick={() => setPreviewId(item.asset.id)}
+                          />
+                          {role === "ADMIN" && (
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              className="px-2 py-1"
+                              title="Editar"
+                              onClick={() => setEditId(item.asset.id)}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                          )}
+                          {role === "ADMIN" && (
+                            <Button
+                              className="px-2 py-1"
+                              onClick={() => completeMaintenance(item.id)}
+                            >
+                              Completar
+                            </Button>
+                          )}
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -464,6 +569,19 @@ export default function CicloVidaPage() {
           />
         </section>
       </div>
+
+      <AssetPreview
+        assetId={previewId}
+        onClose={() => setPreviewId(null)}
+        onSaved={load}
+      />
+      {editId && (
+        <AssetEditModal
+          assetId={editId}
+          onClose={() => setEditId(null)}
+          onSaved={load}
+        />
+      )}
     </div>
   );
 }

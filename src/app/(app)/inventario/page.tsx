@@ -17,6 +17,7 @@ import {
   AssetPreview,
   AssetPreviewButton,
 } from "@/components/AssetPreview";
+import { AssetEditModal } from "@/components/AssetEditModal";
 import { CopyableValue } from "@/components/CopyableValue";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { SortableTh } from "@/components/SortableTh";
@@ -25,7 +26,10 @@ import {
   QuickAssignModal,
   useActiveEmployees,
 } from "@/components/QuickAssign";
-import { assetSearchText } from "@/lib/asset-search";
+import {
+  ASSET_SEARCH_PLACEHOLDER,
+  assetSearchText,
+} from "@/lib/asset-search";
 import { ASSET_CATEGORIES, ASSET_STATUSES, CATEGORY_LABELS } from "@/lib/constants";
 import { formatDate, toInputDate } from "@/lib/utils";
 
@@ -57,8 +61,8 @@ function InventarioContent() {
   const [role, setRole] = useState<"ADMIN" | "USER">("USER");
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(searchParams.get("alta") === "1");
-  const [editing, setEditing] = useState<Asset | null>(null);
   const [previewId, setPreviewId] = useState<string | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
   const [assignAsset, setAssignAsset] = useState<Asset | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [category, setCategory] = useState(searchParams.get("category") || "");
@@ -127,20 +131,17 @@ function InventarioContent() {
   async function saveAsset(values: AssetFormValues) {
     setSubmitting(true);
     try {
-      const url = editing ? `/api/assets/${editing.id}` : "/api/assets";
-      const method = editing ? "PUT" : "POST";
-      const res = await fetch(url, {
-        method,
+      const res = await fetch("/api/assets", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "No se pudo guardar");
-      if (!editing && data.createdCount > 1) {
+      if (data.createdCount > 1) {
         alert(`Se registraron ${data.createdCount} productos correctamente.`);
       }
       setShowForm(false);
-      setEditing(null);
       await load();
     } finally {
       setSubmitting(false);
@@ -169,7 +170,6 @@ function InventarioContent() {
             {role === "ADMIN" && (
               <Button
                 onClick={() => {
-                  setEditing(null);
                   setShowForm(true);
                   window.setTimeout(() => {
                     document.getElementById("alta-equipo")?.scrollIntoView({
@@ -237,7 +237,7 @@ function InventarioContent() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
-        namePlaceholder="Nombre, marca, modelo, serie, inventario, usuario o AnyDesk..."
+        namePlaceholder={ASSET_SEARCH_PLACEHOLDER}
         sortOptions={list.sortOptions}
         sortKey={list.sortKey}
         sortDir={list.sortDir}
@@ -247,32 +247,12 @@ function InventarioContent() {
       {showForm && role === "ADMIN" && (
         <Card id="alta-equipo" className="mb-6 animate-fade">
           <h2 className="mb-4 font-[family-name:var(--font-display)] text-xl">
-            {editing ? "Editar equipo" : "Nuevo equipo en stock"}
+            Nuevo equipo en stock
           </h2>
           <AssetForm
-            initial={
-              editing
-                ? {
-                    name: editing.name,
-                    category: editing.category,
-                    brand: editing.brand,
-                    model: editing.model,
-                    serialNumber: editing.serialNumber,
-                    inventoryNumber: editing.inventoryNumber,
-                    status: editing.status,
-                    purchaseDate: toInputDate(editing.purchaseDate),
-                    renewalDate: toInputDate(editing.renewalDate),
-                    anydesk: editing.anydesk || "",
-                    notes: editing.notes || "",
-                  }
-                : undefined
-            }
-            mode={editing ? "edit" : "create"}
+            mode="create"
             submitting={submitting}
-            onCancel={() => {
-              setShowForm(false);
-              setEditing(null);
-            }}
+            onCancel={() => setShowForm(false)}
             onSubmit={saveAsset}
           />
         </Card>
@@ -414,10 +394,8 @@ function InventarioContent() {
                           <Button
                             variant="secondary"
                             className="px-2 py-1"
-                            onClick={() => {
-                              setEditing(asset);
-                              setShowForm(true);
-                            }}
+                            title="Editar"
+                            onClick={() => setEditId(asset.id)}
                           >
                             <Pencil className="h-4 w-4" />
                           </Button>
@@ -502,10 +480,8 @@ function InventarioContent() {
                     <Button
                       variant="secondary"
                       className="px-2 py-1"
-                      onClick={() => {
-                        setEditing(asset);
-                        setShowForm(true);
-                      }}
+                      title="Editar"
+                      onClick={() => setEditId(asset.id)}
                     >
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -547,15 +523,15 @@ function InventarioContent() {
       <AssetPreview
         assetId={previewId}
         onClose={() => setPreviewId(null)}
-        onEdit={
-          role === "ADMIN"
-            ? (a) => {
-                setEditing(a as Asset);
-                setShowForm(true);
-              }
-            : undefined
-        }
+        onSaved={load}
       />
+      {editId && (
+        <AssetEditModal
+          assetId={editId}
+          onClose={() => setEditId(null)}
+          onSaved={load}
+        />
+      )}
     </div>
   );
 }

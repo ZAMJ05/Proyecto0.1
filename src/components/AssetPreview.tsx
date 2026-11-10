@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Eye, X, User, Wrench, Activity, Laptop } from "lucide-react";
+import { Eye, Pencil, X, User, Wrench, Activity, Laptop } from "lucide-react";
 import {
   Badge,
   Button,
   statusTone,
 } from "@/components/ui";
+import { AssetEditModal } from "@/components/AssetEditModal";
 import { CopyableValue } from "@/components/CopyableValue";
 import { formatDate } from "@/lib/utils";
 import { CATEGORY_LABELS } from "@/lib/constants";
@@ -102,19 +103,41 @@ export function AssetPreview({
   assetId,
   onClose,
   onEdit,
+  onSaved,
 }: {
   assetId: string | null;
   onClose: () => void;
+  /** @deprecated Prefer built-in admin edit via AssetEditModal */
   onEdit?: (asset: AssetListItem) => void;
+  onSaved?: () => void;
 }) {
   const [asset, setAsset] = useState<AssetDetail | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [reloadToken, setReloadToken] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/auth/me")
+      .then((r) => r.json())
+      .then((data) => {
+        if (!cancelled) setIsAdmin(data.user?.role === "ADMIN");
+      })
+      .catch(() => {
+        if (!cancelled) setIsAdmin(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (!assetId) {
       setAsset(null);
       setError("");
+      setEditing(false);
       return;
     }
     let cancelled = false;
@@ -135,18 +158,20 @@ export function AssetPreview({
     return () => {
       cancelled = true;
     };
-  }, [assetId]);
+  }, [assetId, reloadToken]);
 
   useEffect(() => {
-    if (!assetId) return;
+    if (!assetId || editing) return;
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [assetId, onClose]);
+  }, [assetId, onClose, editing]);
 
   if (!assetId) return null;
+
+  const canEdit = isAdmin || !!onEdit;
 
   const openAssignment = asset?.assignments.find((a) => !a.unassignedAt);
   const categoryLabel =
@@ -365,24 +390,40 @@ export function AssetPreview({
         </div>
 
         {asset && (
-          <div className="flex flex-wrap gap-2 border-t border-[var(--border)] px-5 py-3">
+          <div className="flex flex-wrap gap-2 border-t border-[var(--border)] px-4 py-3 sm:px-5">
             <Button type="button" variant="secondary" onClick={onClose}>
               Cerrar
             </Button>
-            {onEdit && (
+            {canEdit && (
               <Button
                 type="button"
                 onClick={() => {
-                  onEdit(asset);
-                  onClose();
+                  if (onEdit && !isAdmin) {
+                    onEdit(asset);
+                    onClose();
+                    return;
+                  }
+                  setEditing(true);
                 }}
               >
+                <Pencil className="h-4 w-4" />
                 Editar equipo
               </Button>
             )}
           </div>
         )}
       </aside>
+
+      {editing && asset && (
+        <AssetEditModal
+          asset={asset}
+          onClose={() => setEditing(false)}
+          onSaved={() => {
+            setReloadToken((n) => n + 1);
+            onSaved?.();
+          }}
+        />
+      )}
     </div>
   );
 }

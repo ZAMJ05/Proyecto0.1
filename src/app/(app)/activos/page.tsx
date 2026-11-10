@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import {
   Badge,
   Button,
@@ -17,14 +17,17 @@ import {
   AssetPreviewButton,
   type AssetListItem,
 } from "@/components/AssetPreview";
-import { AssetForm, AssetFormValues } from "@/components/AssetForm";
+import { AssetEditModal } from "@/components/AssetEditModal";
 import { CopyableValue } from "@/components/CopyableValue";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
-import { assetSearchText } from "@/lib/asset-search";
+import {
+  ASSET_SEARCH_PLACEHOLDER,
+  assetSearchText,
+} from "@/lib/asset-search";
 import { ASSET_CATEGORIES, CATEGORY_LABELS } from "@/lib/constants";
-import { formatDate, toInputDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 
 function ActivosContent() {
   const searchParams = useSearchParams();
@@ -32,9 +35,7 @@ function ActivosContent() {
   const [role, setRole] = useState<"ADMIN" | "USER">("USER");
   const [loading, setLoading] = useState(true);
   const [previewId, setPreviewId] = useState<string | null>(null);
-  const [editing, setEditing] = useState<AssetListItem | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [unassignedOnly, setUnassignedOnly] = useState(
     searchParams.get("unassigned") === "1"
@@ -94,25 +95,6 @@ function ActivosContent() {
     },
   });
 
-  async function saveAsset(values: AssetFormValues) {
-    if (!editing) return;
-    setSubmitting(true);
-    try {
-      const res = await fetch(`/api/assets/${editing.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "No se pudo guardar");
-      setShowForm(false);
-      setEditing(null);
-      await load();
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
   async function removeAsset(id: string) {
     if (!confirm("¿Eliminar este equipo del inventario?")) return;
     const res = await fetch(`/api/assets/${id}`, { method: "DELETE" });
@@ -170,42 +152,12 @@ function ActivosContent() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
-        namePlaceholder="Nombre, marca, modelo, serie, inventario, usuario o AnyDesk..."
+        namePlaceholder={ASSET_SEARCH_PLACEHOLDER}
         sortOptions={list.sortOptions}
         sortKey={list.sortKey}
         sortDir={list.sortDir}
         onSortChange={list.setSort}
       />
-
-      {showForm && editing && role === "ADMIN" && (
-        <Card className="mb-6 animate-fade">
-          <h2 className="mb-4 font-[family-name:var(--font-display)] text-xl">
-            Editar: {editing.name}
-          </h2>
-          <AssetForm
-            initial={{
-              name: editing.name,
-              category: editing.category,
-              brand: editing.brand,
-              model: editing.model,
-              serialNumber: editing.serialNumber,
-              inventoryNumber: editing.inventoryNumber,
-              status: editing.status,
-              purchaseDate: toInputDate(editing.purchaseDate),
-              renewalDate: toInputDate(editing.renewalDate),
-              anydesk: editing.anydesk || "",
-              notes: editing.notes || "",
-            }}
-            mode="edit"
-            submitting={submitting}
-            onCancel={() => {
-              setShowForm(false);
-              setEditing(null);
-            }}
-            onSubmit={saveAsset}
-          />
-        </Card>
-      )}
 
       {loading ? (
         <p className="text-sm text-[var(--muted)]">Cargando equipos activos...</p>
@@ -317,10 +269,8 @@ function ActivosContent() {
                           <Button
                             variant="secondary"
                             className="px-2 py-1"
-                            onClick={() => {
-                              setEditing(asset);
-                              setShowForm(true);
-                            }}
+                            title="Editar"
+                            onClick={() => setEditId(asset.id)}
                           >
                             <Pencil className="h-4 w-4" />
                           </Button>
@@ -373,10 +323,9 @@ function ActivosContent() {
                   </dd>
                 </div>
               </dl>
-              <div className="mt-3 flex items-center gap-2 text-xs text-[var(--accent-strong)]">
-                <Eye className="h-3.5 w-3.5" />
+              <p className="mt-3 text-xs text-[var(--accent-strong)]">
                 Clic para vista previa
-              </div>
+              </p>
             </Card>
           ))}
         </div>
@@ -394,15 +343,15 @@ function ActivosContent() {
       <AssetPreview
         assetId={previewId}
         onClose={() => setPreviewId(null)}
-        onEdit={
-          role === "ADMIN"
-            ? (a) => {
-                setEditing(a);
-                setShowForm(true);
-              }
-            : undefined
-        }
+        onSaved={load}
       />
+      {editId && (
+        <AssetEditModal
+          assetId={editId}
+          onClose={() => setEditId(null)}
+          onSaved={load}
+        />
+      )}
     </div>
   );
 }

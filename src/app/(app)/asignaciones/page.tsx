@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { ChevronDown, ChevronRight, Package } from "lucide-react";
+import { ChevronDown, ChevronRight, Package, Pencil } from "lucide-react";
 import {
   Badge,
   Button,
@@ -12,8 +12,14 @@ import {
   Select,
   Textarea,
 } from "@/components/ui";
+import {
+  AssetPreview,
+  AssetPreviewButton,
+} from "@/components/AssetPreview";
+import { AssetEditModal } from "@/components/AssetEditModal";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { useListControls } from "@/hooks/useListControls";
+import { ASSET_SEARCH_PLACEHOLDER } from "@/lib/asset-search";
 import { formatDate } from "@/lib/utils";
 
 type Employee = { id: string; name: string; active?: boolean };
@@ -85,11 +91,15 @@ function UserAssignmentGroup({
   group,
   role,
   onUnassign,
+  onPreview,
+  onEdit,
   defaultOpen,
 }: {
   group: UserGroup;
   role: "ADMIN" | "USER";
   onUnassign?: (id: string) => void;
+  onPreview?: (assetId: string) => void;
+  onEdit?: (assetId: string) => void;
   defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen ?? group.count > 1);
@@ -153,8 +163,24 @@ function UserAssignmentGroup({
                     )}
                   </div>
                 </div>
-                <div className="flex items-center gap-2 sm:shrink-0">
+                <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
                   <Badge tone="success">Activa</Badge>
+                  {onPreview && (
+                    <AssetPreviewButton
+                      onClick={() => onPreview(a.asset.id)}
+                    />
+                  )}
+                  {role === "ADMIN" && onEdit && (
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="px-2 py-1"
+                      title="Editar"
+                      onClick={() => onEdit(a.asset.id)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                  )}
                   {role === "ADMIN" && onUnassign && (
                     <Button
                       variant="secondary"
@@ -183,6 +209,8 @@ export default function AsignacionesPage() {
   const [employeeId, setEmployeeId] = useState("");
   const [notes, setNotes] = useState("");
   const [error, setError] = useState("");
+  const [previewId, setPreviewId] = useState<string | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
 
   async function load() {
     const [aRes, eRes, asRes, meRes] = await Promise.all([
@@ -367,7 +395,7 @@ export default function AsignacionesPage() {
           showingFrom={activeList.showingFrom}
           showingTo={activeList.showingTo}
           total={activeList.total}
-          namePlaceholder="Usuario, equipo, marca, modelo o serie..."
+          namePlaceholder={ASSET_SEARCH_PLACEHOLDER}
           sortOptions={activeList.sortOptions}
           sortKey={activeList.sortKey}
           sortDir={activeList.sortDir}
@@ -384,6 +412,8 @@ export default function AsignacionesPage() {
                 group={group}
                 role={role}
                 onUnassign={unassign}
+                onPreview={setPreviewId}
+                onEdit={setEditId}
                 defaultOpen={group.count > 1 || activeList.view === "grid"}
               />
             ))}
@@ -399,6 +429,19 @@ export default function AsignacionesPage() {
           total={activeList.total}
         />
       </section>
+
+      <AssetPreview
+        assetId={previewId}
+        onClose={() => setPreviewId(null)}
+        onSaved={load}
+      />
+      {editId && (
+        <AssetEditModal
+          assetId={editId}
+          onClose={() => setEditId(null)}
+          onSaved={load}
+        />
+      )}
     </div>
   );
 }

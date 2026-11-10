@@ -128,7 +128,8 @@ export function ListToolbar({
   showingFrom,
   showingTo,
   total,
-  namePlaceholder = "Buscar por nombre, marca, modelo, serie o usuario...",
+  namePlaceholder = "Buscar por nombre, marca, modelo, serie, inventario o usuario...",
+  showSearch = true,
   extra,
 }: {
   name: string;
@@ -142,6 +143,8 @@ export function ListToolbar({
   showingTo: number;
   total: number;
   namePlaceholder?: string;
+  /** Si false, no muestra la barra de búsqueda (útil cuando hay una sola barra compartida). */
+  showSearch?: boolean;
   sortOptions?: Array<{ key: string; label: string }>;
   sortKey?: string;
   sortDir?: "asc" | "desc";
@@ -152,16 +155,18 @@ export function ListToolbar({
     <div className="mb-3">
       <div className="list-toolbar">
         <div className="flex flex-col gap-2.5 xl:flex-row xl:items-center">
-          <div className="relative min-w-0 flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
-            <Input
-              value={name}
-              onChange={(e) => onNameChange(e.target.value)}
-              placeholder={namePlaceholder}
-              aria-label="Buscar"
-              className="min-h-10 pl-10 text-[15px]"
-            />
-          </div>
+          {showSearch ? (
+            <div className="relative min-w-0 flex-1">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
+              <Input
+                value={name}
+                onChange={(e) => onNameChange(e.target.value)}
+                placeholder={namePlaceholder}
+                aria-label="Buscar"
+                className="min-h-10 pl-10 text-[15px]"
+              />
+            </div>
+          ) : null}
           {extra ? <div className="toolbar-extras">{extra}</div> : null}
           <div className="flex flex-wrap items-center justify-between gap-2 xl:justify-end">
             <p className="shrink-0 text-xs text-[var(--muted)] sm:text-sm">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   Columns3,
   List,
+  Pencil,
   Plus,
   UserPlus,
 } from "lucide-react";
@@ -15,6 +16,11 @@ import {
   PageHeader,
   statusTone,
 } from "@/components/ui";
+import {
+  AssetPreview,
+  AssetPreviewButton,
+} from "@/components/AssetPreview";
+import { AssetEditModal } from "@/components/AssetEditModal";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
@@ -28,7 +34,11 @@ import {
   ASSET_CATEGORIES,
   CATEGORY_LABELS,
 } from "@/lib/constants";
-import { assetSearchText, matchesSearchQuery } from "@/lib/asset-search";
+import {
+  ASSET_SEARCH_PLACEHOLDER,
+  assetSearchText,
+  matchesSearchQuery,
+} from "@/lib/asset-search";
 import { formatDate } from "@/lib/utils";
 
 type Asset = {
@@ -77,6 +87,8 @@ export default function TableroPage() {
   const [assigningId, setAssigningId] = useState<string | null>(null);
   const [modalAsset, setModalAsset] = useState<Asset | null>(null);
   const [flash, setFlash] = useState("");
+  const [previewId, setPreviewId] = useState<string | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
   const { employees, loading: loadingEmployees } = useActiveEmployees();
 
   async function load() {
@@ -298,7 +310,7 @@ export default function TableroPage() {
             ? kanbanColumns.reduce((n, col) => n + col.items.length, 0)
             : list.total
         }
-        namePlaceholder="Equipo, marca, modelo, serie, inventario o usuario..."
+        namePlaceholder={ASSET_SEARCH_PLACEHOLDER}
       />
 
       {loading ? (
@@ -361,22 +373,39 @@ export default function TableroPage() {
                               </span>
                             )}
                           </p>
-                          {canAssign && (
-                            <Button
-                              type="button"
-                              variant="secondary"
-                              className="mt-2 w-full px-2 py-1.5 text-xs"
-                              disabled={assigningId === asset.id}
-                              onClick={() => quickAssign(asset)}
-                            >
-                              <UserPlus className="h-3.5 w-3.5" />
-                              {assigningId === asset.id
-                                ? "Asignando..."
-                                : quickUserId
-                                  ? "Asignar"
-                                  : "Elegir usuario"}
-                            </Button>
-                          )}
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            <AssetPreviewButton
+                              className="px-2 py-1 text-xs"
+                              onClick={() => setPreviewId(asset.id)}
+                            />
+                            {role === "ADMIN" && (
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                className="px-2 py-1 text-xs"
+                                title="Editar"
+                                onClick={() => setEditId(asset.id)}
+                              >
+                                <Pencil className="h-3.5 w-3.5" />
+                              </Button>
+                            )}
+                            {canAssign && (
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                className="flex-1 px-2 py-1.5 text-xs"
+                                disabled={assigningId === asset.id}
+                                onClick={() => quickAssign(asset)}
+                              >
+                                <UserPlus className="h-3.5 w-3.5" />
+                                {assigningId === asset.id
+                                  ? "Asignando..."
+                                  : quickUserId
+                                    ? "Asignar"
+                                    : "Elegir usuario"}
+                              </Button>
+                            )}
+                          </div>
                         </article>
                       );
                     })
@@ -430,7 +459,7 @@ export default function TableroPage() {
                     direction={list.sortDir}
                     onSort={list.toggleSort}
                   />
-                  {role === "ADMIN" && <th className="hide-narrow">Acción</th>}
+                  <th className="hide-narrow">Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -469,9 +498,23 @@ export default function TableroPage() {
                           <span className="text-[var(--muted)]">Sin asignar</span>
                         )}
                       </td>
-                      {role === "ADMIN" && (
-                        <td className="hide-narrow">
-                          {canAssign ? (
+                      <td className="hide-narrow">
+                        <div className="row-actions">
+                          <AssetPreviewButton
+                            onClick={() => setPreviewId(asset.id)}
+                          />
+                          {role === "ADMIN" && (
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              className="px-2 py-1"
+                              title="Editar"
+                              onClick={() => setEditId(asset.id)}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                          )}
+                          {role === "ADMIN" && canAssign ? (
                             <Button
                               type="button"
                               variant="secondary"
@@ -482,11 +525,9 @@ export default function TableroPage() {
                               <UserPlus className="h-4 w-4" />
                               {assigningId === asset.id ? "..." : "Asignar"}
                             </Button>
-                          ) : (
-                            <span className="text-xs text-[var(--muted)]">—</span>
-                          )}
-                        </td>
-                      )}
+                          ) : null}
+                        </div>
+                      </td>
                     </tr>
                   );
                 })}
@@ -519,6 +560,19 @@ export default function TableroPage() {
           await load();
         }}
       />
+
+      <AssetPreview
+        assetId={previewId}
+        onClose={() => setPreviewId(null)}
+        onSaved={load}
+      />
+      {editId && (
+        <AssetEditModal
+          assetId={editId}
+          onClose={() => setEditId(null)}
+          onSaved={load}
+        />
+      )}
     </div>
   );
 }
