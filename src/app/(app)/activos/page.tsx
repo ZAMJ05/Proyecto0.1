@@ -22,6 +22,7 @@ import { CopyableValue } from "@/components/CopyableValue";
 import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { SortableTh } from "@/components/SortableTh";
 import { useListControls } from "@/hooks/useListControls";
+import { assetSearchText } from "@/lib/asset-search";
 import { ASSET_CATEGORIES, CATEGORY_LABELS } from "@/lib/constants";
 import { formatDate, toInputDate } from "@/lib/utils";
 
@@ -67,12 +68,11 @@ function ActivosContent() {
   const list = useListControls(visible, {
     storageKey: "activos-p50",
     defaultView: "list",
-    getName: (a) =>
-      `${a.name} ${a.brand} ${a.model} ${a.notes || ""} ${a.anydesk || ""} ${a.assignments[0]?.employee.name || ""} ${a.assignments[0]?.employee.email || ""}`,
-    getSerial: (a) => `${a.serialNumber} ${a.inventoryNumber}`,
+    getName: (a) => assetSearchText(a),
     defaultSortKey: "name",
     sortFields: {
       name: { label: "Nombre", getValue: (a) => a.name },
+      brand: { label: "Marca", getValue: (a) => a.brand },
       category: { label: "Categoría", getValue: (a) => a.category },
       serial: { label: "Serial", getValue: (a) => a.serialNumber },
       assigned: {
@@ -161,9 +161,7 @@ function ActivosContent() {
           </>
         }
         name={list.name}
-        serial={list.serial}
         onNameChange={list.setName}
-        onSerialChange={list.setSerial}
         view={list.view}
         onViewChange={list.setView}
         page={list.page}
@@ -172,7 +170,7 @@ function ActivosContent() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
-        namePlaceholder="Nombre, usuario, serie, inventario o AnyDesk..."
+        namePlaceholder="Nombre, marca, modelo, serie, inventario, usuario o AnyDesk..."
         sortOptions={list.sortOptions}
         sortKey={list.sortKey}
         sortDir={list.sortDir}

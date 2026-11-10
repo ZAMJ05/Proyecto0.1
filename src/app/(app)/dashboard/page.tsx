@@ -804,9 +804,7 @@ export default function DashboardPage() {
         </div>
         <ListToolbar
           name={changeList.name}
-          serial={changeList.serial}
           onNameChange={changeList.setName}
-          onSerialChange={changeList.setSerial}
           view={changeList.view}
           onViewChange={changeList.setView}
           page={changeList.page}
@@ -816,7 +814,6 @@ export default function DashboardPage() {
           showingTo={changeList.showingTo}
           total={changeList.total}
           namePlaceholder="Buscar en detalle o acción..."
-          serialPlaceholder="Serial del equipo..."
           sortOptions={changeList.sortOptions}
           sortKey={changeList.sortKey}
           sortDir={changeList.sortDir}

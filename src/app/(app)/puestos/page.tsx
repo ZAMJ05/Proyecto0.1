@@ -346,9 +346,7 @@ export default function PuestosPage() {
 
       <ListToolbar
         name={list.name}
-        serial={list.serial}
         onNameChange={list.setName}
-        onSerialChange={list.setSerial}
         view={list.view}
         onViewChange={list.setView}
         page={list.page}
@@ -357,8 +355,6 @@ export default function PuestosPage() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
-        serialLabel="Usuario en el puesto"
-        serialPlaceholder="Filtrar por nombre de usuario..."
         sortOptions={list.sortOptions}
         sortKey={list.sortKey}
         sortDir={list.sortDir}

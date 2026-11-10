@@ -21,6 +21,7 @@ import {
   assignAssetToEmployee,
   useActiveEmployees,
 } from "@/components/QuickAssign";
+import { assetSearchText } from "@/lib/asset-search";
 import { CATEGORY_LABELS } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
 
@@ -116,11 +117,11 @@ export default function StockPage() {
   const list = useListControls(filteredByCategory, {
     storageKey: "stock-p25",
     defaultView: "list",
-    getName: (a) => `${a.name} ${a.brand} ${a.model} ${a.notes || ""}`,
-    getSerial: (a) => `${a.serialNumber} ${a.inventoryNumber}`,
+    getName: (a) => assetSearchText(a),
     defaultSortKey: "name",
     sortFields: {
       name: { label: "Nombre", getValue: (a) => a.name },
+      brand: { label: "Marca", getValue: (a) => a.brand },
       category: { label: "Categoría", getValue: (a) => a.category },
       serial: { label: "Serial", getValue: (a) => a.serialNumber },
       inventory: {
@@ -231,9 +232,7 @@ export default function StockPage() {
           </Select>
         }
         name={list.name}
-        serial={list.serial}
         onNameChange={list.setName}
-        onSerialChange={list.setSerial}
         view={list.view}
         onViewChange={list.setView}
         page={list.page}
@@ -242,6 +241,7 @@ export default function StockPage() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
+        namePlaceholder="Nombre, marca, modelo, serie o inventario..."
         sortOptions={list.sortOptions}
         sortKey={list.sortKey}
         sortDir={list.sortDir}

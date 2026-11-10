@@ -29,8 +29,11 @@ type Employee = {
     asset: {
       id: string;
       name: string;
+      brand?: string;
+      model?: string;
       category: string;
       serialNumber: string;
+      inventoryNumber?: string;
       status: string;
     };
   }>;
@@ -238,9 +241,20 @@ export default function EmpleadosPage() {
   const list = useListControls(filteredEmployees, {
     storageKey: "empleados-p25",
     defaultView: "list",
-    getName: (e) => `${e.name} ${e.email || ""}`,
+    getName: (e) =>
+      `${e.name} ${e.email || ""} ${e.assignments
+        .map(
+          (a) =>
+            `${a.asset.name || ""} ${a.asset.brand || ""} ${a.asset.model || ""}`
+        )
+        .join(" ")}`,
     getSerial: (e) =>
-      e.assignments.map((a) => a.asset.serialNumber).join(" "),
+      e.assignments
+        .map(
+          (a) =>
+            `${a.asset.serialNumber} ${a.asset.inventoryNumber || ""}`
+        )
+        .join(" "),
     defaultSortKey: "name",
     sortFields: {
       name: { label: "Usuario", getValue: (e) => e.name },
@@ -417,9 +431,7 @@ export default function EmpleadosPage() {
 
       <ListToolbar
         name={list.name}
-        serial={list.serial}
         onNameChange={list.setName}
-        onSerialChange={list.setSerial}
         view={list.view}
         onViewChange={list.setView}
         page={list.page}
@@ -428,8 +440,7 @@ export default function EmpleadosPage() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
-        namePlaceholder="Nombre o email..."
-        serialPlaceholder="Serial de equipo asignado..."
+        namePlaceholder="Nombre, email, equipo, marca o serie..."
         sortOptions={list.sortOptions}
         sortKey={list.sortKey}
         sortDir={list.sortDir}

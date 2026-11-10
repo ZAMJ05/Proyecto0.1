@@ -25,6 +25,7 @@ import {
   QuickAssignModal,
   useActiveEmployees,
 } from "@/components/QuickAssign";
+import { assetSearchText } from "@/lib/asset-search";
 import { ASSET_CATEGORIES, ASSET_STATUSES, CATEGORY_LABELS } from "@/lib/constants";
 import { formatDate, toInputDate } from "@/lib/utils";
 
@@ -96,12 +97,11 @@ function InventarioContent() {
   const list = useListControls(visible, {
     storageKey: "inventario-p50",
     defaultView: "list",
-    getName: (a) =>
-      `${a.name} ${a.brand} ${a.model} ${a.notes || ""} ${a.anydesk || ""} ${a.assignments[0]?.employee.name || ""} ${a.assignments[0]?.employee.email || ""}`,
-    getSerial: (a) => `${a.serialNumber} ${a.inventoryNumber}`,
+    getName: (a) => assetSearchText(a),
     defaultSortKey: "name",
     sortFields: {
       name: { label: "Nombre", getValue: (a) => a.name },
+      brand: { label: "Marca", getValue: (a) => a.brand },
       category: { label: "Categoría", getValue: (a) => a.category },
       serial: { label: "Serial", getValue: (a) => a.serialNumber },
       status: { label: "Estado", getValue: (a) => a.status },
@@ -228,9 +228,7 @@ function InventarioContent() {
           </>
         }
         name={list.name}
-        serial={list.serial}
         onNameChange={list.setName}
-        onSerialChange={list.setSerial}
         view={list.view}
         onViewChange={list.setView}
         page={list.page}
@@ -239,7 +237,7 @@ function InventarioContent() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
-        namePlaceholder="Nombre, usuario, serie, inventario o AnyDesk..."
+        namePlaceholder="Nombre, marca, modelo, serie, inventario, usuario o AnyDesk..."
         sortOptions={list.sortOptions}
         sortKey={list.sortKey}
         sortDir={list.sortDir}

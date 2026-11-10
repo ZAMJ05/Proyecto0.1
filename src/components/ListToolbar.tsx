@@ -9,7 +9,7 @@ import {
   Search,
 } from "lucide-react";
 import { Button, Input } from "./ui";
-import type { ListViewMode, SortDir } from "@/hooks/useListControls";
+import type { ListViewMode } from "@/hooks/useListControls";
 import { LIST_PAGE_SIZE } from "@/hooks/useListControls";
 import { cn } from "@/lib/utils";
 
@@ -128,13 +128,11 @@ export function ListToolbar({
   showingFrom,
   showingTo,
   total,
-  namePlaceholder = "Buscar por nombre, serie o usuario...",
+  namePlaceholder = "Buscar por nombre, marca, modelo, serie o usuario...",
   extra,
 }: {
   name: string;
-  serial?: string;
   onNameChange: (value: string) => void;
-  onSerialChange?: (value: string) => void;
   view: ListViewMode;
   onViewChange: (view: ListViewMode) => void;
   page?: number;
@@ -143,15 +141,11 @@ export function ListToolbar({
   showingFrom: number;
   showingTo: number;
   total: number;
-  showSerial?: boolean;
-  nameLabel?: string;
-  serialLabel?: string;
   namePlaceholder?: string;
-  serialPlaceholder?: string;
   sortOptions?: Array<{ key: string; label: string }>;
   sortKey?: string;
-  sortDir?: SortDir;
-  onSortChange?: (key: string, dir: SortDir) => void;
+  sortDir?: "asc" | "desc";
+  onSortChange?: (key: string, dir: "asc" | "desc") => void;
   extra?: ReactNode;
 }) {
   return (

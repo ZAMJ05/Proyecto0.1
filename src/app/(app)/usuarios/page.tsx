@@ -237,9 +237,7 @@ export default function UsuariosPage() {
 
       <ListToolbar
         name={list.name}
-        serial={list.serial}
         onNameChange={list.setName}
-        onSerialChange={list.setSerial}
         view={list.view}
         onViewChange={list.setView}
         page={list.page}
@@ -248,8 +246,6 @@ export default function UsuariosPage() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
-        serialLabel="Email"
-        serialPlaceholder="Buscar por email..."
         sortOptions={list.sortOptions}
         sortKey={list.sortKey}
         sortDir={list.sortDir}

@@ -189,9 +189,7 @@ export default function CicloVidaPage() {
           </h2>
           <ListToolbar
             name={renewalList.name}
-            serial={renewalList.serial}
             onNameChange={renewalList.setName}
-            onSerialChange={renewalList.setSerial}
             view={renewalList.view}
             onViewChange={renewalList.setView}
             page={renewalList.page}
@@ -338,9 +336,7 @@ export default function CicloVidaPage() {
           </h2>
           <ListToolbar
             name={maintList.name}
-            serial={maintList.serial}
             onNameChange={maintList.setName}
-            onSerialChange={maintList.setSerial}
             view={maintList.view}
             onViewChange={maintList.setView}
             page={maintList.page}

@@ -28,6 +28,7 @@ import {
   ASSET_CATEGORIES,
   CATEGORY_LABELS,
 } from "@/lib/constants";
+import { assetSearchText, matchesSearchQuery } from "@/lib/asset-search";
 import { formatDate } from "@/lib/utils";
 
 type Asset = {
@@ -122,12 +123,11 @@ export default function TableroPage() {
   const list = useListControls(filtered, {
     storageKey: "tablero-asignacion",
     defaultView: "list",
-    getName: (asset) =>
-      `${asset.name} ${asset.brand} ${asset.model} ${asset.notes || ""} ${assigneeName(asset)}`,
-    getSerial: (asset) => `${asset.serialNumber} ${asset.inventoryNumber}`,
+    getName: (asset) => assetSearchText(asset),
     defaultSortKey: "category",
     sortFields: {
       name: { label: "Equipo", getValue: (asset) => asset.name },
+      brand: { label: "Marca", getValue: (asset) => asset.brand },
       category: { label: "Categoría", getValue: (asset) => asset.category },
       serial: { label: "Serie", getValue: (asset) => asset.serialNumber },
       status: { label: "Estado", getValue: (asset) => asset.status },
@@ -138,19 +138,15 @@ export default function TableroPage() {
     },
   });
 
-  const kanbanQuery = list.query.trim().toLowerCase();
   const kanbanColumns = useMemo(() => {
     return visibleCategories.map((cat) => {
       const items = assets.filter((asset) => {
         if (asset.category !== cat) return false;
-        if (!kanbanQuery) return true;
-        const blob =
-          `${asset.name} ${asset.brand} ${asset.model} ${asset.serialNumber} ${asset.inventoryNumber} ${asset.notes || ""} ${assigneeName(asset)}`.toLowerCase();
-        return blob.includes(kanbanQuery);
+        return matchesSearchQuery(assetSearchText(asset), list.query);
       });
       return { category: cat, items };
     });
-  }, [assets, visibleCategories, kanbanQuery]);
+  }, [assets, visibleCategories, list.query]);
 
   async function quickAssign(asset: Asset) {
     if (!canAssignAsset(asset)) return;
@@ -302,7 +298,7 @@ export default function TableroPage() {
             ? kanbanColumns.reduce((n, col) => n + col.items.length, 0)
             : list.total
         }
-        namePlaceholder="Equipo, serie, inventario o usuario..."
+        namePlaceholder="Equipo, marca, modelo, serie, inventario o usuario..."
       />
 
       {loading ? (

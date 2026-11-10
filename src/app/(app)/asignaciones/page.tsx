@@ -20,7 +20,10 @@ type Employee = { id: string; name: string; active?: boolean };
 type Asset = {
   id: string;
   name: string;
+  brand?: string;
+  model?: string;
   serialNumber: string;
+  inventoryNumber?: string;
   category: string;
   status: string;
 };
@@ -254,10 +257,15 @@ export default function AsignacionesPage() {
     defaultView: "list",
     getName: (g) =>
       `${g.employeeName} ${g.position} ${g.assignments
-        .map((a) => a.asset.name)
+        .map(
+          (a) =>
+            `${a.asset.name} ${a.asset.brand || ""} ${a.asset.model || ""}`
+        )
         .join(" ")}`,
     getSerial: (g) =>
-      g.assignments.map((a) => a.asset.serialNumber).join(" "),
+      g.assignments
+        .map((a) => `${a.asset.serialNumber} ${a.asset.inventoryNumber || ""}`)
+        .join(" "),
     defaultSortKey: "employee",
     sortFields: {
       employee: { label: "Usuario", getValue: (g) => g.employeeName },
@@ -350,9 +358,7 @@ export default function AsignacionesPage() {
 
         <ListToolbar
           name={activeList.name}
-          serial={activeList.serial}
           onNameChange={activeList.setName}
-          onSerialChange={activeList.setSerial}
           view={activeList.view}
           onViewChange={activeList.setView}
           page={activeList.page}
@@ -361,8 +367,7 @@ export default function AsignacionesPage() {
           showingFrom={activeList.showingFrom}
           showingTo={activeList.showingTo}
           total={activeList.total}
-          namePlaceholder="Buscar usuario o equipo..."
-          serialPlaceholder="Serial..."
+          namePlaceholder="Usuario, equipo, marca, modelo o serie..."
           sortOptions={activeList.sortOptions}
           sortKey={activeList.sortKey}
           sortDir={activeList.sortDir}

@@ -6,6 +6,7 @@ import { ListFooter, ListToolbar } from "@/components/ListToolbar";
 import { SortableTh } from "@/components/SortableTh";
 import { Badge, EmptyState, PageHeader, statusTone } from "@/components/ui";
 import { useListControls } from "@/hooks/useListControls";
+import { assetSearchText } from "@/lib/asset-search";
 
 type Vista = "activas" | "inactivas" | "monitores";
 
@@ -67,12 +68,11 @@ export default function EquiposPage() {
   const list = useListControls(visible, {
     storageKey: "equipos-consulta",
     defaultView: "list",
-    getName: (asset) =>
-      `${asset.name} ${asset.brand} ${asset.model} ${asset.anydesk || ""} ${assignee(asset)} ${asset.assignments[0]?.employee.email || ""}`,
-    getSerial: (asset) => `${asset.serialNumber} ${asset.inventoryNumber}`,
+    getName: (asset) => assetSearchText(asset),
     defaultSortKey: "assigned",
     sortFields: {
       name: { label: "Equipo", getValue: (asset) => asset.name },
+      brand: { label: "Marca", getValue: (asset) => asset.brand },
       serial: { label: "Serie", getValue: (asset) => asset.serialNumber },
       status: { label: "Estado", getValue: (asset) => asset.status },
       assigned: { label: "Asignado", getValue: (asset) => assignee(asset) },
@@ -118,7 +118,7 @@ export default function EquiposPage() {
         showingFrom={list.showingFrom}
         showingTo={list.showingTo}
         total={list.total}
-        namePlaceholder="Equipo, serie, inventario o usuario..."
+        namePlaceholder="Equipo, marca, modelo, serie, inventario o usuario..."
       />
 
       {loading ? (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { matchesSearchQuery } from "@/lib/asset-search";
 
 export type ListViewMode = "grid" | "list";
 export type SortDir = "asc" | "desc";
@@ -106,11 +107,10 @@ export function useListControls<T>(
   }
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
     const result = items.filter((item) => {
-      if (!q) return true;
-      const blob = `${options.getName(item) || ""} ${options.getSerial?.(item) || ""}`.toLowerCase();
-      return blob.includes(q);
+      const blob = `${options.getName(item) || ""} ${options.getSerial?.(item) || ""}`;
+      // Una sola barra: nombre, marca, modelo, serie, etc. Todas las palabras deben coincidir.
+      return matchesSearchQuery(blob, query);
     });
 
     if (sortFields && sortKey && sortFields[sortKey]) {
@@ -165,8 +165,6 @@ export function useListControls<T>(
     setQuery,
     name: query,
     setName: setQuery,
-    serial: "",
-    setSerial: setQuery,
     view,
     setView,
     page: safePage,
